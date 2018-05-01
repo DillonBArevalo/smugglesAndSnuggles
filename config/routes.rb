@@ -5,5 +5,7 @@ Rails.application.routes.draw do
 
   resources :users, only: [:new, :create, :show]
 
+  resources :games, only: [:new, :create, :update, :show]
+
   root 'index#home'
 end
