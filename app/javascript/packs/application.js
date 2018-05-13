@@ -10,4 +10,7 @@ import Game from './game';
 import Card from './card';
 import Visualizer from './visualizer';
 console.log('Hello World from Webpacker');
-console.log( new Game );
+let game = new Game
+console.log( game );
+console.log( game.legalMoves(0,0))
+

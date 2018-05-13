@@ -2,7 +2,7 @@ class Card {
   constructor(value, deck) {
     this.value = value;
     this.deck = deck;
-    this.name = deck + value
+    this.name = deck + value;
     this.faceDown = false;
     this.snuggled = false;
     this.zIndex = 1;
@@ -10,8 +10,8 @@ class Card {
   }
 
   flip(){
-    this.faceDown = !this.faceDown
-    return this
+    this.faceDown = !this.faceDown;
+    return this;
   }
 
   static buildDeck(deck){
