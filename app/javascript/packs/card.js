@@ -1,9 +1,9 @@
 class Card {
-  constructor(value, deck) {
+  constructor(value, deck, faceDown = false) {
     this.value = value;
     this.deck = deck;
     this.name = deck + value;
-    this.faceDown = false;
+    this.faceDown = faceDown;
     this.snuggled = false;
     this.zIndex = 1;
     this.snuggling = [];
