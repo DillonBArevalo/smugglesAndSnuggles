@@ -43,8 +43,8 @@ class Game {
 
   buildLegalMovesBoard(possibleMoves, startRow, startCol, card) {
     // dynamic, recursive. For all neighbors, checks if legal, then, if smuggle, run on that space.
-    let endRow = startRow + 1 > 2 ? startRow : startRow + 1;
-    let endCol = startCol + 1 > 4 ? startCol : startCol + 1;
+    let endRow = startRow + 1 > 4 ? startRow : startRow + 1;
+    let endCol = startCol + 1 > 2 ? startCol : startCol + 1;
     for(let i = (startRow === 0 ? startRow : startRow - 1); i <= endRow; i++){
       for(let j = (startCol === 0 ? startCol : startCol - 1); j <= endCol; j++){
         if(typeof possibleMoves[i][j] === 'undefined'){ // if not already checked
@@ -75,7 +75,7 @@ class Game {
   }
 
   adjacentLegal(startCard, endRow, endCol){
-    if( endRow > 2 || endRow < 0 || endCol > 4 || endCol < 0 ){
+    if( endRow > 4 || endRow < 0 || endCol > 2 || endCol < 0 ){
       return false;
     }
     console.log('endRow', endRow, 'endCol', endCol);

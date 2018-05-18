@@ -1,8 +1,8 @@
 class Game < ApplicationRecord
-  belongs_to :city_bears, class_name: :user
-  belongs_to :country_bears, class_name: :user
-  belongs_to :winner, class_name: :user
-  validates :city_bears, :country_bears, presence: true
+  has_one :users_won_game
+  has_one :winner, through: :users_won_game, source: :user
+  has_many :games_users
+  has_many :players, through: :games_users, source: :user
 
   def self.new_game
     city_cards = build_deck('city').shuffle
@@ -19,21 +19,21 @@ class Game < ApplicationRecord
         [city_cards.pop(), city_cards.pop()],[],[]
       ],
       [
-        [],['law' + rand(1..4)],[]
+        [],['law' + rand(1..4).to_s],[]
       ],
       [
-        [],[],[countryCards.pop(), countryCards.pop()]
+        [],[],[country_cards.pop(), country_cards.pop()]
       ],
-      [ [countryCards.pop(), countryCards.pop()],
-        [countryCards.pop(), countryCards.pop()],
-        [countryCards.pop(), countryCards.pop()]
+      [ [country_cards.pop(), country_cards.pop()],
+        [country_cards.pop(), country_cards.pop()],
+        [country_cards.pop(), country_cards.pop()]
       ]
     ]
   end
 
   private
 
-  def build_deck(deck_name)
+  def self.build_deck(deck_name)
     deck = []
     8.times do |i|
       deck << {value: i + 1, deck: deck_name}
@@ -41,10 +41,10 @@ class Game < ApplicationRecord
     deck
   end
 
-  def flip_evens(deck)
+  def self.flip_evens(deck)
     flip = false
     deck.map! do |card|
-      if flip do
+      if flip
         card[:faceDown] = true
       end
       flip = !flip
