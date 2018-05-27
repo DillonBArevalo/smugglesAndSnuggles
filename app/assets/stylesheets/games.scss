@@ -13,16 +13,17 @@
 
 .board__row {
   border: 1px dashed grey;
-  flex-grow:1;
+  flex-basis:20%;
   display: flex;
   flex-direction:row;
   flex-wrap: nowrap;
   align-items: stretch;
+  justify-content: space-around;
 }
 
 .board__cell{
   display: inline-block;
-  flex-grow:1;
+  flex-basis: 33%;
   border: 1px dashed grey;
 }
 

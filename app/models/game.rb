@@ -4,6 +4,11 @@ class Game < ApplicationRecord
   has_many :games_users
   has_many :players, through: :games_users, source: :user
 
+  before_create do
+    self.games_users.first.deck = 'city'
+    self.games_users.last.deck = 'country'
+  end
+
   def self.new_game
     city_cards = build_deck('city').shuffle
     country_cards = build_deck('country').shuffle

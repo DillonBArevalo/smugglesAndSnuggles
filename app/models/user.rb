@@ -14,4 +14,8 @@ class User < ApplicationRecord
     l = games.length - w
     "#{w}/#{l}"
   end
+
+  def deck(game)
+    self.games_users.find_by(game_id: game.id).deck
+  end
 end
