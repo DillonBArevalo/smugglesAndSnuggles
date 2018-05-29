@@ -25,5 +25,14 @@ Things you may want to cover:
 
 ## notes
 
-- maybe move game construction to rails and scrape for initial board state?
-  - that way we'd get the image tags as part of the card and wouldn't have to worry about hashed values for the card images, both players would get the same board, and we wouldn't need anything different for restarting a game vs building a new one.
+TODO:
+- add move logic
+- add hover state
+- add stack view
+- reroll game board if first turn can't be decided
+- add turns
+- add local multi-player
+- add law logic
+- add websockets
+- add real game generation
+

@@ -16,9 +16,7 @@ class Card extends Component {
 
   render() {
     return(
-      <div>
-        {this.state.deck} {this.state.value}
-      </div>
+      <img src={this.props.url} className={`card stack-${this.state.zIndex} card--${this.state.deck}`} />
     );
   }
 }

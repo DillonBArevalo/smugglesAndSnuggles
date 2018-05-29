@@ -10,7 +10,7 @@ class GamesController < ApplicationController
   end
 
   def create # creates a new game and redirects to play
-    @game = Game.new(game_log: Game.new_game.to_json)
+    @game = Game.new(game_log: Game.new_game) #could move to a before create?
     @game.players = [current_user, User.find(params[:player2])].shuffle
     if @game.save
       redirect_to "/users/#{params[:player2]}/games/#{@game.id}/play"
@@ -23,8 +23,6 @@ class GamesController < ApplicationController
     @player = current_user
     @game = Game.find(params[:id])
     @opponent = User.find(params[:user_id])
-    p @game
-    p @player.games_users.find_by(game_id: params[:id])
   end
 
   def show # review an already played game

@@ -24,7 +24,7 @@ class Game < ApplicationRecord
         [city_cards.pop(), city_cards.pop()],[],[]
       ],
       [
-        [],['law' + rand(1..4).to_s],[]
+        [],[{deck: 'laws', value: rand(1..4)}],[]
       ],
       [
         [],[],[country_cards.pop(), country_cards.pop()]
@@ -34,6 +34,17 @@ class Game < ApplicationRecord
         [country_cards.pop(), country_cards.pop()]
       ]
     ]
+  end
+
+  def board_with_images_as_json
+    self.game_log.each do |row|
+      row.each do |cell|
+        cell.each do |card|
+          card['url'] =ActionController::Base.helpers.image_path("cards/#{card['deck']}/#{card['deck']}#{card['value']}.png")
+        end
+      end
+    end
+    return self.game_log.to_json
   end
 
   private

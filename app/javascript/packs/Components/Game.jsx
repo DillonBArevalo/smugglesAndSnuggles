@@ -20,7 +20,7 @@ class Game extends Component {
             {row.map((cell, colI) =>{
               return <div key={`column${rowI}${colI}`} className="board__cell">
                 {cell.map((card, idx) => {
-                  return <Card key={`card${rowI}${colI}${idx}`} deck={card.deck} value={card.value} zIndex={idx} />
+                  return <Card key={`card${rowI}${colI}${idx}`} deck={card.deck} value={card.value} zIndex={idx} url={card.faceDown ? this.props[`${card.deck}FlippedUrl`] : card.url} faceDown={card.faceDown} />
                 })}
               </div>
             })}
