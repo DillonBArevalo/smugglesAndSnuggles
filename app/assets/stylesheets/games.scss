@@ -2,7 +2,17 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 #game {
-  height: 100%
+  height: 100%;
+  width: 100%;
+}
+
+.game-container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-end;
 }
 
 .board {
@@ -86,4 +96,19 @@
   border: 1px solid gray;
   box-sizing: border-box;
   border-radius: 5px;
+}
+
+.board__highlight {
+  height: 100%;
+  width: 100%;
+  background-color: green;
+  position: absolute;
+  opacity: 0.33;
+  z-index: 11;
+}
+
+.game__cancel-button {
+  height: 40px;
+  font-weight: 800;
+
 }

@@ -16,22 +16,59 @@ class Game < ApplicationRecord
     flip_evens(country_cards)
     [
       [
-        [city_cards.pop(), city_cards.pop()],
-        [city_cards.pop(), city_cards.pop()],
-        [city_cards.pop(), city_cards.pop()]
+        {
+          'cards': [city_cards.pop(), city_cards.pop()]
+        },
+        {
+          'cards': [city_cards.pop(), city_cards.pop()]
+        },
+        {
+          'cards': [city_cards.pop(), city_cards.pop()]
+        }
       ],
       [
-        [city_cards.pop(), city_cards.pop()],[],[]
+        {
+          'cards': [city_cards.pop(), city_cards.pop()]
+        },
+        {
+          'cards': []
+        },
+        {
+          'cards': []
+        }
       ],
       [
-        [],[{deck: 'laws', value: rand(1..4)}],[]
+        {
+          'cards': []
+        },
+        {
+          'cards': [{deck: 'laws', value: rand(1..4)}]
+        },
+        {
+          'cards': []
+        }
       ],
       [
-        [],[],[country_cards.pop(), country_cards.pop()]
+        {
+          'cards': []
+        },
+        {
+          'cards': []
+        },
+        {
+          'cards': [country_cards.pop(), country_cards.pop()]
+        }
       ],
-      [ [country_cards.pop(), country_cards.pop()],
-        [country_cards.pop(), country_cards.pop()],
-        [country_cards.pop(), country_cards.pop()]
+      [
+        {
+          'cards': [country_cards.pop(), country_cards.pop()]
+        },
+        {
+          'cards': [country_cards.pop(), country_cards.pop()]
+        },
+        {
+          'cards': [country_cards.pop(), country_cards.pop()]
+        }
       ]
     ]
   end
@@ -39,9 +76,11 @@ class Game < ApplicationRecord
   def board_with_images_as_json
     self.game_log.each do |row|
       row.each do |cell|
-        cell.each do |card|
-          card['url'] =ActionController::Base.helpers.image_path("cards/#{card['deck']}/#{card['deck']}#{card['value']}.png")
+        cell['cards'].each do |card|
+          card['url'] = ActionController::Base.helpers.image_path("cards/#{card['deck']}/#{card['deck']}#{card['value']}.png")
+          card['active'] = false
         end
+        cell['highlighted'] = false
       end
     end
     return self.game_log.to_json

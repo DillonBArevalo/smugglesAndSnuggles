@@ -26,6 +26,8 @@ Things you may want to cover:
 ## notes
 
 TODO:
+- refactor all array[array.length - 1] into a helper to import
+- watch for top card being null.. breaks things...
 - add move logic
 - add hover state
 - add stack view
@@ -34,5 +36,6 @@ TODO:
 - add local multi-player
 - add law logic
 - add websockets
+- put your deck at bottom visually
 - add real game generation
 
