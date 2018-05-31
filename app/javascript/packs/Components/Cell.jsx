@@ -24,10 +24,12 @@ class Cell extends Component {
                     highlightMoves={this.props.highlightMoves}
                     cancelMove={this.props.cancelMove}
                     active={card.active}
+                    isSmuggled={card.isSmuggled}
                   />
         })}
         {this.props.highlighted && <div
           className="board__highlight"
+          onClick={this.props.moveCard}
           ></div>}
       </div>
     );

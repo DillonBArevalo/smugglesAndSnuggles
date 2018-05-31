@@ -9,7 +9,7 @@ class Card extends Component {
   }
 
   clickHandler(){
-    if(!(this.props.faceDown || this.props.deck === 'laws')){
+    if(!(this.props.faceDown || this.props.deck === 'laws' || this.props.isSmuggled)){
       if(this.props.active){
         this.props.cancelMove();
       }else{

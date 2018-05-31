@@ -25,6 +25,25 @@ class Game extends Component {
     this.clearStatuses = this.clearStatuses.bind(this);
     this.modifyAllCards = this.modifyAllCards.bind(this);
     this.cancelMove = this.cancelMove.bind(this);
+    this.moveCard = this.moveCard.bind(this);
+  }
+
+  moveCard(endRow, endCol){
+    const board = this.state.board.slice();
+    const previousTop = this.topCard(board[endRow][endCol]);
+    const movingCard = board[this.state.movement.startingLocation[0]][this.state.movement.startingLocation[1]].cards.pop();
+    const newTop = this.topCard(board[this.state.movement.startingLocation[0]][this.state.movement.startingLocation[1]]);
+    board[endRow][endCol].cards.push(movingCard);
+    if(previousTop && previousTop.deck !== 'laws'){
+      previousTop.isSmuggled = true;
+    }
+    if(newTop && newTop.deck !== 'laws') {
+      newTop.isSmuggled = false;
+      newTop.faceDown = false;
+    }
+    this.clearStatuses(board);
+    this.setState({board, movement: {active:false, startingLocation: []}});
+
   }
 
   cancelMove(){
@@ -152,6 +171,7 @@ class Game extends Component {
                           cancelMove={this.cancelMove}
                           cityFlippedUrl={this.props.cityFlippedUrl}
                           countryFlippedUrl={this.props.countryFlippedUrl}
+                          moveCard={this.moveCard.bind(this, rowIndex, colIndex)}
                         />
               })}
             </div>
