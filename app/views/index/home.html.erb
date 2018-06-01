@@ -1,1 +1,8 @@
 <h1>Welcome to Smulggles 'n Snuggles!</h1>
+
+<p>
+  Please <%= link_to('Register', new_user_path) %> or <%= link_to('Log In', new_sessions_path) %>
+</p>
+<p>
+  or, since i don't have much non-game logic in yet, if you're already logged in, go to the <%= link_to('game creation page', new_game_path) %>
+</p>

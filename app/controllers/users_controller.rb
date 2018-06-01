@@ -15,6 +15,7 @@ class UsersController < ApplicationController
   end
 
   def show
+    redirect_to '/sessions/new' unless logged_in?
     @user = User.find(params[:id])
   end
 

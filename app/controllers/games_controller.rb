@@ -1,4 +1,8 @@
 class GamesController < ApplicationController
+  before_action do
+    redirect_to '/sessions/new' unless logged_in?
+  end
+
   def index
     @games = Game.all
   end
