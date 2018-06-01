@@ -8,6 +8,7 @@ class Game extends Component {
   constructor(props){
     super(props);
     this.state = {
+      isLocal: this.props.isLocal,
       playerDeck: this.props.playerDeck,
       board: this.props.gameData.currentBoard,
       movesLeft: this.props.gameData.movesLeft,
@@ -36,6 +37,7 @@ class Game extends Component {
     const previousTop = this.topCard(board[endRow][endCol]);
     const movingCard = board[this.state.movement.startingLocation[0]][this.state.movement.startingLocation[1]].cards.pop();
     const newTop = this.topCard(board[this.state.movement.startingLocation[0]][this.state.movement.startingLocation[1]]);
+    let movesLeft, activeDeck, movedCardValue;
     board[endRow][endCol].cards.push(movingCard);
     if(previousTop && previousTop.deck !== 'laws'){
       previousTop.isSmuggled = true;
@@ -44,9 +46,18 @@ class Game extends Component {
       newTop.isSmuggled = false;
       newTop.faceDown = false;
     }
-    this.clearStatuses(board);
-    this.setState({board, movement: {active:false, startingLocation: []}});
 
+    if(this.state.movesLeft === 1){
+      movesLeft = 2;
+      activeDeck = this.state.activeDeck === 'city' ? 'country' : 'city';
+      movedCardValue = null;
+    }else{
+      movesLeft = 1;
+      activeDeck = this.state.activeDeck;
+      movedCardValue = movingCard.value;
+    }
+    this.clearStatuses(board);
+    this.setState({board, movesLeft, activeDeck, movedCardValue, movement: {active:false, startingLocation: []}});
   }
 
   cancelMove(){
@@ -147,11 +158,14 @@ class Game extends Component {
   }
 
   highlightMoves(row, col) {
+    const card = this.topCard(this.state.board[row][col]);
+    if((this.state.isLocal && card.deck === this.state.activeDeck) || (!this.state.isLocal && this.state.activeDeck !== this.state.playerDeck) || card.value === this.state.movedCardValue ){
+      return
+    }
     const legalMoves = this.legalMoves(row, col);
-    const cell = this.state.board[row][col];
     const board = this.state.board.slice();
     this.clearStatuses(board);
-    this.topCard(cell).active = true;
+    card.active = true;
 
     legalMoves.forEach((legalXY) => {
       board[legalXY[0]][legalXY[1]].highlighted = true;

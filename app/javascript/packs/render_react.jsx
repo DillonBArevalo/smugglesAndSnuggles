@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const playerDeck = game.dataset.playerDeck;
     const cityFlippedUrl = game.dataset.cityFlippedUrl;
     const countryFlippedUrl = game.dataset.countryFlippedUrl;
-    ReactDOM.render(<Game gameData={gameData} playerDeck={playerDeck} countryFlippedUrl={countryFlippedUrl} cityFlippedUrl={cityFlippedUrl} />, game)
+    const isLocal = game.dataset.isLocal;
+    ReactDOM.render(<Game gameData={gameData} playerDeck={playerDeck} countryFlippedUrl={countryFlippedUrl} cityFlippedUrl={cityFlippedUrl} isLocal={isLocal} />, game)
   }
 })
