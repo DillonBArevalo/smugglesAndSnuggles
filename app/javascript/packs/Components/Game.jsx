@@ -9,7 +9,10 @@ class Game extends Component {
     super(props);
     this.state = {
       playerDeck: this.props.playerDeck,
-      board: this.props.gameData,
+      board: this.props.gameData.currentBoard,
+      movesLeft: this.props.gameData.movesLeft,
+      activeDeck: this.props.gameData.activeDeck,
+      movedCardValue: this.props.gameData.movedCardValue,
       movement: {
         active: false,
         startingLocation: []

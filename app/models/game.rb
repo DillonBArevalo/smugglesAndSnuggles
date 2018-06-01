@@ -10,11 +10,13 @@ class Game < ApplicationRecord
   end
 
   def self.new_game
+    game_data = {'movesLeft': 1}
     city_cards = build_deck('city').shuffle
     country_cards = build_deck('country').shuffle
+    game_data['activeDeck'] = first_move = decide_first_move(city_cards, country_cards)
     flip_evens(city_cards)
     flip_evens(country_cards)
-    [
+    game_data['startingBoard'] = [
       [
         {
           'cards': [city_cards.pop(), city_cards.pop()]
@@ -71,10 +73,13 @@ class Game < ApplicationRecord
         }
       ]
     ]
+    game_data['currentBoard'] = game_data['startingBoard']
+    game_data
   end
 
   def board_with_images_as_json
-    self.game_log.each do |row|
+    p self.game_log
+    self.game_log['currentBoard'].each do |row|
       row.each do |cell|
         cell['cards'].each do |card|
           card['url'] = ActionController::Base.helpers.image_path("cards/#{card['deck']}/#{card['deck']}#{card['value']}.png")
@@ -87,6 +92,16 @@ class Game < ApplicationRecord
   end
 
   private
+
+  def self.decide_first_move(city, country)
+    if city[-1][:value] == country[1][:value] && city[1][:value] = country[-1][:value]
+      decide_first_move(city.shuffle!, country.shuffle!)
+    else
+      city[1], city[-1] = city[-1], city[1]
+      country[1], country[-1] = country[-1], country[1]
+    end
+    city[-1] > country[1] ? 'country' : 'city'
+  end
 
   def self.build_deck(deck_name)
     deck = []

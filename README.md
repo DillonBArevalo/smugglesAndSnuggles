@@ -26,16 +26,24 @@ Things you may want to cover:
 ## notes
 
 TODO:
-- refactor all array[array.length - 1] into a helper to import
 - watch for top card being null.. breaks things...
-- add move logic
 - add hover state
 - add stack view
 - reroll game board if first turn can't be decided
 - add turns
+- make sure has turns available
+  - has available moves method
 - add local multi-player
 - add law logic
 - add websockets
 - put your deck at bottom visually
 - add real game generation
+
+
+rails todo:
+- game
+  - add move history.
+  - separate initial state from current state
+  - add turns left (int max size = 2)
+  - add isOver bool
 
