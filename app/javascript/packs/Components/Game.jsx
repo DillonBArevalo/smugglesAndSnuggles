@@ -8,7 +8,7 @@ class Game extends Component {
   constructor(props){
     super(props);
     this.state = {
-      winner: this.props.winner,
+      winner: this.props.winner || null,
       isLocal: this.props.isLocal,
       playerDeck: this.props.playerDeck,
       board: this.props.gameData.currentBoard,
@@ -41,10 +41,10 @@ class Game extends Component {
     let movesLeft = this.state.movesLeft
     let activeDeck, movedCardValue, winner;
     board[endRow][endCol].cards.push(movingCard);
-    if(previousTop && previousTop.deck !== 'laws'){
+    if(previousTop.deck && previousTop.deck !== 'laws'){
       previousTop.isSmuggled = true;
     }
-    if(newTop && newTop.deck !== 'laws') {
+    if(newTop.deck && newTop.deck !== 'laws') {
       newTop.isSmuggled = false;
       newTop.faceDown = false;
     }
@@ -69,11 +69,13 @@ class Game extends Component {
     const playerDeck = this.state.playerDeck;
     if(activeDeck === playerDeck && endRow === 0 || activeDeck !== playerDeck && endRow === 4){
       card.faceDown = true;
-      if(!board[endRow].some((cell) => this.topCard(cell).deck !== activeDeck )){
+      if(!board[endRow].some((cell) => {
+        return this.topCard(cell).deck !== activeDeck
+      })){
         return{movesLeft: 0, activeDeck: null, movedCardValue: null, winner: activeDeck}
       }
     }
-    return {movesLeft: movesLeft}
+    return {movesLeft: movesLeft, winner: null}
   }
 
   cancelMove(){
@@ -86,7 +88,7 @@ class Game extends Component {
     if(cell.cards.length){
       return cell.cards[cell.cards.length - 1]
     }else{
-      return undefined
+      return {}
     }
   }
 
@@ -140,7 +142,7 @@ class Game extends Component {
   isSmuggle(startCard, endRow, endCol){
     const endCell = this.state.board[endRow][endCol];
     const end = this.topCard(endCell);
-    return typeof end === 'object' && startCard.deck === end.deck && end.value > startCard.value;
+    return startCard.deck === end.deck && end.value > startCard.value;
   }
 
   adjacentLegal(startCard, endRow, endCol){
@@ -149,7 +151,7 @@ class Game extends Component {
     }
     const endCell = this.state.board[endRow][endCol]
     const end = this.topCard(endCell);
-    if( typeof end !== 'object' || end.deck === 'laws'){ // not a card or a law
+    if( !end.deck || end.deck === 'laws'){ // not a card or a law
       return true;
     }else if(end.faceDown){ // pile has scored
       return false;
@@ -175,7 +177,10 @@ class Game extends Component {
 
   highlightMoves(row, col) {
     const card = this.topCard(this.state.board[row][col]);
-    if((this.state.isLocal && card.deck === this.state.activeDeck) || (!this.state.isLocal && this.state.activeDeck !== this.state.playerDeck) || card.value === this.state.movedCardValue ){
+    if((this.state.isLocal && card.deck !== this.state.activeDeck)
+      || (!this.state.isLocal && this.state.activeDeck !== this.state.playerDeck)
+      || card.value === this.state.movedCardValue
+      || this.state.winner ){
       return
     }
     const legalMoves = this.legalMoves(row, col);
@@ -210,7 +215,7 @@ class Game extends Component {
             </div>
           })}
         </div>
-        {this.state.winner && <h2></h2>}
+        {this.state.winner && <h2>{this.state.winner} Bears Win!</h2>}
         {this.state.movement.active && <button
           className='game__cancel-button'
           onClick={this.cancelMove}
