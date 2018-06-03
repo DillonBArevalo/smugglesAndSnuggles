@@ -8,6 +8,7 @@ class Game extends Component {
   constructor(props){
     super(props);
     this.state = {
+      winner: this.props.winner,
       isLocal: this.props.isLocal,
       playerDeck: this.props.playerDeck,
       board: this.props.gameData.currentBoard,
@@ -37,7 +38,8 @@ class Game extends Component {
     const previousTop = this.topCard(board[endRow][endCol]);
     const movingCard = board[this.state.movement.startingLocation[0]][this.state.movement.startingLocation[1]].cards.pop();
     const newTop = this.topCard(board[this.state.movement.startingLocation[0]][this.state.movement.startingLocation[1]]);
-    let movesLeft, activeDeck, movedCardValue;
+    let movesLeft = this.state.movesLeft
+    let activeDeck, movedCardValue, winner;
     board[endRow][endCol].cards.push(movingCard);
     if(previousTop && previousTop.deck !== 'laws'){
       previousTop.isSmuggled = true;
@@ -47,17 +49,31 @@ class Game extends Component {
       newTop.faceDown = false;
     }
 
-    if(this.state.movesLeft === 1){
+    ({movesLeft, activeDeck, movedCardValue, winner} = this.checkScore(endRow, movingCard, board, movesLeft));
+    if(movesLeft === 1){
       movesLeft = 2;
       activeDeck = this.state.activeDeck === 'city' ? 'country' : 'city';
       movedCardValue = null;
-    }else{
+    }else if(movesLeft === 2){
       movesLeft = 1;
       activeDeck = this.state.activeDeck;
       movedCardValue = movingCard.value;
     }
+
     this.clearStatuses(board);
-    this.setState({board, movesLeft, activeDeck, movedCardValue, movement: {active:false, startingLocation: []}});
+    this.setState({board, movesLeft, activeDeck, movedCardValue, winner, movement: {active:false, startingLocation: []}});
+  }
+
+  checkScore(endRow, card, board, movesLeft){
+    const activeDeck = this.state.activeDeck;
+    const playerDeck = this.state.playerDeck;
+    if(activeDeck === playerDeck && endRow === 0 || activeDeck !== playerDeck && endRow === 4){
+      card.faceDown = true;
+      if(!board[endRow].some((cell) => this.topCard(cell).deck !== activeDeck )){
+        return{movesLeft: 0, activeDeck: null, movedCardValue: null, winner: activeDeck}
+      }
+    }
+    return {movesLeft: movesLeft}
   }
 
   cancelMove(){
@@ -194,6 +210,7 @@ class Game extends Component {
             </div>
           })}
         </div>
+        {this.state.winner && <h2></h2>}
         {this.state.movement.active && <button
           className='game__cancel-button'
           onClick={this.cancelMove}
