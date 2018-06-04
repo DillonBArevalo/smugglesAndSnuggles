@@ -26,6 +26,7 @@ class GamesController < ApplicationController
   def play
     @player = current_user
     @game = Game.find(params[:id])
+    @game_data = @game.json_board
     @opponent = User.find(params[:user_id])
   end
 
