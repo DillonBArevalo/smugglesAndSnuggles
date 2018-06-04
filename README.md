@@ -26,14 +26,9 @@ Things you may want to cover:
 ## notes
 
 TODO:
-- watch for top card being null.. breaks things...
-- add hover state
 - add stack view
-- reroll game board if first turn can't be decided
-- add turns
 - make sure has turns available
   - has available moves method
-- add local multi-player
 - add law logic
 - add websockets
 - put your deck at bottom visually

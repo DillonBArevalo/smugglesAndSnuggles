@@ -31,6 +31,16 @@ class Game extends Component {
     this.modifyAllCards = this.modifyAllCards.bind(this);
     this.cancelMove = this.cancelMove.bind(this);
     this.moveCard = this.moveCard.bind(this);
+    this.canMove = this.canMove.bind(this);
+  }
+
+  canMove(board, deck, movedCardValue){
+    return board.some((row, rowIndex) => {
+      return row.some((cell, colIndex) => {
+        let top = this.topCard(cell)
+        return top.deck === deck && !top.faceDown && top.value !== movedCardValue && !!this.legalMoves(rowIndex, colIndex).length
+      })
+    })
   }
 
   moveCard(endRow, endCol){
@@ -51,17 +61,30 @@ class Game extends Component {
 
     ({movesLeft, activeDeck, movedCardValue, winner} = this.checkScore(endRow, movingCard, board, movesLeft));
     if(movesLeft === 1){
-      movesLeft = 2;
-      activeDeck = this.state.activeDeck === 'city' ? 'country' : 'city';
-      movedCardValue = null;
+      ({movesLeft, activeDeck, movedCardValue} = this.newTurnVars(this.state.activeDeck));
+      // movesLeft = 2;
+      // activeDeck = this.state.activeDeck === 'city' ? 'country' : 'city';
+      // movedCardValue = null;
     }else if(movesLeft === 2){
       movesLeft = 1;
       activeDeck = this.state.activeDeck;
       movedCardValue = movingCard.value;
     }
 
+    if(!this.canMove(board, activeDeck, movedCardValue)){
+      ({movesLeft, activeDeck, movedCardValue} = this.newTurnVars(activeDeck));
+    }
+
     this.clearStatuses(board);
     this.setState({board, movesLeft, activeDeck, movedCardValue, winner, movement: {active:false, startingLocation: []}});
+  }
+
+  newTurnVars(activeDeck){
+    return {
+      movesLeft: 2,
+      activeDeck: activeDeck === 'city' ? 'country' : 'city',
+      movedCardValue: null
+    }
   }
 
   checkScore(endRow, card, board, movesLeft){
