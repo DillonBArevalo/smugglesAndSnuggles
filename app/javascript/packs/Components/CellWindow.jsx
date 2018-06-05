@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import Card from './Card';
 import PropTypes from 'prop-types';
 
-class Cell extends Component {
+class CellWindow extends Component {
   constructor(props){
     super(props);
   }
@@ -11,8 +11,7 @@ class Cell extends Component {
   render() {
     return(
       <div
-        className="board__cell"
-        onClick={this.props.showStack}
+        className="cell-window"
       >
         {this.props.cards.map((card, idx) => {
           return  <Card
@@ -22,19 +21,12 @@ class Cell extends Component {
                     zIndex={idx}
                     url={card.faceDown ? this.props[`${card.deck}FlippedUrl`] : card.url}
                     faceDown={card.faceDown}
-                    highlightMoves={this.props.highlightMoves}
-                    cancelMove={this.props.cancelMove}
-                    active={card.active}
-                    isSmuggled={card.isSmuggled}
+                    class="cell-window__card"
                   />
         })}
-        {this.props.highlighted && <div
-          className="board__highlight"
-          onClick={this.props.moveCard}
-          ></div>}
       </div>
     );
   }
 }
 
-export default Cell;
+export default CellWindow;

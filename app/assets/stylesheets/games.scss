@@ -17,6 +17,8 @@
 
 .board {
   width: 660px;
+  min-width: 350px;
+  flex-shrink: 1;
   height:100%;
   max-height: 65rem;
   border: 1px solid black;
@@ -99,6 +101,30 @@
   border-radius: 5px;
 }
 
+.cell-window {
+  height: 80%;
+  display: flex;
+  flex-shrink: 1;
+  flex-basis: 250px;
+  overflow-y: auto;
+  flex-direction: column-reverse;
+  align-items: center;
+  flex-wrap: wrap-reverse;
+  min-width: 200px;
+  margin: 0 20px 0 auto;
+  border: 1px solid black;
+}
+
+.cell-window__card {
+  flex: 0 1 50%;
+  display: block;
+  position: static;
+  min-height: 200px;
+  z-index: 1;
+  object-fit: contain;
+  border: 0;
+}
+
 .board__highlight {
   height: 100%;
   width: 100%;
@@ -111,5 +137,5 @@
 .game__cancel-button {
   height: 40px;
   font-weight: 800;
-
+  align-self: center
 }

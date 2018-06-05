@@ -2,12 +2,14 @@
 import React, { Component } from 'react';
 import Card from './Card'
 import Cell from './Cell'
+import CellWindow from './CellWindow'
 import PropTypes from 'prop-types';
 
 class Game extends Component {
   constructor(props){
     super(props);
     this.state = {
+      stackView: null,
       winner: this.props.winner || null,
       isLocal: this.props.isLocal,
       playerDeck: this.props.playerDeck,
@@ -35,6 +37,21 @@ class Game extends Component {
     this.newTurnVars = this.newTurnVars.bind(this);
     this.flippedBoard = this.flippedBoard.bind(this);
     this.setSmuggleAndFlip = this.setSmuggleAndFlip.bind(this);
+    this.showStack = this.showStack.bind(this);
+    this.hideStack = this.hideStack.bind(this);
+  }
+
+  showStack(row, col){
+    console.log('show')
+    console.log('row', row)
+    console.log('col', col)
+    console.log(this.state.board[row][col])
+    this.state.board[row][col].cards.length && this.setState({stackView: {row: row, col: col}});
+  }
+
+  hideStack(){
+    console.log('hide')
+    this.setState({stackView: null});
   }
 
   flippedBoard(){
@@ -246,6 +263,8 @@ class Game extends Component {
                           cityFlippedUrl={this.props.cityFlippedUrl}
                           countryFlippedUrl={this.props.countryFlippedUrl}
                           moveCard={this.moveCard.bind(this, rowIndex, colIndex)}
+                          showStack={this.showStack.bind(this, rowIndex, colIndex)}
+                          hideStack={this.hideStack}
                         />
               })}
             </div>
@@ -258,6 +277,11 @@ class Game extends Component {
           >
           Cancel move
           </button>}
+              <CellWindow
+                cards={this.state.stackView ? this.state.board[this.state.stackView.row][this.state.stackView.col].cards : []}
+                cityFlippedUrl={this.props.cityFlippedUrl}
+                countryFlippedUrl={this.props.countryFlippedUrl}
+              />
       </div>
     );
   }
