@@ -27,8 +27,6 @@ Things you may want to cover:
 
 TODO:
 - add stack view
-- make sure has turns available
-  - has available moves method
 - add law logic
 - add websockets
 - put your deck at bottom visually

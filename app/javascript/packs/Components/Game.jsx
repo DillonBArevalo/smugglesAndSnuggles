@@ -32,15 +32,36 @@ class Game extends Component {
     this.cancelMove = this.cancelMove.bind(this);
     this.moveCard = this.moveCard.bind(this);
     this.canMove = this.canMove.bind(this);
+    this.newTurnVars = this.newTurnVars.bind(this);
+    this.flippedBoard = this.flippedBoard.bind(this);
+    this.setSmuggleAndFlip = this.setSmuggleAndFlip.bind(this);
+  }
+
+  flippedBoard(){
+    const board = this.state.board;
+    board.map((row) => {
+      return row.reverse();
+    });
+    return board.reverse();
   }
 
   canMove(board, deck, movedCardValue){
     return board.some((row, rowIndex) => {
       return row.some((cell, colIndex) => {
-        let top = this.topCard(cell)
-        return top.deck === deck && !top.faceDown && top.value !== movedCardValue && !!this.legalMoves(rowIndex, colIndex).length
+        let top = this.topCard(cell);
+        return top.deck === deck && !top.faceDown && top.value !== movedCardValue && !!this.legalMoves(rowIndex, colIndex).length;
       })
     })
+  }
+
+  setSmuggleAndFlip(previousTop, newTop){
+    if(previousTop.deck && previousTop.deck !== 'laws'){
+      previousTop.isSmuggled = true;
+    }
+    if(newTop.deck && newTop.deck !== 'laws') {
+      newTop.isSmuggled = false;
+      newTop.faceDown = false;
+    }
   }
 
   moveCard(endRow, endCol){
@@ -51,20 +72,12 @@ class Game extends Component {
     let movesLeft = this.state.movesLeft
     let activeDeck, movedCardValue, winner;
     board[endRow][endCol].cards.push(movingCard);
-    if(previousTop.deck && previousTop.deck !== 'laws'){
-      previousTop.isSmuggled = true;
-    }
-    if(newTop.deck && newTop.deck !== 'laws') {
-      newTop.isSmuggled = false;
-      newTop.faceDown = false;
-    }
+
+    this.setSmuggleAndFlip(previousTop, newTop);
 
     ({movesLeft, activeDeck, movedCardValue, winner} = this.checkScore(endRow, movingCard, board, movesLeft));
     if(movesLeft === 1){
       ({movesLeft, activeDeck, movedCardValue} = this.newTurnVars(this.state.activeDeck));
-      // movesLeft = 2;
-      // activeDeck = this.state.activeDeck === 'city' ? 'country' : 'city';
-      // movedCardValue = null;
     }else if(movesLeft === 2){
       movesLeft = 1;
       activeDeck = this.state.activeDeck;
@@ -174,13 +187,13 @@ class Game extends Component {
     }
     const endCell = this.state.board[endRow][endCol]
     const end = this.topCard(endCell);
-    if( !end.deck || end.deck === 'laws'){ // not a card or a law
+    if(!end.deck || end.deck === 'laws'){ // not a card or a law
       return true;
     }else if(end.faceDown){ // pile has scored
       return false;
-    }else if( startCard.deck === end.deck && end.value > startCard.value){ // smuggling
+    }else if(startCard.deck === end.deck){ // moving onto ally
       return true;
-    }else if( startCard.deck !== end.deck && startCard.value >= end.value){ // snuggling
+    }else if(startCard.deck !== end.deck && startCard.value >= end.value){ // snuggling
       return true;
     }else{ // illegal
       return false;
