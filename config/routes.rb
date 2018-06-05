@@ -5,5 +5,8 @@ Rails.application.routes.draw do
 
   resources :users, only: [:new, :create, :show]
 
+  resources :games, only: [:new, :create, :update, :show]
+  get 'users/:user_id/games/:id/play', to: 'games#play'
+
   root 'index#home'
 end

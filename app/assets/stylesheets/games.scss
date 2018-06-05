@@ -1,0 +1,115 @@
+// Place all the styles related to the games controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+#game {
+  height: 100%;
+  width: 100%;
+}
+
+.game-container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-end;
+}
+
+.board {
+  width: 660px;
+  height:100%;
+  max-height: 65rem;
+  border: 1px solid black;
+  display:flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.board__row {
+  border: 1px solid black;
+  flex-basis:20%;
+  display: flex;
+  flex-direction:row;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  justify-content: space-around;
+}
+
+.board__cell{
+  display: inline-block;
+  position: relative;
+  flex-basis: 33%;
+  border-right: 1px solid black;
+  border-left: 1px solid black;
+}
+
+.stack-0 {
+  z-index: 0;
+  right: 0;
+}
+
+.stack-1 {
+  z-index: 1;
+  right: 10%;
+}
+
+.stack-2 {
+  z-index: 2;
+  right: 20%;
+}
+
+.stack-3 {
+  z-index: 3;
+  right: 30%;
+}
+
+.stack-4 {
+  z-index: 4;
+}
+
+.stack-5 {
+  z-index: 5;
+}
+
+.stack-6 {
+  z-index: 6;
+}
+
+.stack-7 {
+  z-index: 7;
+}
+
+.stack-8 {
+  z-index: 8;
+}
+
+.stack-9 {
+  z-index: 9;
+}
+
+.stack-10 {
+  z-index: 10;
+}
+
+.card {
+  height: 100%;
+  position: absolute;
+  border: 1px solid gray;
+  box-sizing: border-box;
+  border-radius: 5px;
+}
+
+.board__highlight {
+  height: 100%;
+  width: 100%;
+  background-color: green;
+  position: absolute;
+  opacity: 0.33;
+  z-index: 11;
+}
+
+.game__cancel-button {
+  height: 40px;
+  font-weight: 800;
+
+}
