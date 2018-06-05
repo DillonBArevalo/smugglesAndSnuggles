@@ -10,7 +10,9 @@ class Game < ApplicationRecord
   end
 
   def self.new_game
+    law_number = rand(1..4)
     game_data = {'movesLeft': 1}
+    game_data['law'] = law_number
     city_cards = build_deck('city').shuffle
     country_cards = build_deck('country').shuffle
     game_data['activeDeck'] = decide_first_move(city_cards, country_cards)
@@ -44,7 +46,7 @@ class Game < ApplicationRecord
           'cards': []
         },
         {
-          'cards': [{deck: 'laws', value: rand(1..4)}]
+          'cards': [{deck: 'laws', value: law_number}]
         },
         {
           'cards': []

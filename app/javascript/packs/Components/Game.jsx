@@ -8,6 +8,7 @@ class Game extends Component {
   constructor(props){
     super(props);
     this.state = {
+      law: this.props.gameData.law,
       winner: this.props.winner || null,
       isLocal: this.props.isLocal,
       playerDeck: this.props.playerDeck,
@@ -35,6 +36,7 @@ class Game extends Component {
     this.newTurnVars = this.newTurnVars.bind(this);
     this.flippedBoard = this.flippedBoard.bind(this);
     this.setSmuggleAndFlip = this.setSmuggleAndFlip.bind(this);
+    this.isOnLaw = this.isOnLaw.bind(this);
   }
 
   flippedBoard(){
@@ -175,9 +177,16 @@ class Game extends Component {
     return moves;
   }
 
+  isOnLaw(row, col){
+    return row === 2 && col === 1;
+  }
+
   isSmuggle(startCard, endRow, endCol){
     const endCell = this.state.board[endRow][endCol];
     const end = this.topCard(endCell);
+    if(this.state.law === 2 && this.isOnLaw(endRow, endCol)){
+      return startCard.deck === end.deck && end.value < startCard.value;
+    }
     return startCard.deck === end.deck && end.value > startCard.value;
   }
 
