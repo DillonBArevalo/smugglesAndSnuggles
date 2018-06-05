@@ -1,0 +1,45 @@
+#header {
+  background-color: #e67c42;
+  // background-color: #5e7fe4;
+  height: 60px;
+  width: 100vw;
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
+  top:0;
+  left:0;
+}
+
+#user-info {
+  display:flex;
+  align-items: center;
+}
+
+#main-content {
+  // width: 100vw;
+  height: calc(100vh - 60px);
+  y-overflow: scroll;
+}
+
+#title {
+  padding-left: 10px;
+  margin: 0;
+  color: white;
+}
+
+.sessions-link {
+  padding-right: 10px;
+  color: white;
+}
+
+.form {
+  display:flex;
+  flex-direction: column;
+  align-items: flex-start
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}

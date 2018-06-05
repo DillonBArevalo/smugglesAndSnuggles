@@ -1,0 +1,9 @@
+
+<% if logged_in? %>
+  <%= form_for @game do |f| %>
+    <%= hidden_field_tag 'player2', 2 %>
+    <%= f.submit %>
+  <% end %>
+<% else %>
+  <%= link_to 'log in', new_sessions_path %>
+<% end %>
