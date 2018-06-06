@@ -15,7 +15,7 @@ class Game extends Component {
       board: this.props.gameData.currentBoard,
       movesLeft: this.props.gameData.movesLeft,
       activeDeck: this.props.gameData.activeDeck,
-      movedCardValue: this.props.gameData.movedCardValue,
+      movedCardValue: this.props.gameData.movedCardValue || [],
       movement: {
         active: false,
         startingLocation: []
@@ -71,19 +71,22 @@ class Game extends Component {
     const previousTop = this.topCard(board[endRow][endCol]);
     const movingCard = board[this.state.movement.startingLocation[0]][this.state.movement.startingLocation[1]].cards.pop();
     const newTop = this.topCard(board[this.state.movement.startingLocation[0]][this.state.movement.startingLocation[1]]);
-    let movesLeft = this.state.movesLeft
-    let activeDeck, movedCardValue, winner;
+    let movesLeft = this.state.movesLeft;
+    let movedCardValue = this.state.movedCardValue;
+    let activeDeck, winner;
     board[endRow][endCol].cards.push(movingCard);
 
     this.setSmuggleAndFlip(previousTop, newTop);
 
-    ({movesLeft, activeDeck, movedCardValue, winner} = this.checkScore(endRow, movingCard, board, movesLeft));
+    ({movesLeft, movedCardValue, winner, activeDeck} = this.checkScore(endRow, movingCard, board, movesLeft, movedCardValue));
     if(movesLeft === 1){
       ({movesLeft, activeDeck, movedCardValue} = this.newTurnVars(this.state.activeDeck));
     }else if(movesLeft === 2){
       movesLeft = 1;
       activeDeck = this.state.activeDeck;
-      movedCardValue = movingCard.value;
+      if(!(this.state.law === 3 && this.topCard(board[2][1]).deck === activeDeck)){
+        movedCardValue.push(movingCard.value);
+      }
     }
 
     if(!this.canMove(board, activeDeck, movedCardValue)){
@@ -98,22 +101,20 @@ class Game extends Component {
     return {
       movesLeft: 2,
       activeDeck: activeDeck === 'city' ? 'country' : 'city',
-      movedCardValue: null
+      movedCardValue: []
     }
   }
 
-  checkScore(endRow, card, board, movesLeft){
+  checkScore(endRow, card, board, movesLeft, movedCardValue){
     const activeDeck = this.state.activeDeck;
     const playerDeck = this.state.playerDeck;
     if(activeDeck === playerDeck && endRow === 0 || activeDeck !== playerDeck && endRow === 4){
       card.faceDown = true;
-      if(!board[endRow].some((cell) => {
-        return this.topCard(cell).deck !== activeDeck
-      })){
-        return{movesLeft: 0, activeDeck: null, movedCardValue: null, winner: activeDeck}
+      if(!board[endRow].some((cell) => this.topCard(cell).deck !== activeDeck)){
+        return {movesLeft: 0, movedCardValue: [], winner: activeDeck, activeDeck: null}
       }
     }
-    return {movesLeft: movesLeft, winner: null}
+    return {movesLeft: movesLeft, movedCardValue: movedCardValue, winner: null}
   }
 
   cancelMove(){
@@ -124,7 +125,7 @@ class Game extends Component {
 
   topCard(cell){
     if(cell.cards.length){
-      return cell.cards[cell.cards.length - 1]
+      return cell.cards[cell.cards.length - 1];
     }else{
       return {}
     }
@@ -194,7 +195,7 @@ class Game extends Component {
     if( endRow > 4 || endRow < 0 || endCol > 2 || endCol < 0 ){
       return false;
     }
-    const endCell = this.state.board[endRow][endCol]
+    const endCell = this.state.board[endRow][endCol];
     const end = this.topCard(endCell);
     if(!end.deck || end.deck === 'laws'){ // not a card or a law
       return true;
@@ -211,7 +212,7 @@ class Game extends Component {
 
   clearStatuses(board){
     this.modifyAllCards(board, (card) => {
-      card.active = false
+      card.active = false;
     })
     board.forEach((row) => {
       row.forEach((cell) => {
@@ -224,9 +225,9 @@ class Game extends Component {
     const card = this.topCard(this.state.board[row][col]);
     if((this.state.isLocal && card.deck !== this.state.activeDeck)
       || (!this.state.isLocal && this.state.activeDeck !== this.state.playerDeck)
-      || card.value === this.state.movedCardValue
+      || this.state.movedCardValue.some((value) => card.value === value)
       || this.state.winner ){
-      return
+      return;
     }
     const legalMoves = this.legalMoves(row, col);
     const board = this.state.board.slice();
