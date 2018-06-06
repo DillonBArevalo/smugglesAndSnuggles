@@ -218,8 +218,11 @@ class Game extends Component {
   isSnuggle(startCard, end, endRow, endCol){
     if(this.state.law === 1 && this.isOnLaw(endRow, endCol)){
       return true;
+    }else if(this.state.law === 4 && this.isOnLaw(endRow, endCol)){
+      return startCard.deck !== end.deck && startCard.value <= end.value;
+    }else{
+      return startCard.deck !== end.deck && startCard.value >= end.value;
     }
-    return startCard.deck !== end.deck && startCard.value >= end.value;
   }
 
   clearStatuses(board){
