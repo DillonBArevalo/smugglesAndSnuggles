@@ -37,6 +37,7 @@ class Game extends Component {
     this.flippedBoard = this.flippedBoard.bind(this);
     this.setSmuggleAndFlip = this.setSmuggleAndFlip.bind(this);
     this.isOnLaw = this.isOnLaw.bind(this);
+    this.isSnuggle = this.isSnuggle.bind(this);
   }
 
   flippedBoard(){
@@ -79,7 +80,11 @@ class Game extends Component {
     this.setSmuggleAndFlip(previousTop, newTop);
 
     ({movesLeft, movedCardValue, winner, activeDeck} = this.checkScore(endRow, movingCard, board, movesLeft, movedCardValue));
-    if(movesLeft === 1){
+    if(this.state.law === 1 && this.isOnLaw(endRow, endCol)){
+      console.log('here')
+      activeDeck = this.state.activeDeck;
+      movedCardValue.push(movingCard.value);
+    }else if(movesLeft === 1){
       ({movesLeft, activeDeck, movedCardValue} = this.newTurnVars(this.state.activeDeck));
     }else if(movesLeft === 2){
       movesLeft = 1;
@@ -203,11 +208,18 @@ class Game extends Component {
       return false;
     }else if(startCard.deck === end.deck){ // moving onto ally
       return true;
-    }else if(startCard.deck !== end.deck && startCard.value >= end.value){ // snuggling
+    }else if(this.isSnuggle(startCard, end, endRow, endCol)){ // snuggling
       return true;
     }else{ // illegal
       return false;
     }
+  }
+
+  isSnuggle(startCard, end, endRow, endCol){
+    if(this.state.law === 1 && this.isOnLaw(endRow, endCol)){
+      return true;
+    }
+    return startCard.deck !== end.deck && startCard.value >= end.value;
   }
 
   clearStatuses(board){
@@ -261,13 +273,18 @@ class Game extends Component {
             </div>
           })}
         </div>
-        {this.state.winner && <h2>{this.state.winner} Bears Win!</h2>}
-        {this.state.movement.active && <button
-          className='game__cancel-button'
-          onClick={this.cancelMove}
-          >
-          Cancel move
-          </button>}
+        <div className="game-container__center-box">
+          {this.state.winner && <h2>{this.state.winner} Bears Win!</h2>}
+          <h3>Moves Left: {this.state.movesLeft}</h3>
+          <h3>Active Deck: {this.state.activeDeck} bears</h3>
+          <button
+            className='game__cancel-button'
+            onClick={this.cancelMove}
+            disabled={!this.state.movement.active}
+            >
+            Cancel move
+            </button>
+        </div>
       </div>
     );
   }
