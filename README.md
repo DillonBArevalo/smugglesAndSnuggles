@@ -27,18 +27,17 @@ Things you may want to cover:
 
 TODO:
 - add stack view
-- add law logic
 - add websockets
 - put your deck at bottom visually
 - add real game generation
+- favicon?
 
 
 rails todo:
 - game
   - add move history.
-  - separate initial state from current state
-  - add turns left (int max size = 2)
   - add isOver bool
+  - allow non-square images
 
 
 my understanding of the laws:
