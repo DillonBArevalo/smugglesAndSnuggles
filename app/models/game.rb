@@ -10,7 +10,9 @@ class Game < ApplicationRecord
   end
 
   def self.new_game
+    law_number = rand(1..4)
     game_data = {'movesLeft': 1}
+    game_data['law'] = law_number
     city_cards = build_deck('city').shuffle
     country_cards = build_deck('country').shuffle
     game_data['activeDeck'] = decide_first_move(city_cards, country_cards)
@@ -44,7 +46,7 @@ class Game < ApplicationRecord
           'cards': []
         },
         {
-          'cards': [{deck: 'laws', value: rand(1..4)}]
+          'cards': [{deck: 'laws', value: law_number}]
         },
         {
           'cards': []
@@ -93,13 +95,13 @@ class Game < ApplicationRecord
   private
 
   def self.decide_first_move(city, country)
-    if city[-1][:value] == country[1][:value] && city[1][:value] = country[-1][:value]
+    if city[0][:value] == country[-2][:value] && city[-2][:value] = country[0][:value]
       return decide_first_move(city.shuffle!, country.shuffle!)
-    elsif city[-1][:value] == country[1][:value]
-      city[1], city[-1] = city[-1], city[1]
-      country[1], country[-1] = country[-1], country[1]
+    elsif city[0][:value] == country[-2][:value]
+      city[-2], city[0] = city[0], city[-2]
+      country[-2], country[0] = country[0], country[-2]
     end
-    city[-1][:value] > country[1][:value] ? 'country' : 'city'
+    city[0][:value] > country[-2][:value] ? 'country' : 'city'
   end
 
   def self.build_deck(deck_name)
