@@ -10,7 +10,7 @@
 
   <body>
     <header id="header">
-      <h1 id='title'>Smuggles 'N Snuggles</h1>
+      <div id='title'>Smuggles 'N Snuggles</div>
       <div id='user-info'>
         <% if logged_in? %>
           <%= link_to('Logout', sessions_path, method: :delete, class: 'sessions-link') %>
