@@ -95,13 +95,13 @@ class Game < ApplicationRecord
   private
 
   def self.decide_first_move(city, country)
-    if city[-1][:value] == country[1][:value] && city[1][:value] = country[-1][:value]
+    if city[0][:value] == country[-2][:value] && city[-2][:value] = country[0][:value]
       return decide_first_move(city.shuffle!, country.shuffle!)
-    elsif city[-1][:value] == country[1][:value]
-      city[1], city[-1] = city[-1], city[1]
-      country[1], country[-1] = country[-1], country[1]
+    elsif city[0][:value] == country[-2][:value]
+      city[-2], city[0] = city[0], city[-2]
+      country[-2], country[0] = country[0], country[-2]
     end
-    city[-1][:value] > country[1][:value] ? 'country' : 'city'
+    city[0][:value] > country[-2][:value] ? 'country' : 'city'
   end
 
   def self.build_deck(deck_name)

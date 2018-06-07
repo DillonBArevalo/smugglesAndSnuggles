@@ -81,7 +81,6 @@ class Game extends Component {
 
     ({movesLeft, movedCardValue, winner, activeDeck} = this.checkScore(endRow, movingCard, board, movesLeft, movedCardValue));
     if(this.state.law === 1 && this.isOnLaw(endRow, endCol)){
-      console.log('here')
       activeDeck = this.state.activeDeck;
       movedCardValue.push(movingCard.value);
     }else if(movesLeft === 1){
