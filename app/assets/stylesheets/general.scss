@@ -57,7 +57,10 @@
 }
 
 .form__upload {
-  margin: auto;
+  width: 200px;
+  font-size: 14px;
+  color: #080b3c;
+  font-weight: 500;
 }
 
 .form__label {
@@ -67,12 +70,12 @@
 }
 
 .form__input {
-  border: 1px solid #e67c42;
-  background-color: white !important;
+  border: 2px solid #e67c42;
+  background-color: white;
   border-radius: 30px;
   height: 32px;
   box-sizing: border-box;
-  color: #e67c42 !important;
+  color: #e67c42;
   padding: 0 15px;
   font-weight: bold;
   font-size: 14px;
@@ -82,10 +85,26 @@
   background-color: #e67c42;
   color: white;
   height: 40px;
-  width: 100px;
+  min-width: 100px;
   border-radius: 30px;
   font-size: 20px;
   font-weight: 500;
+  box-shadow: 2px 2px 1px gray;
+  &:active {
+    box-shadow: none;
+    transform: translate(2px, 2px);
+    background-color: #dc753d;
+  }
+}
+
+.errors {
+  list-style-type: none;
+  margin: auto;
+  color: red;
+  font-weight: bold;
+  font-size: 16px;
+  padding-left: 0;
+  text-align: center;
 }
 
 body {
