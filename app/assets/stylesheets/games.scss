@@ -11,8 +11,17 @@
   width: 100%;
   display: flex;
   flex-direction: row;
-  justify-content: flex-start;
-  align-items: flex-end;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.game-container__center-box {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  text-align: center;
 }
 
 .board {
@@ -101,28 +110,41 @@
   border-radius: 5px;
 }
 
+.law-container {
+  min-width: 300px
+}
+
+.card--law-card {
+    transform: rotate(90deg);
+    width: 213.29px;
+    height: 300px;
+    position: static;
+    border: none;
+
+}
+
 .cell-window {
   height: 80%;
   display: flex;
-  flex-shrink: 1;
-  flex-basis: 250px;
-  overflow-y: auto;
-  flex-direction: column-reverse;
+  overflow-y: scroll;
+  flex-direction: column;
   align-items: center;
-  flex-wrap: wrap-reverse;
-  min-width: 200px;
-  margin: 0 20px 0 auto;
+  flex-wrap: nowrap;
+  flex-shrink: 0;
+  width: 200px;
+  margin: 0 40px 0 0; // media query here
   border: 1px solid black;
 }
 
 .cell-window__card {
-  flex: 0 1 50%;
   display: block;
   position: static;
-  min-height: 200px;
+  height: 215px;
+  width: 153px;
   z-index: 1;
-  object-fit: contain;
   border: 0;
+  margin-bottom: 10px;
+  box-shadow: 5px 10px 10px black;
 }
 
 .board__highlight {

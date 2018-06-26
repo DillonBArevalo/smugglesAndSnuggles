@@ -1,8 +1,15 @@
+<h1>Game Lobby</h1>
 
+<p>In the future this page will contain a game lobby where you can see other players looking for a game and send them requests to play. If they accept a request or you accept a request you will then be taken to a game instance to play against them.</p>
+<p>Also, while the option is always selected now (as the multi-player mode is not enabled yet) there is also an option to play a local game. </p>
 <% if logged_in? %>
-  <%= form_for @game do |f| %>
+  <%= form_for @game, html: {class: 'form'} do |f| %>
+    <div>
+      <%= f.label "Local Game:", for: "local" %>
+      <input id="local" type="checkbox" name="player2" checked="checked" disabled="true">
+    </div>
     <%= hidden_field_tag 'player2', 2 %>
-    <%= f.submit %>
+    <%= f.submit "Play a Game", class: "form__submit" %>
   <% end %>
 <% else %>
   <%= link_to 'log in', new_sessions_path %>
