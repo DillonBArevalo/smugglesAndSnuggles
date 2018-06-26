@@ -95,7 +95,7 @@ class Game < ApplicationRecord
   private
 
   def self.decide_first_move(city, country)
-    if city[0][:value] == country[-2][:value] && city[-2][:value] = country[0][:value]
+    if city[0][:value] == country[-2][:value] && city[-2][:value] == country[0][:value]
       return decide_first_move(city.shuffle!, country.shuffle!)
     elsif city[0][:value] == country[-2][:value]
       city[-2], city[0] = city[0], city[-2]

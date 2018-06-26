@@ -52,7 +52,12 @@ class Game extends Component {
     return board.some((row, rowIndex) => {
       return row.some((cell, colIndex) => {
         let top = this.topCard(cell);
-        return top.deck === deck && !top.faceDown && top.value !== movedCardValue && !!this.legalMoves(rowIndex, colIndex).length;
+        console.log(top)
+        console.log(top.deck === deck );
+        console.log(!top.faceDown );
+        console.log(!movedCardValue.some((value) => top.value === value) );
+        console.log(!!this.legalMoves(rowIndex, colIndex).length);
+        return top.deck === deck && !top.faceDown && !movedCardValue.some((value) => top.value === value) && !!this.legalMoves(rowIndex, colIndex).length;
       })
     })
   }
