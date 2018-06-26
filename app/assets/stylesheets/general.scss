@@ -25,6 +25,13 @@
   padding-left: 10px;
   margin: 0;
   color: white;
+  display: block;
+  font-size: 2em;
+  -webkit-margin-before: 0.67em;
+  -webkit-margin-after: 0.67em;
+  -webkit-margin-start: 0px;
+  -webkit-margin-end: 0px;
+  font-weight: bold;
 }
 
 .sessions-link {
@@ -35,7 +42,69 @@
 .form {
   display:flex;
   flex-direction: column;
-  align-items: flex-start
+  align-items: center;
+  margin: auto;
+  width: 30%;
+}
+
+.form__field {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  flex-basis: 100%;
+  height: 80px;
+}
+
+.form__upload {
+  width: 200px;
+  font-size: 14px;
+  color: #080b3c;
+  font-weight: 500;
+}
+
+.form__label {
+  font-weight: 500;
+  color: #080b3c;
+  font-size: 20px;
+}
+
+.form__input {
+  border: 2px solid #e67c42;
+  background-color: white;
+  border-radius: 30px;
+  height: 32px;
+  box-sizing: border-box;
+  color: #e67c42;
+  padding: 0 15px;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.form__submit {
+  background-color: #e67c42;
+  color: white;
+  height: 40px;
+  min-width: 100px;
+  border-radius: 30px;
+  font-size: 20px;
+  font-weight: 500;
+  box-shadow: 2px 2px 1px gray;
+  &:active {
+    box-shadow: none;
+    transform: translate(2px, 2px);
+    background-color: #dc753d;
+  }
+}
+
+.errors {
+  list-style-type: none;
+  margin: auto;
+  color: red;
+  font-weight: bold;
+  font-size: 16px;
+  padding-left: 0;
+  text-align: center;
 }
 
 body {

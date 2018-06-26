@@ -2,19 +2,22 @@
 import React, { Component } from 'react';
 import Card from './Card'
 import Cell from './Cell'
+import CellWindow from './CellWindow'
 import PropTypes from 'prop-types';
 
 class Game extends Component {
   constructor(props){
     super(props);
     this.state = {
+      stackView: null,
+      law: this.props.gameData.law,
       winner: this.props.winner || null,
       isLocal: this.props.isLocal,
       playerDeck: this.props.playerDeck,
       board: this.props.gameData.currentBoard,
       movesLeft: this.props.gameData.movesLeft,
       activeDeck: this.props.gameData.activeDeck,
-      movedCardValue: this.props.gameData.movedCardValue,
+      movedCardValue: this.props.gameData.movedCardValue || [],
       movement: {
         active: false,
         startingLocation: []
@@ -35,6 +38,23 @@ class Game extends Component {
     this.newTurnVars = this.newTurnVars.bind(this);
     this.flippedBoard = this.flippedBoard.bind(this);
     this.setSmuggleAndFlip = this.setSmuggleAndFlip.bind(this);
+    this.showStack = this.showStack.bind(this);
+    this.hideStack = this.hideStack.bind(this);
+    this.isOnLaw = this.isOnLaw.bind(this);
+    this.isSnuggle = this.isSnuggle.bind(this);
+  }
+
+  showStack(row, col){
+    console.log('show')
+    console.log('row', row)
+    console.log('col', col)
+    console.log(this.state.board[row][col])
+    this.state.board[row][col].cards.length && this.setState({stackView: {row: row, col: col}});
+  }
+
+  hideStack(){
+    console.log('hide')
+    this.setState({stackView: null});
   }
 
   flippedBoard(){
@@ -49,7 +69,12 @@ class Game extends Component {
     return board.some((row, rowIndex) => {
       return row.some((cell, colIndex) => {
         let top = this.topCard(cell);
-        return top.deck === deck && !top.faceDown && top.value !== movedCardValue && !!this.legalMoves(rowIndex, colIndex).length;
+        console.log(top)
+        console.log(top.deck === deck );
+        console.log(!top.faceDown );
+        console.log(!movedCardValue.some((value) => top.value === value) );
+        console.log(!!this.legalMoves(rowIndex, colIndex).length);
+        return top.deck === deck && !top.faceDown && !movedCardValue.some((value) => top.value === value) && !!this.legalMoves(rowIndex, colIndex).length;
       })
     })
   }
@@ -69,19 +94,25 @@ class Game extends Component {
     const previousTop = this.topCard(board[endRow][endCol]);
     const movingCard = board[this.state.movement.startingLocation[0]][this.state.movement.startingLocation[1]].cards.pop();
     const newTop = this.topCard(board[this.state.movement.startingLocation[0]][this.state.movement.startingLocation[1]]);
-    let movesLeft = this.state.movesLeft
-    let activeDeck, movedCardValue, winner;
+    let movesLeft = this.state.movesLeft;
+    let movedCardValue = this.state.movedCardValue;
+    let activeDeck, winner;
     board[endRow][endCol].cards.push(movingCard);
 
     this.setSmuggleAndFlip(previousTop, newTop);
 
-    ({movesLeft, activeDeck, movedCardValue, winner} = this.checkScore(endRow, movingCard, board, movesLeft));
-    if(movesLeft === 1){
+    ({movesLeft, movedCardValue, winner, activeDeck} = this.checkScore(endRow, movingCard, board, movesLeft, movedCardValue));
+    if(this.state.law.number === 1 && this.isOnLaw(endRow, endCol)){
+      activeDeck = this.state.activeDeck;
+      movedCardValue.push(movingCard.value);
+    }else if(movesLeft === 1){
       ({movesLeft, activeDeck, movedCardValue} = this.newTurnVars(this.state.activeDeck));
     }else if(movesLeft === 2){
       movesLeft = 1;
       activeDeck = this.state.activeDeck;
-      movedCardValue = movingCard.value;
+      if(!(this.state.law.number === 3 && this.topCard(board[2][1]).deck === activeDeck)){
+        movedCardValue.push(movingCard.value);
+      }
     }
 
     if(!this.canMove(board, activeDeck, movedCardValue)){
@@ -96,22 +127,20 @@ class Game extends Component {
     return {
       movesLeft: 2,
       activeDeck: activeDeck === 'city' ? 'country' : 'city',
-      movedCardValue: null
+      movedCardValue: []
     }
   }
 
-  checkScore(endRow, card, board, movesLeft){
+  checkScore(endRow, card, board, movesLeft, movedCardValue){
     const activeDeck = this.state.activeDeck;
     const playerDeck = this.state.playerDeck;
     if(activeDeck === playerDeck && endRow === 0 || activeDeck !== playerDeck && endRow === 4){
       card.faceDown = true;
-      if(!board[endRow].some((cell) => {
-        return this.topCard(cell).deck !== activeDeck
-      })){
-        return{movesLeft: 0, activeDeck: null, movedCardValue: null, winner: activeDeck}
+      if(!board[endRow].some((cell) => this.topCard(cell).deck !== activeDeck)){
+        return {movesLeft: 0, movedCardValue: [], winner: activeDeck, activeDeck: null}
       }
     }
-    return {movesLeft: movesLeft, winner: null}
+    return {movesLeft: movesLeft, movedCardValue: movedCardValue, winner: null}
   }
 
   cancelMove(){
@@ -122,7 +151,7 @@ class Game extends Component {
 
   topCard(cell){
     if(cell.cards.length){
-      return cell.cards[cell.cards.length - 1]
+      return cell.cards[cell.cards.length - 1];
     }else{
       return {}
     }
@@ -175,9 +204,16 @@ class Game extends Component {
     return moves;
   }
 
+  isOnLaw(row, col){
+    return row === 2 && col === 1;
+  }
+
   isSmuggle(startCard, endRow, endCol){
     const endCell = this.state.board[endRow][endCol];
     const end = this.topCard(endCell);
+    if(this.state.law.number === 2 && this.isOnLaw(endRow, endCol)){
+      return startCard.deck === end.deck && end.value < startCard.value;
+    }
     return startCard.deck === end.deck && end.value > startCard.value;
   }
 
@@ -185,7 +221,7 @@ class Game extends Component {
     if( endRow > 4 || endRow < 0 || endCol > 2 || endCol < 0 ){
       return false;
     }
-    const endCell = this.state.board[endRow][endCol]
+    const endCell = this.state.board[endRow][endCol];
     const end = this.topCard(endCell);
     if(!end.deck || end.deck === 'laws'){ // not a card or a law
       return true;
@@ -193,16 +229,26 @@ class Game extends Component {
       return false;
     }else if(startCard.deck === end.deck){ // moving onto ally
       return true;
-    }else if(startCard.deck !== end.deck && startCard.value >= end.value){ // snuggling
+    }else if(this.isSnuggle(startCard, end, endRow, endCol)){ // snuggling
       return true;
     }else{ // illegal
       return false;
     }
   }
 
+  isSnuggle(startCard, end, endRow, endCol){
+    if(this.state.law.number === 1 && this.isOnLaw(endRow, endCol)){
+      return true;
+    }else if(this.state.law.number === 4 && this.isOnLaw(endRow, endCol)){
+      return startCard.deck !== end.deck && startCard.value <= end.value;
+    }else{
+      return startCard.deck !== end.deck && startCard.value >= end.value;
+    }
+  }
+
   clearStatuses(board){
     this.modifyAllCards(board, (card) => {
-      card.active = false
+      card.active = false;
     })
     board.forEach((row) => {
       row.forEach((cell) => {
@@ -215,9 +261,9 @@ class Game extends Component {
     const card = this.topCard(this.state.board[row][col]);
     if((this.state.isLocal && card.deck !== this.state.activeDeck)
       || (!this.state.isLocal && this.state.activeDeck !== this.state.playerDeck)
-      || card.value === this.state.movedCardValue
+      || this.state.movedCardValue.some((value) => card.value === value)
       || this.state.winner ){
-      return
+      return;
     }
     const legalMoves = this.legalMoves(row, col);
     const board = this.state.board.slice();
@@ -246,18 +292,44 @@ class Game extends Component {
                           cityFlippedUrl={this.props.cityFlippedUrl}
                           countryFlippedUrl={this.props.countryFlippedUrl}
                           moveCard={this.moveCard.bind(this, rowIndex, colIndex)}
+                          showStack={this.showStack.bind(this, rowIndex, colIndex)}
+                          hideStack={this.hideStack}
                         />
               })}
             </div>
           })}
         </div>
-        {this.state.winner && <h2>{this.state.winner} Bears Win!</h2>}
-        {this.state.movement.active && <button
-          className='game__cancel-button'
-          onClick={this.cancelMove}
-          >
-          Cancel move
-          </button>}
+        <div className="game-container__center-box">
+          {this.state.winner && <h2>{this.state.winner} Bears Win!</h2>}
+          <h3>Moves Left: {this.state.movesLeft}</h3>
+          <h3>Active Deck: {this.state.activeDeck} bears</h3>
+          <button
+            className='game__cancel-button'
+            onClick={this.cancelMove}
+            disabled={!this.state.movement.active}
+            >
+            Cancel move
+            </button>
+            {this.state.law.url &&
+              <div className="law-container">
+                <h3>Active Law:</h3>
+                <Card
+                  key={"display-law"}
+                  deck={"laws"}
+                  value={this.state.law.number}
+                  zIndex={1}
+                  url={this.state.law.url}
+                  faceDown={false}
+                  class="card--law-card"
+                />
+              </div>
+            }
+        </div>
+        <CellWindow
+          cards={this.state.stackView ? this.state.board[this.state.stackView.row][this.state.stackView.col].cards.map((i) => i).reverse() : []}
+          cityFlippedUrl={this.props.cityFlippedUrl}
+          countryFlippedUrl={this.props.countryFlippedUrl}
+        />
       </div>
     );
   }
