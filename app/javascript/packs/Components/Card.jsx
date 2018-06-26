@@ -22,7 +22,7 @@ class Card extends Component {
     return(
       <img
         src={this.props.url}
-        className={`card stack-${this.props.zIndex} card--${this.props.deck}`}
+        className={`card stack-${this.props.zIndex} card--${this.props.deck} ${this.props.class}`}
         onClick={this.clickHandler}
       />
     );

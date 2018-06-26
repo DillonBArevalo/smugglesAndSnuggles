@@ -29,15 +29,16 @@ TODO:
 - add stack view
 - add websockets
 - put your deck at bottom visually
-- add real game generation
 - favicon?
+- media queries for board size
 
 
 rails todo:
 - game
   - add move history.
   - add isOver bool
-  - allow non-square images
+  - allow non-square images for profile
+  - cache images
 
 
 my understanding of the laws:

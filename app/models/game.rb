@@ -12,7 +12,7 @@ class Game < ApplicationRecord
   def self.new_game
     law_number = rand(1..4)
     game_data = {'movesLeft': 1}
-    game_data['law'] = law_number
+    game_data['law'] = {number: law_number}
     city_cards = build_deck('city').shuffle
     country_cards = build_deck('country').shuffle
     game_data['activeDeck'] = decide_first_move(city_cards, country_cards)
@@ -89,6 +89,7 @@ class Game < ApplicationRecord
         cell['highlighted'] = false
       end
     end
+    !!self.game_log['law']['number'] && self.game_log['law']['url'] = ActionController::Base.helpers.image_path("cards/laws/laws#{self.game_log['law']['number']}.png")
     return self.game_log.to_json
   end
 

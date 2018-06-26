@@ -2,12 +2,14 @@
 import React, { Component } from 'react';
 import Card from './Card'
 import Cell from './Cell'
+import CellWindow from './CellWindow'
 import PropTypes from 'prop-types';
 
 class Game extends Component {
   constructor(props){
     super(props);
     this.state = {
+      stackView: null,
       law: this.props.gameData.law,
       winner: this.props.winner || null,
       isLocal: this.props.isLocal,
@@ -36,8 +38,23 @@ class Game extends Component {
     this.newTurnVars = this.newTurnVars.bind(this);
     this.flippedBoard = this.flippedBoard.bind(this);
     this.setSmuggleAndFlip = this.setSmuggleAndFlip.bind(this);
+    this.showStack = this.showStack.bind(this);
+    this.hideStack = this.hideStack.bind(this);
     this.isOnLaw = this.isOnLaw.bind(this);
     this.isSnuggle = this.isSnuggle.bind(this);
+  }
+
+  showStack(row, col){
+    console.log('show')
+    console.log('row', row)
+    console.log('col', col)
+    console.log(this.state.board[row][col])
+    this.state.board[row][col].cards.length && this.setState({stackView: {row: row, col: col}});
+  }
+
+  hideStack(){
+    console.log('hide')
+    this.setState({stackView: null});
   }
 
   flippedBoard(){
@@ -85,7 +102,7 @@ class Game extends Component {
     this.setSmuggleAndFlip(previousTop, newTop);
 
     ({movesLeft, movedCardValue, winner, activeDeck} = this.checkScore(endRow, movingCard, board, movesLeft, movedCardValue));
-    if(this.state.law === 1 && this.isOnLaw(endRow, endCol)){
+    if(this.state.law.number === 1 && this.isOnLaw(endRow, endCol)){
       activeDeck = this.state.activeDeck;
       movedCardValue.push(movingCard.value);
     }else if(movesLeft === 1){
@@ -93,7 +110,7 @@ class Game extends Component {
     }else if(movesLeft === 2){
       movesLeft = 1;
       activeDeck = this.state.activeDeck;
-      if(!(this.state.law === 3 && this.topCard(board[2][1]).deck === activeDeck)){
+      if(!(this.state.law.number === 3 && this.topCard(board[2][1]).deck === activeDeck)){
         movedCardValue.push(movingCard.value);
       }
     }
@@ -194,7 +211,7 @@ class Game extends Component {
   isSmuggle(startCard, endRow, endCol){
     const endCell = this.state.board[endRow][endCol];
     const end = this.topCard(endCell);
-    if(this.state.law === 2 && this.isOnLaw(endRow, endCol)){
+    if(this.state.law.number === 2 && this.isOnLaw(endRow, endCol)){
       return startCard.deck === end.deck && end.value < startCard.value;
     }
     return startCard.deck === end.deck && end.value > startCard.value;
@@ -220,9 +237,9 @@ class Game extends Component {
   }
 
   isSnuggle(startCard, end, endRow, endCol){
-    if(this.state.law === 1 && this.isOnLaw(endRow, endCol)){
+    if(this.state.law.number === 1 && this.isOnLaw(endRow, endCol)){
       return true;
-    }else if(this.state.law === 4 && this.isOnLaw(endRow, endCol)){
+    }else if(this.state.law.number === 4 && this.isOnLaw(endRow, endCol)){
       return startCard.deck !== end.deck && startCard.value <= end.value;
     }else{
       return startCard.deck !== end.deck && startCard.value >= end.value;
@@ -275,6 +292,8 @@ class Game extends Component {
                           cityFlippedUrl={this.props.cityFlippedUrl}
                           countryFlippedUrl={this.props.countryFlippedUrl}
                           moveCard={this.moveCard.bind(this, rowIndex, colIndex)}
+                          showStack={this.showStack.bind(this, rowIndex, colIndex)}
+                          hideStack={this.hideStack}
                         />
               })}
             </div>
@@ -291,7 +310,26 @@ class Game extends Component {
             >
             Cancel move
             </button>
+            {this.state.law.url &&
+              <div className="law-container">
+                <h3>Active Law:</h3>
+                <Card
+                  key={"display-law"}
+                  deck={"laws"}
+                  value={this.state.law.number}
+                  zIndex={1}
+                  url={this.state.law.url}
+                  faceDown={false}
+                  class="card--law-card"
+                />
+              </div>
+            }
         </div>
+        <CellWindow
+          cards={this.state.stackView ? this.state.board[this.state.stackView.row][this.state.stackView.col].cards.map((i) => i).reverse() : []}
+          cityFlippedUrl={this.props.cityFlippedUrl}
+          countryFlippedUrl={this.props.countryFlippedUrl}
+        />
       </div>
     );
   }
