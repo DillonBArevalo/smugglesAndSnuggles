@@ -34,8 +34,12 @@ gem 'bcrypt', '~> 3.1.7'
 
 gem "paperclip", "~> 6.0.0"
 
+gem 'sprockets', '~> 3.7.2'
+
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
+
+gem 'ffi', "~> 1.9.24"
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
