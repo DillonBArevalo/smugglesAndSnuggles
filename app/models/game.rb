@@ -9,6 +9,10 @@ class Game < ApplicationRecord
     self.games_users.last.deck = 'country'
   end
 
+  def deck(player_id)
+    games_users.find_by(user_id: player_id).deck
+  end
+
   def self.new_game
     law_number = rand(1..4)
     game_data = {'movesLeft': 1}
