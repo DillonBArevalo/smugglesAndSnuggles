@@ -1,6 +1,6 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import Game from './Components/Game'
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Game from './Components/Game';
 
 document.addEventListener('DOMContentLoaded', () => {
   const game = document.getElementById('game');
@@ -10,7 +10,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const playerDeck = game.dataset.playerDeck;
     const cityFlippedUrl = game.dataset.cityFlippedUrl;
     const countryFlippedUrl = game.dataset.countryFlippedUrl;
-    const isLocal = game.dataset.isLocal;
-    ReactDOM.render(<Game gameData={gameData} playerDeck={playerDeck} countryFlippedUrl={countryFlippedUrl} cityFlippedUrl={cityFlippedUrl} isLocal={isLocal} />, game)
+    const isLocal = game.dataset.isLocal === 'true';
+    const id = game.dataset.id;
+    const gameId = game.dataset.gameId;
+    ReactDOM.render(
+      <Game
+        gameData={gameData}
+        id={id}
+        gameId={gameId}
+        playerDeck={playerDeck}
+        countryFlippedUrl={countryFlippedUrl}
+        cityFlippedUrl={cityFlippedUrl}
+        isLocal={isLocal}
+      />,
+      game
+    );
   }
 })
