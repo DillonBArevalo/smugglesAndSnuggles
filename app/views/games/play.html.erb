@@ -1,1 +1,12 @@
-<div id='game' data-board-state="<%= @game_data %>" data-city-flipped-url="<%= image_url("cards/city/city-flipped.png") %>" data-country-flipped-url="<%= image_url("cards/country/country-flipped.png") %>" data-player-deck="country" data-is-local="<%= true %>"></div>
+<div
+  id='game'
+  data-board-state="<%= @game_data %>"
+  data-city-flipped-url="<%= image_url("cards/city/city-flipped.png") %>"
+  data-country-flipped-url="<%= image_url("cards/country/country-flipped.png") %>"
+  data-player-deck="<%= @game.deck(session[:id]) %>"
+  data-is-local="<%= false %>"
+  data-id="<%= session[:id] %>"
+  data-game-id="<%= @game.id %>"
+></div>
+
+<script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.21.2.min.js"></script>

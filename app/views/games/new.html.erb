@@ -8,7 +8,7 @@
       <%= f.label "Local Game:", for: "local" %>
       <input id="local" type="checkbox" name="player2" checked="checked" disabled="true">
     </div>
-    <%= hidden_field_tag 'player2', 2 %>
+    <%= hidden_field_tag 'player2', 3 %>
     <%= f.submit "Play a Game", class: "form__submit" %>
   <% end %>
 <% else %>

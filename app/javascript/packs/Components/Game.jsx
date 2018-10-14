@@ -1,59 +1,79 @@
 // react component for a game
 import React, { Component } from 'react';
-import Card from './Card'
-import Cell from './Cell'
-import CellWindow from './CellWindow'
+import Card from './Card';
+import Cell from './Cell';
+import CellWindow from './CellWindow';
 import PropTypes from 'prop-types';
 
 class Game extends Component {
   constructor(props){
     super(props);
     this.state = {
-      stackView: null,
-      law: this.props.gameData.law,
-      winner: this.props.winner || null,
-      isLocal: this.props.isLocal,
-      playerDeck: this.props.playerDeck,
-      board: this.props.gameData.currentBoard,
-      movesLeft: this.props.gameData.movesLeft,
       activeDeck: this.props.gameData.activeDeck,
+      board: this.props.gameData.currentBoard,
+      gameID: `game${this.props.gameId}`,
+      isLocal: this.props.isLocal,
+      law: this.props.gameData.law,
       movedCardValue: this.props.gameData.movedCardValue || [],
       movement: {
         active: false,
-        startingLocation: []
-      }
+        startingLocation: [],
+      },
+      movesLeft: this.props.gameData.movesLeft,
+      playerDeck: this.props.playerDeck,
+      playerId: this.props.id,
+      stackView: null,
+      winner: this.props.winner || null,
     };
 
-    this.highlightMoves = this.highlightMoves.bind(this);
-    this.legalMoves = this.legalMoves.bind(this);
-    this.buildLegalMovesBoard = this.buildLegalMovesBoard.bind(this);
-    this.constructSingleListFromMovesBoard = this.constructSingleListFromMovesBoard.bind(this);
-    this.isSmuggle = this.isSmuggle.bind(this);
     this.adjacentLegal = this.adjacentLegal.bind(this);
-    this.clearStatuses = this.clearStatuses.bind(this);
-    this.modifyAllCards = this.modifyAllCards.bind(this);
+    this.buildLegalMovesBoard = this.buildLegalMovesBoard.bind(this);
     this.cancelMove = this.cancelMove.bind(this);
-    this.moveCard = this.moveCard.bind(this);
     this.canMove = this.canMove.bind(this);
-    this.newTurnVars = this.newTurnVars.bind(this);
+    this.clearStatuses = this.clearStatuses.bind(this);
+    this.constructSingleListFromMovesBoard = this.constructSingleListFromMovesBoard.bind(this);
     this.flippedBoard = this.flippedBoard.bind(this);
+    this.hideStack = this.hideStack.bind(this);
+    this.highlightMoves = this.highlightMoves.bind(this);
+    this.isSmuggle = this.isSmuggle.bind(this);
+    this.isSnuggle = this.isSnuggle.bind(this);
+    this.isOnLaw = this.isOnLaw.bind(this);
+    this.legalMoves = this.legalMoves.bind(this);
+    this.modifyAllCards = this.modifyAllCards.bind(this);
+    this.moveCard = this.moveCard.bind(this);
+    this.newTurnVars = this.newTurnVars.bind(this);
+    this.publishMove = this.publishMove.bind(this);
     this.setSmuggleAndFlip = this.setSmuggleAndFlip.bind(this);
     this.showStack = this.showStack.bind(this);
-    this.hideStack = this.hideStack.bind(this);
-    this.isOnLaw = this.isOnLaw.bind(this);
-    this.isSnuggle = this.isSnuggle.bind(this);
+  }
+
+  componentDidMount () {
+    const gameComponent = this;
+    if (!this.props.isLocal) {
+      fetch('pnkeys')
+        .then(function(response) {
+          return response.json();
+        })
+        .then(function(pnData) {
+          gameComponent.pubnub = new PubNub(pnData);
+          gameComponent.pubnub.subscribe({
+            channels: [gameComponent.state.gameID],
+          });
+          gameComponent.pubnub.addListener({
+            message: (m) => {
+              console.log(m);
+              m.publisher !== gameComponent.state.playerId && gameComponent.moveCard(m.message.endRow, m.message.endCol, false, m.message.movement);
+            }
+          });
+        });
+    }
   }
 
   showStack(row, col){
-    console.log('show')
-    console.log('row', row)
-    console.log('col', col)
-    console.log(this.state.board[row][col])
     this.state.board[row][col].cards.length && this.setState({stackView: {row: row, col: col}});
   }
 
   hideStack(){
-    console.log('hide')
     this.setState({stackView: null});
   }
 
@@ -69,11 +89,6 @@ class Game extends Component {
     return board.some((row, rowIndex) => {
       return row.some((cell, colIndex) => {
         let top = this.topCard(cell);
-        console.log(top)
-        console.log(top.deck === deck );
-        console.log(!top.faceDown );
-        console.log(!movedCardValue.some((value) => top.value === value) );
-        console.log(!!this.legalMoves(rowIndex, colIndex).length);
         return top.deck === deck && !top.faceDown && !movedCardValue.some((value) => top.value === value) && !!this.legalMoves(rowIndex, colIndex).length;
       })
     })
@@ -89,12 +104,13 @@ class Game extends Component {
     }
   }
 
-  moveCard(endRow, endCol){
+  moveCard(endRow, endCol, send, movement = false){
     const board = this.state.board.slice();
     const previousTop = this.topCard(board[endRow][endCol]);
-    const movingCard = board[this.state.movement.startingLocation[0]][this.state.movement.startingLocation[1]].cards.pop();
-    const newTop = this.topCard(board[this.state.movement.startingLocation[0]][this.state.movement.startingLocation[1]]);
-    let movesLeft = this.state.movesLeft;
+    const startingLocation = movement ? movement.startingLocation : this.state.movement.startingLocation;
+    const movingCard = board[startingLocation[0]][startingLocation[1]].cards.pop();
+    const newTop = this.topCard(board[startingLocation[0]][startingLocation[1]]);
+    let movesLeft = this.state.movesLeft; // use destructuring for this and movedCardValue
     let movedCardValue = this.state.movedCardValue;
     let activeDeck, winner;
     board[endRow][endCol].cards.push(movingCard);
@@ -119,8 +135,19 @@ class Game extends Component {
       ({movesLeft, activeDeck, movedCardValue} = this.newTurnVars(activeDeck));
     }
 
+    send && this.publishMove(endRow, endCol)
     this.clearStatuses(board);
     this.setState({board, movesLeft, activeDeck, movedCardValue, winner, movement: {active:false, startingLocation: []}});
+  }
+
+  publishMove(endRow, endCol) {
+      const movement = this.state.movement;
+      this.pubnub.publish({
+        message: {endRow, endCol, movement},
+        channel: this.state.gameID,
+      },
+        (status, response) => console.log('publish', status, response)
+      )
   }
 
   newTurnVars(activeDeck){
@@ -134,7 +161,10 @@ class Game extends Component {
   checkScore(endRow, card, board, movesLeft, movedCardValue){
     const activeDeck = this.state.activeDeck;
     const playerDeck = this.state.playerDeck;
-    if(activeDeck === playerDeck && endRow === 0 || activeDeck !== playerDeck && endRow === 4){
+    // later use commented instead of current generation of scoring for when flipped happens
+    // const scoring = card.deck === playerDeck && endRow === 0 || card.deck !== playerDeck && endRow === 4;
+    const scoring = card.deck === 'country' && endRow === 0 || card.deck === 'city' && endRow === 4;
+    if(scoring){
       card.faceDown = true;
       if(!board[endRow].some((cell) => this.topCard(cell).deck !== activeDeck)){
         return {movesLeft: 0, movedCardValue: [], winner: activeDeck, activeDeck: null}
@@ -259,8 +289,8 @@ class Game extends Component {
 
   highlightMoves(row, col) {
     const card = this.topCard(this.state.board[row][col]);
-    if((this.state.isLocal && card.deck !== this.state.activeDeck)
-      || (!this.state.isLocal && this.state.activeDeck !== this.state.playerDeck)
+    if(card.deck !== this.state.activeDeck
+      || (!this.state.isLocal && card.deck !== this.state.playerDeck)
       || this.state.movedCardValue.some((value) => card.value === value)
       || this.state.winner ){
       return;
@@ -291,7 +321,7 @@ class Game extends Component {
                           cancelMove={this.cancelMove}
                           cityFlippedUrl={this.props.cityFlippedUrl}
                           countryFlippedUrl={this.props.countryFlippedUrl}
-                          moveCard={this.moveCard.bind(this, rowIndex, colIndex)}
+                          moveCard={this.moveCard.bind(this, rowIndex, colIndex, !this.state.isLocal, false)}
                           showStack={this.showStack.bind(this, rowIndex, colIndex)}
                           hideStack={this.hideStack}
                         />
@@ -301,8 +331,12 @@ class Game extends Component {
         </div>
         <div className="game-container__center-box">
           {this.state.winner && <h2>{this.state.winner} Bears Win!</h2>}
+          <h3>{
+            this.state.isLocal ?
+              `Active Deck: ${this.state.activeDeck} bears` :
+              `It is ${this.state.playerDeck === this.state.activeDeck ? 'your turn' : 'your opponent\'s turn'}`
+          }</h3>
           <h3>Moves Left: {this.state.movesLeft}</h3>
-          <h3>Active Deck: {this.state.activeDeck} bears</h3>
           <button
             className='game__cancel-button'
             onClick={this.cancelMove}

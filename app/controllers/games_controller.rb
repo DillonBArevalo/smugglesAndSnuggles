@@ -16,6 +16,7 @@ class GamesController < ApplicationController
   def create # creates a new game and redirects to play
     @game = Game.new(game_log: Game.new_game) #could move to a before create?
     @game.players = [current_user, User.find(params[:player2])].shuffle
+    p params[:player2]
     if @game.save
       redirect_to "/users/#{params[:player2]}/games/#{@game.id}/play"
     else
@@ -36,5 +37,9 @@ class GamesController < ApplicationController
 
   def update
 
+  end
+
+  def keys
+    render json: {publishKey: ENV['PUBLISH_KEY'], subscribeKey: ENV['SUBSCRIBE_KEY'], uuid: session[:id]}
   end
 end
