@@ -4,49 +4,42 @@
 
 ## notes
 
-TODO:
-- put your deck at bottom visually
-- favicon?
-- media queries for board size
-
-
-rails todo:
-- game
-  - add move history.
-  - add isOver bool
-  - cache images
-
-
-my understanding of the laws:
-  ~~1 cuddle puddle: movement onto the law is free (does not take a move). Does not mean you can move that card again. any card can always move onto the pile. If you do not end your move on the law it is not considered snuggling the law as you were instead smuggled through it.~~
-  ~~2 impawsible odds: If attempting to smuggle through this law, the order is reversed and low cards can smuggle higher ones (this one seems simple)~~
-  ~~3 bear-boned plan: If you control the law (currently your card is on top of the center pile) then you can move the same card twice. If you start the turn on it any cards can move twice, if you don't, the only card that could actually be moved twice is the center one, because it already had to go once to get there. There's no way to lose control mid turn, so there aren't any complications along those lines.~~
-  4 unhuggables: seems straightforward, if attempting to end your turn on this pile you need to have a smaller (or equal) card than your opponent. If you control it you may (as always) move freely onto it no matter the size of your cards.
-
-
-Next steps:
- - Update laws
- - Use react to construct new game lobby
- - research and use fetch vs axios vs anything else that sounds good. no CORS request, so that's easy. Need js request in controller for passing it and need environment variables.
- - dotenv for env variable of pubnub key.
- - pass pubnub key in api call (fetch) and use closures to hide it
- - add key generation and keyed sign-up
- - maybe use mailer for sending out keys so it doesn't have to be manual.
-
-
 1 play online
+  - move history
+  - add isOver
+  - remove current version of laws
+  - pubnub takes a second to connect. block deck render against it
+  - error handling for pubnub/fetches
+  - deck at bottom
+  - undo last move?
 2 matchmaking
+  - Use react to construct new game lobby
+2.5 code cleanup
+  - refactor game by extracting methods into new file and extending game with class?
 3 aesthetics
+  - favicon
+  - cache images
+  - media queries for board size
 4 key generation
+  - add key generation and keyed sign-up
+  - maybe use mailer for sending out keys so it doesn't have to be manual.
 5 initial release
 6 laws
+  - add new version of laws
+7 game reviews
+  - add ability to locally revisit
 
+## Other items of low priority
 
-undo last move?
-refactor game by extracting methods into new file and extending game with class?
+- Add game chat
+- Add opponent info in game
 
+## implementation thoughts
 
-pubnub:
+- For flipping decks. we can say that one deck is always bottom and add a flipping behavior in the js. We can then curry all relevant functions and bind them in the constructor to the appropriate flipped or non-flipped version.
+
+----------
+## pubnub notes:
 subscribe:
 loading message until connect callback at which time a message with a time delay to remove itself gets posted saying you're connected.
 local storage for uuid?
@@ -70,11 +63,4 @@ can specify count: 1 to just get latest state
 end given a timetoken can give you all the messages newer than your current timetoken.
 localStorage.getItem(subkey) for last time token?
 
-credentials include to make sessions go in a fetch request.
-
-
-Check flipping
-if move to defend on own zone then  either person can move the card and it stays flipped. everything goes wrong
-
-you can always move cards in your zone - even if opponents
-not an issue on live local
+---------

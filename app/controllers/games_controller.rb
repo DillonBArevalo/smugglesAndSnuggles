@@ -28,15 +28,25 @@ class GamesController < ApplicationController
     @player = current_user
     @game = Game.find(params[:id])
     @game_data = @game.json_board
-    @opponent = User.find(params[:user_id])
   end
 
   def show # review an already played game
 
   end
 
-  def update
-
+  def update # add is over
+    @game = Game.find(params['id'])
+    game_data = @game.game_log.dup
+    game_data['movesLeft'] = params['movesLeft']
+    game_data['activeDeck'] = params['activeDeck']
+    game_data['currentBoard'] = params['board']
+    game_data['winner'] = params['winner']
+    game_data['moveHistory'].push(params['moveData'])
+    if params['winner']
+      @game.winner = @game.winner_by_deck(params['winner'])
+    end
+    # update moveHistory as well
+    @game.update(game_log: game_data)
   end
 
   def keys

@@ -9,6 +9,15 @@ class Game < ApplicationRecord
     self.games_users.last.deck = 'country'
   end
 
+  def winning_deck
+    return nil unless winner
+    deck(winner.id)
+  end
+
+  def winner_by_deck( deck )
+    User.find(self.games_users.select {|item| item.deck == deck}[0].user_id)
+  end
+
   def deck(player_id)
     games_users.find_by(user_id: player_id).deck
   end
@@ -22,6 +31,7 @@ class Game < ApplicationRecord
     game_data['activeDeck'] = decide_first_move(city_cards, country_cards)
     flip_evens(city_cards)
     flip_evens(country_cards)
+    game_data['moveHistory'] = []
     game_data['startingBoard'] = [
       [
         {
