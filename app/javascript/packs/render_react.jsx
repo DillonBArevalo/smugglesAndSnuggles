@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const isLocal = game.dataset.isLocal === 'true';
     const id = game.dataset.id;
     const gameId = game.dataset.gameId;
+    const authToken = game.dataset.authToken;
     ReactDOM.render(
       <Game
         gameData={gameData}
@@ -22,6 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
         countryFlippedUrl={countryFlippedUrl}
         cityFlippedUrl={cityFlippedUrl}
         isLocal={isLocal}
+        authToken={authToken}
       />,
       game
     );
