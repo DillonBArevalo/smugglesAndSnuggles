@@ -36,7 +36,7 @@ class GamesController < ApplicationController
 
   def update # add is over
     @game = Game.find(params['id'])
-    game_data = @game.game_log.dup
+    game_data = @game.game_log
     game_data['movesLeft'] = params['movesLeft']
     game_data['activeDeck'] = params['activeDeck']
     game_data['currentBoard'] = params['board']
@@ -44,9 +44,10 @@ class GamesController < ApplicationController
     game_data['moveHistory'].push(params['moveData'])
     if params['winner']
       @game.winner = @game.winner_by_deck(params['winner'])
+      @game.completed_at = Time.now
     end
     # update moveHistory as well
-    @game.update(game_log: game_data)
+    @game.save
   end
 
   def keys

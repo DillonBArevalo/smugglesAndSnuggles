@@ -5,11 +5,9 @@
 ## notes
 
 1 play online
-  - move history
-  - add isOver
-  - remove current version of laws
-  - pubnub takes a second to connect. block deck render against it
+  - pubnub takes a second to connect. block render against it (placeholder board with loading message)
   - error handling for pubnub/fetches
+  - remove current version of laws
   - deck at bottom
   - undo last move?
 2 matchmaking
