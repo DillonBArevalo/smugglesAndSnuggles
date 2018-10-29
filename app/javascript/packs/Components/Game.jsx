@@ -1,4 +1,3 @@
-// react component for a game
 import React, { Component } from 'react';
 import Card from './Card';
 import Cell from './Cell';
@@ -11,7 +10,7 @@ class Game extends Component {
     this.state = {
       activeDeck: this.props.gameData.activeDeck,
       board: this.props.gameData.currentBoard,
-      gameID: `game${this.props.gameId}`,
+      gameId: `game${this.props.gameId}`,
       isLocal: this.props.isLocal,
       law: this.props.gameData.law,
       movedCardValue: this.props.gameData.movedCardValue || [],
@@ -23,7 +22,7 @@ class Game extends Component {
       playerDeck: this.props.playerDeck,
       playerId: this.props.id,
       stackView: null,
-      winner: this.props.winner || null,
+      winner: this.props.gameData.winner || null,
     };
 
     this.adjacentLegal = this.adjacentLegal.bind(this);
@@ -43,6 +42,7 @@ class Game extends Component {
     this.moveCard = this.moveCard.bind(this);
     this.newTurnVars = this.newTurnVars.bind(this);
     this.publishMove = this.publishMove.bind(this);
+    this.sendGameUpdate = this.sendGameUpdate.bind(this);
     this.setSmuggleAndFlip = this.setSmuggleAndFlip.bind(this);
     this.showStack = this.showStack.bind(this);
   }
@@ -57,7 +57,7 @@ class Game extends Component {
         .then(function(pnData) {
           gameComponent.pubnub = new PubNub(pnData);
           gameComponent.pubnub.subscribe({
-            channels: [gameComponent.state.gameID],
+            channels: [gameComponent.state.gameId],
           });
           gameComponent.pubnub.addListener({
             message: (m) => {
@@ -67,6 +67,23 @@ class Game extends Component {
           });
         });
     }
+  }
+
+  sendGameUpdate(movesLeft, activeDeck, board, winner) {
+    const {playerDeck, playerId, gameId} = this.state;
+    const authenticity_token = this.props.authToken;
+    console.log(authenticity_token)
+    const data = JSON.stringify({movesLeft, activeDeck, board, playerDeck, playerId, winner, authenticity_token});
+    fetch(
+      `/games/${this.props.gameId}`,
+      {
+        method: 'PATCH',
+        body: data,
+        headers: {
+            "Content-Type": "application/json; charset=utf-8",
+        }
+      }
+    );
   }
 
   showStack(row, col){
@@ -135,19 +152,24 @@ class Game extends Component {
       ({movesLeft, activeDeck, movedCardValue} = this.newTurnVars(activeDeck));
     }
 
-    send && this.publishMove(endRow, endCol)
+    this.publishMove(send, endRow, endCol, movesLeft, activeDeck, board, winner)
     this.clearStatuses(board);
     this.setState({board, movesLeft, activeDeck, movedCardValue, winner, movement: {active:false, startingLocation: []}});
   }
 
-  publishMove(endRow, endCol) {
+  publishMove(send, endRow, endCol, movesLeft, activeDeck, board, winner) {
+    if( send ) {
+      this.sendGameUpdate(movesLeft, activeDeck, board, winner);
       const movement = this.state.movement;
       this.pubnub.publish({
         message: {endRow, endCol, movement},
-        channel: this.state.gameID,
+        channel: this.state.gameId,
       },
         (status, response) => console.log('publish', status, response)
       )
+    } else if ( this.state.isLocal ) {
+      this.sendGameUpdate(movesLeft, activeDeck, board, winner);
+    }
   }
 
   newTurnVars(activeDeck){
