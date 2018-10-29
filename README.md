@@ -29,6 +29,11 @@
 7 game reviews
   - add ability to locally revisit
 
+## Other items of low priority
+
+- Add game chat
+- Add opponent info in game
+
 ----------
 ## pubnub notes:
 subscribe:
