@@ -69,11 +69,10 @@ class Game extends Component {
     }
   }
 
-  sendGameUpdate(movesLeft, activeDeck, board, winner) {
+  sendGameUpdate(movesLeft, activeDeck, board, winner, moveData) {
     const {playerDeck, playerId, gameId} = this.state;
     const authenticity_token = this.props.authToken;
-    console.log(authenticity_token)
-    const data = JSON.stringify({movesLeft, activeDeck, board, playerDeck, playerId, winner, authenticity_token});
+    const data = JSON.stringify({movesLeft, activeDeck, board, playerDeck, playerId, winner, authenticity_token, moveData});
     fetch(
       `/games/${this.props.gameId}`,
       {
@@ -121,12 +120,19 @@ class Game extends Component {
     }
   }
 
+  generateMoveData(endRow, endCol, startingLocation, card) {
+    const [startCol, startRow] = startingLocation;
+    const {deck, value} = card;
+    return {endRow, endCol, startCol, startRow, deck, value};
+  }
+
   moveCard(endRow, endCol, send, movement = false){
     const board = this.state.board.slice();
     const previousTop = this.topCard(board[endRow][endCol]);
     const startingLocation = movement ? movement.startingLocation : this.state.movement.startingLocation;
     const movingCard = board[startingLocation[0]][startingLocation[1]].cards.pop();
     const newTop = this.topCard(board[startingLocation[0]][startingLocation[1]]);
+    const moveData = this.generateMoveData(endRow, endCol, startingLocation, movingCard);
     let movesLeft = this.state.movesLeft; // use destructuring for this and movedCardValue
     let movedCardValue = this.state.movedCardValue;
     let activeDeck, winner;
@@ -152,14 +158,14 @@ class Game extends Component {
       ({movesLeft, activeDeck, movedCardValue} = this.newTurnVars(activeDeck));
     }
 
-    this.publishMove(send, endRow, endCol, movesLeft, activeDeck, board, winner)
+    this.publishMove(send, endRow, endCol, movesLeft, activeDeck, board, winner, moveData);
     this.clearStatuses(board);
     this.setState({board, movesLeft, activeDeck, movedCardValue, winner, movement: {active:false, startingLocation: []}});
   }
 
-  publishMove(send, endRow, endCol, movesLeft, activeDeck, board, winner) {
+  publishMove(send, endRow, endCol, movesLeft, activeDeck, board, winner, moveData) {
     if( send ) {
-      this.sendGameUpdate(movesLeft, activeDeck, board, winner);
+      this.sendGameUpdate(movesLeft, activeDeck, board, winner, moveData);
       const movement = this.state.movement;
       this.pubnub.publish({
         message: {endRow, endCol, movement},
@@ -168,7 +174,7 @@ class Game extends Component {
         (status, response) => console.log('publish', status, response)
       )
     } else if ( this.state.isLocal ) {
-      this.sendGameUpdate(movesLeft, activeDeck, board, winner);
+      this.sendGameUpdate(movesLeft, activeDeck, board, winner, moveData);
     }
   }
 

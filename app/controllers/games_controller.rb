@@ -40,6 +40,11 @@ class GamesController < ApplicationController
     game_data['movesLeft'] = params['movesLeft']
     game_data['activeDeck'] = params['activeDeck']
     game_data['currentBoard'] = params['board']
+    game_data['winner'] = params['winner']
+    game_data['moveHistory'].push(params['moveData'])
+    if params['winner']
+      @game.winner = @game.winner_by_deck(params['winner'])
+    end
     # update moveHistory as well
     @game.update(game_log: game_data)
   end
