@@ -22,6 +22,7 @@ class CellWindow extends Component {
                     url={card.faceDown ? this.props[`${card.deck}FlippedUrl`] : card.url}
                     faceDown={card.faceDown}
                     class="cell-window__card"
+                    highlightMoves={_ => {}}
                   />
         })}
       </div>

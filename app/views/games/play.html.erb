@@ -7,6 +7,7 @@
   data-is-local="<%= false %>"
   data-id="<%= session[:id] %>"
   data-game-id="<%= @game.id %>"
+  data-auth-token="<%= form_authenticity_token %>"
 ></div>
 
 <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.21.2.min.js"></script>
