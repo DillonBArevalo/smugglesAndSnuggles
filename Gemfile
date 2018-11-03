@@ -40,6 +40,7 @@ gem 'sprockets', '~> 3.7.2'
 # gem 'capistrano-rails', group: :development
 
 gem 'ffi', "~> 1.9.24"
+gem "loofah", ">= 2.2.3"
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
