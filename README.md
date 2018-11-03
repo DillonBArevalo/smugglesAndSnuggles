@@ -14,6 +14,7 @@
   - Use react to construct new game lobby
 2.5 code cleanup
   - refactor game by extracting methods into new file and extending game with class?
+  - remove game container to own component
 3 aesthetics
   - favicon
   - cache images
