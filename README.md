@@ -10,6 +10,7 @@
   - remove current version of laws
   - deck at bottom
   - undo last move?
+  - basic keyboard support
 2 matchmaking
   - Use react to construct new game lobby
 2.5 code cleanup

@@ -13,6 +13,7 @@ class Game extends Component {
       board: this.props.gameData.currentBoard,
       gameId: `game${this.props.gameId}`,
       isLocal: this.props.isLocal,
+      isOpponentConnected: this.props.isLocal,
       law: this.props.gameData.law,
       movedCardValue: this.props.gameData.movedCardValue || [],
       movement: {
@@ -45,6 +46,7 @@ class Game extends Component {
     this.moveCard = this.moveCard.bind(this);
     this.newTurnVars = this.newTurnVars.bind(this);
     this.publishMove = publishMove.bind(this);
+    this.renderGameBoard = this.renderGameBoard.bind(this);
     this.sendGameUpdate = sendGameUpdate.bind(this);
     this.setSmuggleAndFlip = this.setSmuggleAndFlip.bind(this);
     this.showStack = this.showStack.bind(this);
@@ -303,28 +305,36 @@ class Game extends Component {
     this.setState({board, movement: {active: true, startingLocation: [row, col]}});
   }
 
+  renderGameBoard () {
+    let gameContents = <h2>Waiting for your opponent to connect...</h2>;
+    if (this.state.isOpponentConnected) {
+      gameContents = this.state.board.map((row, rowIndex) => {
+        return <div key={`row${rowIndex}`} className="board__row">
+          {row.map((cell, colIndex) => {
+            return  <Cell
+                      key={`column${rowIndex}${colIndex}`}
+                      cards={cell.cards}
+                      highlighted={cell.highlighted}
+                      highlightMoves={this.highlightMoves.bind(this, rowIndex, colIndex)}
+                      cancelMove={this.cancelMove}
+                      cityFlippedUrl={this.props.cityFlippedUrl}
+                      countryFlippedUrl={this.props.countryFlippedUrl}
+                      moveCard={this.moveCard.bind(this, rowIndex, colIndex, !this.state.isLocal, false)}
+                      showStack={this.showStack.bind(this, rowIndex, colIndex)}
+                      hideStack={this.hideStack}
+                    />
+          })}
+        </div>
+      });
+    }
+    return gameContents;
+  }
+
   render() {
     return(
       <div className='game-container'>
         <div id='main-game-container' className="board">
-          {this.state.board.map((row, rowIndex) => {
-            return <div key={`row${rowIndex}`} className="board__row">
-              {row.map((cell, colIndex) => {
-                return  <Cell
-                          key={`column${rowIndex}${colIndex}`}
-                          cards={cell.cards}
-                          highlighted={cell.highlighted}
-                          highlightMoves={this.highlightMoves.bind(this, rowIndex, colIndex)}
-                          cancelMove={this.cancelMove}
-                          cityFlippedUrl={this.props.cityFlippedUrl}
-                          countryFlippedUrl={this.props.countryFlippedUrl}
-                          moveCard={this.moveCard.bind(this, rowIndex, colIndex, !this.state.isLocal, false)}
-                          showStack={this.showStack.bind(this, rowIndex, colIndex)}
-                          hideStack={this.hideStack}
-                        />
-              })}
-            </div>
-          })}
+          {this.renderGameBoard()}
         </div>
         <div className="game-container__center-box">
           {this.displayWinner()}

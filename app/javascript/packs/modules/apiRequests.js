@@ -1,3 +1,10 @@
+function sendGameStart ( gameComponent ) {
+  gameComponent.pubnub.publish({
+    message: {startConnection: true},
+    channel: gameComponent.state.gameId,
+  });
+}
+
 function fetchKeysAndStartConnection ( gameComponent ) {
   fetch('pnkeys')
     .then(response => response.json())
@@ -8,10 +15,16 @@ function fetchKeysAndStartConnection ( gameComponent ) {
       });
       gameComponent.pubnub.addListener({
         message: (m) => {
-          console.log(m);
-          m.publisher !== gameComponent.state.playerId && gameComponent.moveCard(m.message.endRow, m.message.endCol, false, m.message.movement);
+          const {endRow, endCol, movement, startConnection} = m.message;
+          if ( m.message.startConnection ) {
+            gameComponent.setState({isOpponentConnected: true})
+            !gameComponent.state.isOpponentConnected && sendGameStart( gameComponent );
+          } else {
+            m.publisher !== gameComponent.state.playerId && gameComponent.moveCard(endRow, endCol, false, movement);
+          }
         }
       });
+      sendGameStart(gameComponent);
     });
 }
 
