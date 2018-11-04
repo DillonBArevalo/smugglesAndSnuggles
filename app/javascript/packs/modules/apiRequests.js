@@ -7,7 +7,13 @@ function sendGameStart ( gameComponent ) {
 
 function fetchKeysAndStartConnection ( gameComponent ) {
   fetch('pnkeys')
-    .then(response => response.json())
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        gameComponent.setState({pubNubError: true});
+      }
+    })
     .then( pnData => {
       gameComponent.pubnub = new PubNub(pnData);
       gameComponent.pubnub.subscribe({
@@ -17,10 +23,15 @@ function fetchKeysAndStartConnection ( gameComponent ) {
         message: (m) => {
           const {endRow, endCol, movement, startConnection} = m.message;
           if ( m.message.startConnection ) {
-            gameComponent.setState({isOpponentConnected: true})
+            gameComponent.setState({isOpponentConnected: true});
             !gameComponent.state.isOpponentConnected && sendGameStart( gameComponent );
           } else {
             m.publisher !== gameComponent.state.playerId && gameComponent.moveCard(endRow, endCol, false, movement);
+          }
+        },
+        status: (s) => {
+          if (s.error || s.category === "PNNetworkDownCategory") {
+            gameComponent.setState({pubNubError: true});
           }
         }
       });

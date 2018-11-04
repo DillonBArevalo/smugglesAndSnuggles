@@ -5,8 +5,6 @@
 ## notes
 
 1 play online
-  - pubnub takes a second to connect. block render against it (placeholder board with loading message)
-  - error handling for pubnub/fetches
   - remove current version of laws
   - deck at bottom
   - undo last move?
