@@ -29,15 +29,21 @@ function fetchKeysAndStartConnection ( gameComponent ) {
 }
 
 function publishMove (send, endRow, endCol, movesLeft, activeDeck, board, winner, moveData) {
+  const gameComponent = this;
   if( send ) {
     this.sendGameUpdate(movesLeft, activeDeck, board, winner, moveData);
     const movement = this.state.movement;
-    this.pubnub.publish({
-      message: {endRow, endCol, movement},
-      channel: this.state.gameId,
-    },
-      (status, response) => console.log('publish', status, response)
-    )
+    this.pubnub.publish(
+      {
+        message: {endRow, endCol, movement},
+        channel: this.state.gameId,
+      },
+      (status, response) => {
+        if (status.error) {
+          gameComponent.setState({pubNubError: true});
+        }
+      }
+    );
   } else if ( this.state.isLocal ) {
     this.sendGameUpdate(movesLeft, activeDeck, board, winner, moveData);
   }

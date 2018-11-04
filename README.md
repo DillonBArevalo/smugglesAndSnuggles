@@ -20,6 +20,7 @@
   - favicon
   - cache images
   - media queries for board size
+  - make waiting message nicer for online connection - also make it active? (animated)
 4 key generation
   - add key generation and keyed sign-up
   - maybe use mailer for sending out keys so it doesn't have to be manual.

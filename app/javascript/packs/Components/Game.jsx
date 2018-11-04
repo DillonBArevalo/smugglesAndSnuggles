@@ -307,7 +307,9 @@ class Game extends Component {
 
   renderGameBoard () {
     let gameContents = <h2>Waiting for your opponent to connect...</h2>;
-    if (this.state.isOpponentConnected) {
+    if (this.state.pubNubError) {
+      gameContents = <h2>A connection error has occured. Please check your internet connection and reload the page.</h2>;
+    } else if (this.state.isOpponentConnected) {
       gameContents = this.state.board.map((row, rowIndex) => {
         return <div key={`row${rowIndex}`} className="board__row">
           {row.map((cell, colIndex) => {
