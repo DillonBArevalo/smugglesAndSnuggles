@@ -1,6 +1,9 @@
 function sendGameStart ( gameComponent ) {
   gameComponent.pubnub.publish({
-    message: {startConnection: true},
+    message: {
+      startConnection: true,
+      connected: gameComponent.state.isOpponentConnected,
+    },
     channel: gameComponent.state.gameId,
   });
 }
@@ -21,10 +24,10 @@ function fetchKeysAndStartConnection ( gameComponent ) {
       });
       gameComponent.pubnub.addListener({
         message: (m) => {
-          const {endRow, endCol, movement, startConnection} = m.message;
+          const {endRow, endCol, movement, startConnection, connected} = m.message;
           if ( m.message.startConnection && m.publisher !== gameComponent.state.playerId ) {
             gameComponent.setState({isOpponentConnected: true});
-            !gameComponent.state.isOpponentConnected && sendGameStart( gameComponent );
+            !connected && sendGameStart( gameComponent );
           } else {
             m.publisher !== gameComponent.state.playerId && gameComponent.moveCard(endRow, endCol, false, movement);
           }
