@@ -5,21 +5,20 @@
 ## notes
 
 1 play online
-  - move history
-  - add isOver
   - remove current version of laws
-  - pubnub takes a second to connect. block deck render against it
-  - error handling for pubnub/fetches
   - deck at bottom
   - undo last move?
+  - basic keyboard support
 2 matchmaking
   - Use react to construct new game lobby
 2.5 code cleanup
   - refactor game by extracting methods into new file and extending game with class?
+  - remove game container to own component
 3 aesthetics
   - favicon
   - cache images
   - media queries for board size
+  - make waiting message nicer for online connection - also make it active? (animated)
 4 key generation
   - add key generation and keyed sign-up
   - maybe use mailer for sending out keys so it doesn't have to be manual.

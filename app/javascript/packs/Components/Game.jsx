@@ -3,6 +3,7 @@ import Card from './Card';
 import Cell from './Cell';
 import CellWindow from './CellWindow';
 import PropTypes from 'prop-types';
+import {fetchKeysAndStartConnection, publishMove, sendGameUpdate} from '../modules/apiRequests'
 
 class Game extends Component {
   constructor(props){
@@ -12,6 +13,7 @@ class Game extends Component {
       board: this.props.gameData.currentBoard,
       gameId: `game${this.props.gameId}`,
       isLocal: this.props.isLocal,
+      isOpponentConnected: this.props.isLocal,
       law: this.props.gameData.law,
       movedCardValue: this.props.gameData.movedCardValue || [],
       movement: {
@@ -31,6 +33,8 @@ class Game extends Component {
     this.canMove = this.canMove.bind(this);
     this.clearStatuses = this.clearStatuses.bind(this);
     this.constructSingleListFromMovesBoard = this.constructSingleListFromMovesBoard.bind(this);
+    this.displayWinner = this.displayWinner.bind(this);
+    this.fetchKeysAndStartConnection = fetchKeysAndStartConnection.bind(this);
     this.flippedBoard = this.flippedBoard.bind(this);
     this.hideStack = this.hideStack.bind(this);
     this.highlightMoves = this.highlightMoves.bind(this);
@@ -41,8 +45,9 @@ class Game extends Component {
     this.modifyAllCards = this.modifyAllCards.bind(this);
     this.moveCard = this.moveCard.bind(this);
     this.newTurnVars = this.newTurnVars.bind(this);
-    this.publishMove = this.publishMove.bind(this);
-    this.sendGameUpdate = this.sendGameUpdate.bind(this);
+    this.publishMove = publishMove.bind(this);
+    this.renderGameBoard = this.renderGameBoard.bind(this);
+    this.sendGameUpdate = sendGameUpdate.bind(this);
     this.setSmuggleAndFlip = this.setSmuggleAndFlip.bind(this);
     this.showStack = this.showStack.bind(this);
   }
@@ -50,39 +55,20 @@ class Game extends Component {
   componentDidMount () {
     const gameComponent = this;
     if (!this.props.isLocal) {
-      fetch('pnkeys')
-        .then(function(response) {
-          return response.json();
-        })
-        .then(function(pnData) {
-          gameComponent.pubnub = new PubNub(pnData);
-          gameComponent.pubnub.subscribe({
-            channels: [gameComponent.state.gameId],
-          });
-          gameComponent.pubnub.addListener({
-            message: (m) => {
-              console.log(m);
-              m.publisher !== gameComponent.state.playerId && gameComponent.moveCard(m.message.endRow, m.message.endCol, false, m.message.movement);
-            }
-          });
-        });
+      fetchKeysAndStartConnection( gameComponent );
     }
   }
 
-  sendGameUpdate(movesLeft, activeDeck, board, winner, moveData) {
-    const {playerDeck, playerId, gameId} = this.state;
-    const authenticity_token = this.props.authToken;
-    const data = JSON.stringify({movesLeft, activeDeck, board, playerDeck, playerId, winner, authenticity_token, moveData});
-    fetch(
-      `/games/${this.props.gameId}`,
-      {
-        method: 'PATCH',
-        body: data,
-        headers: {
-            "Content-Type": "application/json; charset=utf-8",
-        }
-      }
-    );
+  displayWinner () {
+    let winnerHeader;
+    if (!this.state.winner) {
+      winnerHeader = '';
+    } else if (this.state.isLocal) {
+      winnerHeader = <h2>{this.state.winner} Bears Win!</h2>;
+    } else {
+      winnerHeader = <h2>You { this.state.winner === this.state.playerDeck ? 'Win!' : 'Lose'}</h2>;
+    }
+    return winnerHeader;
   }
 
   showStack(row, col){
@@ -161,21 +147,6 @@ class Game extends Component {
     this.publishMove(send, endRow, endCol, movesLeft, activeDeck, board, winner, moveData);
     this.clearStatuses(board);
     this.setState({board, movesLeft, activeDeck, movedCardValue, winner, movement: {active:false, startingLocation: []}});
-  }
-
-  publishMove(send, endRow, endCol, movesLeft, activeDeck, board, winner, moveData) {
-    if( send ) {
-      this.sendGameUpdate(movesLeft, activeDeck, board, winner, moveData);
-      const movement = this.state.movement;
-      this.pubnub.publish({
-        message: {endRow, endCol, movement},
-        channel: this.state.gameId,
-      },
-        (status, response) => console.log('publish', status, response)
-      )
-    } else if ( this.state.isLocal ) {
-      this.sendGameUpdate(movesLeft, activeDeck, board, winner, moveData);
-    }
   }
 
   newTurnVars(activeDeck){
@@ -334,31 +305,41 @@ class Game extends Component {
     this.setState({board, movement: {active: true, startingLocation: [row, col]}});
   }
 
+  renderGameBoard () {
+    let gameContents = <h2>Waiting for your opponent to connect...</h2>;
+    if (this.state.pubNubError) {
+      gameContents = <h2>A connection error has occured. Please check your internet connection and reload the page.</h2>;
+    } else if (this.state.isOpponentConnected) {
+      gameContents = this.state.board.map((row, rowIndex) => {
+        return <div key={`row${rowIndex}`} className="board__row">
+          {row.map((cell, colIndex) => {
+            return  <Cell
+                      key={`column${rowIndex}${colIndex}`}
+                      cards={cell.cards}
+                      highlighted={cell.highlighted}
+                      highlightMoves={this.highlightMoves.bind(this, rowIndex, colIndex)}
+                      cancelMove={this.cancelMove}
+                      cityFlippedUrl={this.props.cityFlippedUrl}
+                      countryFlippedUrl={this.props.countryFlippedUrl}
+                      moveCard={this.moveCard.bind(this, rowIndex, colIndex, !this.state.isLocal, false)}
+                      showStack={this.showStack.bind(this, rowIndex, colIndex)}
+                      hideStack={this.hideStack}
+                    />
+          })}
+        </div>
+      });
+    }
+    return gameContents;
+  }
+
   render() {
     return(
       <div className='game-container'>
         <div id='main-game-container' className="board">
-          {this.state.board.map((row, rowIndex) => {
-            return <div key={`row${rowIndex}`} className="board__row">
-              {row.map((cell, colIndex) => {
-                return  <Cell
-                          key={`column${rowIndex}${colIndex}`}
-                          cards={cell.cards}
-                          highlighted={cell.highlighted}
-                          highlightMoves={this.highlightMoves.bind(this, rowIndex, colIndex)}
-                          cancelMove={this.cancelMove}
-                          cityFlippedUrl={this.props.cityFlippedUrl}
-                          countryFlippedUrl={this.props.countryFlippedUrl}
-                          moveCard={this.moveCard.bind(this, rowIndex, colIndex, !this.state.isLocal, false)}
-                          showStack={this.showStack.bind(this, rowIndex, colIndex)}
-                          hideStack={this.hideStack}
-                        />
-              })}
-            </div>
-          })}
+          {this.renderGameBoard()}
         </div>
         <div className="game-container__center-box">
-          {this.state.winner && <h2>{this.state.winner} Bears Win!</h2>}
+          {this.displayWinner()}
           <h3>{
             this.state.isLocal ?
               `Active Deck: ${this.state.activeDeck} bears` :
