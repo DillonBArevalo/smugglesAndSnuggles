@@ -34,7 +34,7 @@ class GamesController < ApplicationController
 
   end
 
-  def update # add is over
+  def update
     @game = Game.find(params['id'])
     game_data = @game.game_log
     game_data['movesLeft'] = params['movesLeft']

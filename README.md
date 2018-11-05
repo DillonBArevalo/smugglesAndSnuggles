@@ -1,32 +1,37 @@
 # README
 
-## This project is not finished yet and thus this readme is for me, the author, to put my notes. It will be updated to be a proper readme when the project is at a reasonably presentable point
+## This project is not finished yet and thus this readme is for me, the developer, to put my notes. It will be updated to be a proper readme when the project is at a reasonably presentable point
 
-## notes
+## next steps
 
-1 play online
-  - remove current version of laws
+1. play online
   - deck at bottom
-  - undo last move?
+  - alert on move confirmation
   - basic keyboard support
-2 matchmaking
+  - basic site navigation
+2. matchmaking
   - Use react to construct new game lobby
-2.5 code cleanup
+2.5. code cleanup
   - refactor game by extracting methods into new file and extending game with class?
   - remove game container to own component
-3 aesthetics
+3. aesthetics
   - favicon
   - cache images
   - media queries for board size
   - make waiting message nicer for online connection - also make it active? (animated)
-4 key generation
+4. key generation
   - add key generation and keyed sign-up
   - maybe use mailer for sending out keys so it doesn't have to be manual.
-5 initial release
-6 laws
+5. initial release
+6. laws
   - add new version of laws
-7 game reviews
+7. game reviews
   - add ability to locally revisit
+8. Additional features
+  - move timer for comp/competitive
+  - undo last move
+  - advanced keyboard support
+  - SR support for gameplay
 
 ## Other items of low priority
 
