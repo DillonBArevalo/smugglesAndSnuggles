@@ -13,6 +13,7 @@ class Game extends Component {
       board: this.props.gameData.currentBoard,
       gameId: `game${this.props.gameId}`,
       isLocal: this.props.isLocal,
+      isFlippedBoard: this.props.playerDeck === 'city',
       isOpponentConnected: this.props.isLocal,
       movedCardValue: this.props.gameData.movedCardValue || [],
       movement: {
@@ -57,6 +58,10 @@ class Game extends Component {
     }
   }
 
+  flippedBoard () {
+    return this.state.board.map((row) => row.slice().reverse()).reverse();
+  }
+
   displayWinner () {
     let winnerHeader;
     if (!this.state.winner) {
@@ -75,14 +80,6 @@ class Game extends Component {
 
   hideStack(){
     this.setState({stackView: null});
-  }
-
-  flippedBoard(){
-    const board = this.state.board;
-    board.map((row) => {
-      return row.reverse();
-    });
-    return board.reverse();
   }
 
   canMove(board, deck, movedCardValue){
@@ -290,19 +287,23 @@ class Game extends Component {
     if (this.state.pubNubError) {
       gameContents = <h2>A connection error has occured. Please check your internet connection and reload the page.</h2>;
     } else if (this.state.isOpponentConnected) {
-      gameContents = this.state.board.map((row, rowIndex) => {
-        return <div key={`row${rowIndex}`} className="board__row">
+      const flip = this.state.isFlippedBoard;
+      const board = flip ? this.flippedBoard() : this.state.board;
+      gameContents = board.map((row, rowIndex) => {
+        const rowIdx = flip ? (4 - rowIndex) : rowIndex;
+        return <div key={`row${rowIdx}`} className="board__row">
           {row.map((cell, colIndex) => {
+            const col = flip ? (2 - colIndex) : colIndex;
             return  <Cell
-                      key={`column${rowIndex}${colIndex}`}
+                      key={`column${rowIdx}${col}`}
                       cards={cell.cards}
                       highlighted={cell.highlighted}
-                      highlightMoves={this.highlightMoves.bind(this, rowIndex, colIndex)}
+                      highlightMoves={this.highlightMoves.bind(this, rowIdx, col)}
                       cancelMove={this.cancelMove}
                       cityFlippedUrl={this.props.cityFlippedUrl}
                       countryFlippedUrl={this.props.countryFlippedUrl}
-                      moveCard={this.moveCard.bind(this, rowIndex, colIndex, !this.state.isLocal, false)}
-                      showStack={this.showStack.bind(this, rowIndex, colIndex)}
+                      moveCard={this.moveCard.bind(this, rowIdx, col, !this.state.isLocal, false)}
+                      showStack={this.showStack.bind(this, rowIdx, col)}
                       hideStack={this.hideStack}
                     />
           })}

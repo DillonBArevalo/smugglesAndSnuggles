@@ -5,7 +5,6 @@
 ## next steps
 
 1. play online
-  - deck at bottom
   - alert on move confirmation
   - basic keyboard support
   - basic site navigation
