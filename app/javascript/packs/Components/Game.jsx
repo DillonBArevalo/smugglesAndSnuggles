@@ -14,7 +14,6 @@ class Game extends Component {
       gameId: `game${this.props.gameId}`,
       isLocal: this.props.isLocal,
       isOpponentConnected: this.props.isLocal,
-      law: this.props.gameData.law,
       movedCardValue: this.props.gameData.movedCardValue || [],
       movement: {
         active: false,
@@ -40,7 +39,6 @@ class Game extends Component {
     this.highlightMoves = this.highlightMoves.bind(this);
     this.isSmuggle = this.isSmuggle.bind(this);
     this.isSnuggle = this.isSnuggle.bind(this);
-    this.isOnLaw = this.isOnLaw.bind(this);
     this.legalMoves = this.legalMoves.bind(this);
     this.modifyAllCards = this.modifyAllCards.bind(this);
     this.moveCard = this.moveCard.bind(this);
@@ -97,10 +95,10 @@ class Game extends Component {
   }
 
   setSmuggleAndFlip(previousTop, newTop){
-    if(previousTop.deck && previousTop.deck !== 'laws'){
+    if(previousTop.deck){
       previousTop.isSmuggled = true;
     }
-    if(newTop.deck && newTop.deck !== 'laws') {
+    if(newTop.deck) {
       newTop.isSmuggled = false;
       newTop.faceDown = false;
     }
@@ -127,17 +125,12 @@ class Game extends Component {
     this.setSmuggleAndFlip(previousTop, newTop);
 
     ({movesLeft, movedCardValue, winner, activeDeck} = this.checkScore(endRow, movingCard, board, movesLeft, movedCardValue));
-    if(this.state.law.number === 1 && this.isOnLaw(endRow, endCol)){
-      activeDeck = this.state.activeDeck;
-      movedCardValue.push(movingCard.value);
-    }else if(movesLeft === 1){
+    if(movesLeft === 1){
       ({movesLeft, activeDeck, movedCardValue} = this.newTurnVars(this.state.activeDeck));
     }else if(movesLeft === 2){
       movesLeft = 1;
       activeDeck = this.state.activeDeck;
-      if(!(this.state.law.number === 3 && this.topCard(board[2][1]).deck === activeDeck)){
-        movedCardValue.push(movingCard.value);
-      }
+      movedCardValue.push(movingCard.value);
     }
 
     if(!this.canMove(board, activeDeck, movedCardValue)){
@@ -190,7 +183,7 @@ class Game extends Component {
     board.forEach( (row) => {
       row.forEach((cell) => {
         cell.cards.forEach((card) => {
-          card.deck !== 'laws' && modifier(card);
+          modifier(card);
         });
       });
     });
@@ -233,16 +226,9 @@ class Game extends Component {
     return moves;
   }
 
-  isOnLaw(row, col){
-    return row === 2 && col === 1;
-  }
-
   isSmuggle(startCard, endRow, endCol){
     const endCell = this.state.board[endRow][endCol];
     const end = this.topCard(endCell);
-    if(this.state.law.number === 2 && this.isOnLaw(endRow, endCol)){
-      return startCard.deck === end.deck && end.value < startCard.value;
-    }
     return startCard.deck === end.deck && end.value > startCard.value;
   }
 
@@ -252,27 +238,21 @@ class Game extends Component {
     }
     const endCell = this.state.board[endRow][endCol];
     const end = this.topCard(endCell);
-    if(!end.deck || end.deck === 'laws'){ // not a card or a law
+    if(!end.deck){ // not a card
       return true;
     }else if(end.faceDown){ // pile has scored
       return false;
     }else if(startCard.deck === end.deck){ // moving onto ally
       return true;
-    }else if(this.isSnuggle(startCard, end, endRow, endCol)){ // snuggling
+    }else if(this.isSnuggle(startCard, end)){ // snuggling
       return true;
     }else{ // illegal
       return false;
     }
   }
 
-  isSnuggle(startCard, end, endRow, endCol){
-    if(this.state.law.number === 1 && this.isOnLaw(endRow, endCol)){
-      return true;
-    }else if(this.state.law.number === 4 && this.isOnLaw(endRow, endCol)){
-      return startCard.deck !== end.deck && startCard.value <= end.value;
-    }else{
-      return startCard.deck !== end.deck && startCard.value >= end.value;
-    }
+  isSnuggle(startCard, endCard){
+    return startCard.deck !== endCard.deck && startCard.value >= endCard.value;
   }
 
   clearStatuses(board){
@@ -353,20 +333,6 @@ class Game extends Component {
             >
             Cancel move
             </button>
-            {this.state.law.url &&
-              <div className="law-container">
-                <h3>Active Law:</h3>
-                <Card
-                  key={"display-law"}
-                  deck={"laws"}
-                  value={this.state.law.number}
-                  zIndex={1}
-                  url={this.state.law.url}
-                  faceDown={false}
-                  class="card--law-card"
-                />
-              </div>
-            }
         </div>
         <CellWindow
           cards={this.state.stackView ? this.state.board[this.state.stackView.row][this.state.stackView.col].cards.map((i) => i).reverse() : []}
