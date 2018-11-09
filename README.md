@@ -5,9 +5,8 @@
 ## next steps
 
 1. play online
-  - alert on move confirmation
-  - basic keyboard support
   - basic site navigation
+  - basic keyboard support
 2. matchmaking
   - Use react to construct new game lobby
 2.5. code cleanup
@@ -31,6 +30,7 @@
   - undo last move
   - advanced keyboard support
   - SR support for gameplay
+  - settings for default move confirmation state
 
 ## Other items of low priority
 

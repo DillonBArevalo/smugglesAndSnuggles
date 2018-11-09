@@ -11,6 +11,7 @@ class Game extends Component {
     this.state = {
       activeDeck: this.props.gameData.activeDeck,
       board: this.props.gameData.currentBoard,
+      confirmMove: false,
       gameId: `game${this.props.gameId}`,
       isLocal: this.props.isLocal,
       isFlippedBoard: this.props.playerDeck === 'city',
@@ -49,6 +50,7 @@ class Game extends Component {
     this.sendGameUpdate = sendGameUpdate.bind(this);
     this.setSmuggleAndFlip = this.setSmuggleAndFlip.bind(this);
     this.showStack = this.showStack.bind(this);
+    this.toggleConfirmMove = this.toggleConfirmMove.bind(this);
   }
 
   componentDidMount () {
@@ -56,6 +58,10 @@ class Game extends Component {
     if (!this.props.isLocal) {
       fetchKeysAndStartConnection( gameComponent );
     }
+  }
+
+  toggleConfirmMove() {
+    this.setState({confirmMove: !this.state.confirmMove});
   }
 
   flippedBoard () {
@@ -301,6 +307,7 @@ class Game extends Component {
                       highlightMoves={this.highlightMoves.bind(this, rowIdx, col)}
                       cancelMove={this.cancelMove}
                       cityFlippedUrl={this.props.cityFlippedUrl}
+                      confirmMove={this.state.confirmMove}
                       countryFlippedUrl={this.props.countryFlippedUrl}
                       moveCard={this.moveCard.bind(this, rowIdx, col, !this.state.isLocal, false)}
                       showStack={this.showStack.bind(this, rowIdx, col)}
@@ -327,6 +334,19 @@ class Game extends Component {
               `It is ${this.state.playerDeck === this.state.activeDeck ? 'your turn' : 'your opponent\'s turn'}`
           }</h3>
           <h3>Moves Left: {this.state.movesLeft}</h3>
+          <div className="game-container__move-confirmation">
+            <input
+              id="confirmMove"
+              type="checkbox"
+              className="game-container__confirmation-checkbox"
+              checked={this.state.confirmMove}
+              onChange={this.toggleConfirmMove}
+            />
+            <label
+              className="game-container__confirmation-label"
+              htmlFor="confirmMove"
+            >Enable move confirmation</label>
+          </div>
           <button
             className='game__cancel-button'
             onClick={this.cancelMove}
