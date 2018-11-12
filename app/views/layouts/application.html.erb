@@ -12,7 +12,10 @@
     <header id="header">
       <div id='title'>Smuggles 'N Snuggles</div>
       <div id='user-info'>
+        <%= link_to('Home', root_path, class: 'sessions-link') %>
         <% if logged_in? %>
+          <%= link_to('Account', user_path(current_user), class: 'sessions-link') %>
+          <%= link_to('Game Lobby', new_game_path, class: 'sessions-link') %>
           <%= link_to('Logout', sessions_path, method: :delete, class: 'sessions-link') %>
           <%= image_tag(current_user.avatar.url(:thumb), class: 'profile-picture--thumb') %>
         <% else %>
