@@ -35,6 +35,7 @@ class Game extends Component {
     this.clearStatuses = this.clearStatuses.bind(this);
     this.constructSingleListFromMovesBoard = this.constructSingleListFromMovesBoard.bind(this);
     this.displayWinner = this.displayWinner.bind(this);
+    this.docKeyup = this.docKeyup.bind(this);
     this.fetchKeysAndStartConnection = fetchKeysAndStartConnection.bind(this);
     this.flippedBoard = this.flippedBoard.bind(this);
     this.hideStack = this.hideStack.bind(this);
@@ -58,6 +59,10 @@ class Game extends Component {
     if (!this.props.isLocal) {
       fetchKeysAndStartConnection( gameComponent );
     }
+    document.addEventListener('keyup', this.docKeyup);
+  }
+  componentWillUnmount () {
+    document.removeEventListener('keyup', this.docKeyup);
   }
 
   toggleConfirmMove() {
@@ -172,6 +177,12 @@ class Game extends Component {
     const board = this.state.board.slice();
     this.clearStatuses(board);
     this.setState({board, movement: {active: false, startingLocation: []}});
+  }
+
+  docKeyup(event){
+    if(event.keyCode === 27){
+      this.cancelMove();
+    }
   }
 
   topCard(cell){
