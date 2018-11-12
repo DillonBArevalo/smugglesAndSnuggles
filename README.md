@@ -5,27 +5,32 @@
 ## next steps
 
 1. play online
-  - basic site navigation
   - basic keyboard support
 2. matchmaking
   - Use react to construct new game lobby
-2.5. code cleanup
+  - Add pubnub to view online players
+  - Add request game function
+  - Rework routing appropriately
+3. code cleanup
   - refactor game by extracting methods into new file and extending game with class?
   - remove game container to own component
-3. aesthetics
+  - Clean css/class names
+4. aesthetics
   - favicon
   - cache images
   - media queries for board size
+  - header breakpoints
   - make waiting message nicer for online connection - also make it active? (animated)
-4. key generation
+  - Integrate amazon [s3](https://aws.amazon.com/s3/) for file storage
+5. key generation
   - add key generation and keyed sign-up
   - maybe use mailer for sending out keys so it doesn't have to be manual.
-5. initial release
-6. laws
+6. initial release
+7. laws
   - add new version of laws
-7. game reviews
+8. game reviews
   - add ability to locally revisit
-8. Additional features
+9. Additional features
   - move timer for comp/competitive
   - undo last move
   - advanced keyboard support
