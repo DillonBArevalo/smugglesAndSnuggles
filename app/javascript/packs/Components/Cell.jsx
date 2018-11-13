@@ -1,7 +1,6 @@
 // react component for a board cell
 import React, { Component } from 'react';
 import Card from './Card';
-import PropTypes from 'prop-types';
 
 class Cell extends Component {
   constructor(props){

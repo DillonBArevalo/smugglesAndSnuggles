@@ -1,6 +1,5 @@
 // react component for a single card
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 
 class Card extends Component {
   constructor(props){

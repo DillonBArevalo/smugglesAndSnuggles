@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Card from './Card';
 import Cell from './Cell';
 import CellWindow from './CellWindow';
-import PropTypes from 'prop-types';
 import {fetchKeysAndStartConnection, publishMove, sendGameUpdate} from '../modules/apiRequests'
 
 class Game extends Component {
