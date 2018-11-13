@@ -4,7 +4,7 @@
   data-city-flipped-url="<%= image_url("cards/city/city-flipped.png") %>"
   data-country-flipped-url="<%= image_url("cards/country/country-flipped.png") %>"
   data-player-deck="<%= @game.deck(session[:id]) %>"
-  data-is-local="<%= false %>"
+  data-is-local="<%= @game.is_local %>"
   data-id="<%= session[:id] %>"
   data-game-id="<%= @game.id %>"
   data-auth-token="<%= form_authenticity_token %>"
