@@ -1,11 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Game from './Components/Game';
+import Lobby from './Components/Lobby';
 
 document.addEventListener('DOMContentLoaded', () => {
   const game = document.getElementById('game');
+  const lobby = document.getElementById('new-game-lobby-container');
 
-  if(!!document.getElementById('game')) {
+  if(!!game) {
     const gameData = JSON.parse(game.dataset.boardState);
     const playerDeck = game.dataset.playerDeck;
     const cityFlippedUrl = game.dataset.cityFlippedUrl;
@@ -27,5 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
       />,
       game
     );
+  }else if(!!lobby) {
+    ReactDOM.render(<Lobby/>, lobby);
   }
 })

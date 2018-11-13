@@ -4,13 +4,15 @@
 
 ## next steps
 
-1. play online
-  - basic keyboard support
+1. ~play online~
 2. matchmaking
   - Use react to construct new game lobby
   - Add pubnub to view online players
   - Add request game function
   - Rework routing appropriately
+  - Only allow proper players into a game
+  - fix w/l to not include local games
+  - add in progress local games so they don't have to remember the url if they wanna pick it back up later?
 3. code cleanup
   - refactor game by extracting methods into new file and extending game with class?
   - remove game container to own component

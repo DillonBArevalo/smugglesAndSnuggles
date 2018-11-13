@@ -1,16 +1,21 @@
-<h1>Game Lobby</h1>
+<div>
+  <h1>Game Lobby</h1>
 
-<p>In the future this page will contain a game lobby where you can see other players looking for a game and send them requests to play. If they accept a request or you accept a request you will then be taken to a game instance to play against them.</p>
-<p>Also, while the option is always selected now (as the multi-player mode is not enabled yet) there is also an option to play a local game. </p>
-<% if logged_in? %>
-  <%= form_for @game, html: {class: 'form'} do |f| %>
-    <div>
-      <%= f.label "Local Game:", for: "local" %>
-      <input id="local" type="checkbox" name="player2" checked="checked" disabled="true">
+  <% if logged_in? %>
+    <div class="new-game">
+      <div class="new-game__container">
+        <h2>Local Game:</h2>
+        <p>Play a local game of Smuggles 'N Snuggles where both players will move with the same keyboard and mouse.</p>
+        <%= form_for @game, html: {class: 'form'} do |f| %>
+          <%= f.hidden_field :is_local, value: true %>
+          <%= hidden_field_tag 'player2', 1 %>
+          <%= f.submit "Play Locally", class: "form__submit" %>
+        <% end %>
+      </div>
+      <div id="new-game-lobby-container" class="new-game__container">
+      </div>
     </div>
-    <%= hidden_field_tag 'player2', 1 %>
-    <%= f.submit "Play a Game", class: "form__submit" %>
+  <% else %>
+    <p>To play a game of Smuggles 'N Snuggles, please <%= link_to('log in', new_sessions_path) %> or <%= link_to('create an account', new_user_path) %>.</p>
   <% end %>
-<% else %>
-  <%= link_to 'log in', new_sessions_path %>
-<% end %>
+</div>

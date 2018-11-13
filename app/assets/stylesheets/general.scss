@@ -16,9 +16,9 @@
 }
 
 #main-content {
-  // width: 100vw;
+  padding: 10px;
+  box-sizing: border-box;
   height: calc(100vh - 60px);
-  y-overflow: scroll;
 }
 
 #title {

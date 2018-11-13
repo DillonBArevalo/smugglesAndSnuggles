@@ -157,3 +157,12 @@
   font-weight: 800;
   align-self: center
 }
+
+.new-game {
+  display: flex;
+  justify-content: space-between;
+}
+
+.new-game__container {
+  flex-basis: 45%;
+}
