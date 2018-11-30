@@ -1,6 +1,4 @@
-// Place all the styles related to the games controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
+@import 'variables';
 #game {
   height: 100%;
   width: 100%;
@@ -165,4 +163,24 @@
 
 .new-game__container {
   flex-basis: 45%;
+}
+
+.lobby__players-tile {
+  display: flex;
+}
+
+.lobby__player-container {
+  border: 1px solid black;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  .player__card {
+    color: white;
+  }
+  .player__card:nth-of-type(2n) {
+    background-color: $cityColor;
+  }
+  .player__card:nth-of-type(2n - 1) {
+    background-color: $countryColor;
+  }
 }
