@@ -12,7 +12,6 @@ class Lobby extends Component {
       id: Number(this.props.id),
     };
     this.pingPlayerById = this.pingPlayerById.bind(this);
-    this.testPeople = this.testPeople.bind(this);
     this.modifyLobby = this.modifyLobby.bind(this);
   }
 
