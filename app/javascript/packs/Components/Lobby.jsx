@@ -1,55 +1,40 @@
 import React, { Component } from 'react';
-import Player from "./Player"
-import ChallengeTile from "./ChallengeTile"
+import Player from "./Player";
+import ChallengeTile from "./ChallengeTile";
+import {fetchKeysAndEnterLobby} from "../modules/apiRequests";
 
 class Lobby extends Component {
   constructor(props){
     super(props);
     this.state = {
-      players: [],
+      players: {},
       selectedPlayer: null,
-    }
+      id: Number(this.props.id),
+    };
     this.pingPlayerById = this.pingPlayerById.bind(this);
+    this.testPeople = this.testPeople.bind(this);
+    this.modifyLobby = this.modifyLobby.bind(this);
   }
 
   componentDidMount(){
-    const mockData = [
-      {
-        id: 1,
-        name: "player1",
-      },
-      {
-        id: 2,
-        name: "player2",
-      },
-      {
-        id: 3,
-        name: "player3",
-      },
-      {
-        id: 4,
-        name: "player4",
-      },
-      {
-        id: 5,
-        name: "player5",
-      },
-    ];
-    this.setState({players: mockData});
-    // connect pubnub and generate list
+    fetchKeysAndEnterLobby(this);
+  }
+
+  // this probably wants to move to apiRequests
+  modifyLobby (presenceEvent) {
+    const players = this.state.players;
+    if (presenceEvent.action === 'state-change') {
+      if (presenceEvent.state && this.state.id !== presenceEvent.state.id) {
+        players[presenceEvent.state.id] = presenceEvent.state;
+      }
+    } else if (presenceEvent.action === 'leave' && presenceEvent.state) {
+      delete players[presenceEvent.state.id];
+    }
+    this.setState({players});
   }
 
   componentWillUnmount(){
-    // disconnect pubnub and send message of removal
-    // might have to do a timer?
-  }
-
-  addPlayer(){
-    //run when pubnub receives a new message that a new player has joined
-  }
-
-  removePlayer(){
-    // ru
+    this.pubnub.unsubscribeAll();
   }
 
   pingPlayerById(){
@@ -76,7 +61,13 @@ class Lobby extends Component {
         </p>
         <div className="lobby__players-tile">
           <div className="lobby__player-container">
-            {this.state.players.map( player => <Player name={player.name} id={player.id} key={player.id} popup={this.popup.bind(this, player)}/>)}
+            {Object.keys(this.state.players).map(
+              playerId => <Player
+                            name={this.state.players[playerId].name}
+                            id={playerId}
+                            key={playerId}
+                            popup={this.popup.bind(this, this.state.players[playerId])}
+                          />)}
           </div>
           <div className="lobby__challenge-tile">
             <ChallengeTile player={this.state.selectedPlayer} challenge={this.pingPlayerById}/>

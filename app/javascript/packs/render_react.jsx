@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
       game
     );
   }else if(!!lobby) {
-    ReactDOM.render(<Lobby/>, lobby);
+    const id = lobby.dataset.id;
+    ReactDOM.render(<Lobby id={id}/>, lobby);
   }
 })
