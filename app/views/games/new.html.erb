@@ -12,10 +12,17 @@
           <%= f.submit "Play Locally", class: "form__submit" %>
         <% end %>
       </div>
-      <div id="new-game-lobby-container" class="new-game__container">
+      <div
+        id="new-game-lobby-container"
+        class="new-game__container"
+        data-auth-token="<%= form_authenticity_token %>"
+        data-id="<%= session[:id] %>"
+      >
       </div>
     </div>
   <% else %>
     <p>To play a game of Smuggles 'N Snuggles, please <%= link_to('log in', new_sessions_path) %> or <%= link_to('create an account', new_user_path) %>.</p>
   <% end %>
 </div>
+
+<script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.21.2.min.js"></script>

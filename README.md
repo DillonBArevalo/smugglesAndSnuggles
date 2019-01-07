@@ -6,8 +6,6 @@
 
 1. ~play online~
 2. matchmaking
-  - Use react to construct new game lobby
-  - Add pubnub to view online players
   - Add request game function
   - Rework routing appropriately
   - Only allow proper players into a game
