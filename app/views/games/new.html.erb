@@ -17,6 +17,7 @@
         class="new-game__container"
         data-auth-token="<%= form_authenticity_token %>"
         data-id="<%= session[:id] %>"
+        data-name="<%= current_user.username %>"
       >
       </div>
     </div>

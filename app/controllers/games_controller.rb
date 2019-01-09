@@ -47,6 +47,6 @@ class GamesController < ApplicationController
   end
 
   def keys
-    render json: {subData: {publishKey: ENV['PUBLISH_KEY'], subscribeKey: ENV['SUBSCRIBE_KEY'], uuid: session[:id]}, username: current_user.username }
+    render json: {publishKey: ENV['PUBLISH_KEY'], subscribeKey: ENV['SUBSCRIBE_KEY'], uuid: session[:id]}
   end
 end

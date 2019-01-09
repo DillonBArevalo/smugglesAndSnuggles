@@ -6,7 +6,6 @@ import Lobby from './Components/Lobby';
 document.addEventListener('DOMContentLoaded', () => {
   const game = document.getElementById('game');
   const lobby = document.getElementById('new-game-lobby-container');
-
   if(!!game) {
     const gameData = JSON.parse(game.dataset.boardState);
     const playerDeck = game.dataset.playerDeck;
@@ -31,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
     );
   }else if(!!lobby) {
     const id = lobby.dataset.id;
-    ReactDOM.render(<Lobby id={id}/>, lobby);
+    const name = lobby.dataset.name;
+    ReactDOM.render(<Lobby id={id} name={name}/>, lobby);
   }
 })
