@@ -19,16 +19,34 @@ function fetchKeys(component) {
     });
 }
 
+function challengePlayerById (handleResponse, event) {
+  event.preventDefault();
+  const message = {
+    type: 'challenge',
+    foe: this.state.selectedPlayer.id,
+    challengerId: this.state.id,
+    challengerName: this.state.name,
+    message: this.state.challengeMessage,
+  };
+  this.pubnub.publish(
+    {
+      message,
+      channel: 'gameLobby',
+    },
+    handleResponse,
+  );
+}
+
 function currySetUserState (component, pnData) {
   return function setUserState(statusEvent) {
     if (statusEvent.category === "PNConnectedCategory") {
       component.pubnub.setState({
         channels: ['gameLobby'],
         state: {
-          name: pnData.username,
-          id: pnData.subData.uuid,
+          name: component.state.name,
+          id: pnData.uuid,
         },
-        uuid: pnData.subData.uuid,
+        uuid: pnData.uuid,
       },
       () => {
         component.pubnub.hereNow(
@@ -60,14 +78,15 @@ function currySetupPlayersList (component) {
         }
 }
 
-function fetchKeysAndEnterLobby (component) {
+function fetchKeysAndEnterLobby (component, displayInvite) {
   fetchKeys(component)
     .then(pnData => {
-      component.pubnub = new PubNub(pnData.subData);
+      component.pubnub = new PubNub(pnData);
 
       component.pubnub.addListener({
         presence: component.modifyLobby,
         status: currySetUserState(component, pnData),
+        message: component.displayInvite,
       });
 
       component.pubnub.subscribe({
@@ -80,7 +99,7 @@ function fetchKeysAndEnterLobby (component) {
 function fetchKeysAndStartConnection ( gameComponent ) {
   fetchKeys(gameComponent)
     .then( pnData => {
-      gameComponent.pubnub = new PubNub(pnData.subData);
+      gameComponent.pubnub = new PubNub(pnData);
       gameComponent.pubnub.subscribe({
         channels: [gameComponent.state.gameId],
       });
@@ -141,4 +160,4 @@ function sendGameUpdate(movesLeft, activeDeck, board, winner, moveData) {
   );
 }
 
-export { fetchKeysAndStartConnection, publishMove, sendGameUpdate, fetchKeysAndEnterLobby }
+export { fetchKeysAndStartConnection, publishMove, sendGameUpdate, fetchKeysAndEnterLobby, challengePlayerById }

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Player from "./Player";
 import ChallengeTile from "./ChallengeTile";
-import {fetchKeysAndEnterLobby} from "../modules/apiRequests";
+import {fetchKeysAndEnterLobby, challengePlayerById} from "../modules/apiRequests";
 
 class Lobby extends Component {
   constructor(props){
@@ -10,26 +10,60 @@ class Lobby extends Component {
       players: {},
       selectedPlayer: null,
       id: Number(this.props.id),
+      challengeMessage: '',
+      requests: [],
+      name: this.props.name,
     };
     this.pingPlayerById = this.pingPlayerById.bind(this);
     this.modifyLobby = this.modifyLobby.bind(this);
+    this.setPlayerInviteStatus = this.setPlayerInviteStatus.bind(this);
+    this.challengePlayerById = challengePlayerById.bind(this, this.setPlayerInviteStatus);
+    this.updateChallengeMessage = this.updateChallengeMessage.bind(this);
+    this.displayInvite = this.displayInvite.bind(this);
   }
 
   componentDidMount(){
     fetchKeysAndEnterLobby(this);
   }
 
+  setPlayerInviteStatus (status, response) {
+    if (!status.error) {
+      const selectedPlayer = Object.assign({}, this.state.selectedPlayer, {requestSent: true});
+      this.setState({selectedPlayer});
+    }
+  }
+
+  displayInvite (message) {
+    if (message.message.type === 'challenge' && message.message.foe === this.state.id) {
+      const requests = this.state.requests;
+      requests.push({
+        id: message.message.challengerId,
+        name: message.message.challengerName,
+        message: message.message.message,
+      });
+      this.setState({requests});
+    }
+  }
+
+  updateChallengeMessage (event) {
+    this.setState({challengeMessage: event.target.value});
+  }
+
   // this probably wants to move to apiRequests
   modifyLobby (presenceEvent) {
     const players = this.state.players;
+    let selectedPlayer = this.state.selectedPlayer;
     if (presenceEvent.action === 'state-change') {
       if (presenceEvent.state && this.state.id !== presenceEvent.state.id) {
         players[presenceEvent.state.id] = presenceEvent.state;
       }
     } else if (presenceEvent.action === 'leave' && presenceEvent.state) {
       delete players[presenceEvent.state.id];
+      if (selectedPlayer && presenceEvent.state.id === selectedPlayer.id) {
+        selectedPlayer = null;
+      }
     }
-    this.setState({players});
+    this.setState({players, selectedPlayer});
   }
 
   componentWillUnmount(){
@@ -48,7 +82,7 @@ class Lobby extends Component {
 
   popup(selectedPlayer){
     console.log(selectedPlayer)
-    this.setState({selectedPlayer});
+    this.setState({selectedPlayer, challengeMessage: ''});
   }
 
   render() {
@@ -69,7 +103,12 @@ class Lobby extends Component {
                           />)}
           </div>
           <div className="lobby__challenge-tile">
-            <ChallengeTile player={this.state.selectedPlayer} challenge={this.pingPlayerById}/>
+            <ChallengeTile
+              player={this.state.selectedPlayer}
+              challenge={this.challengePlayerById}
+              challengeMessage={this.state.challengeMessage}
+              updateChallengeMessage={this.updateChallengeMessage}
+            />
           </div>
         </div>
       </div>
