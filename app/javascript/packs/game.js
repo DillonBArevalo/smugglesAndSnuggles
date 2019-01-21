@@ -1,3 +1,4 @@
+//poc for game logic, can be removed
 import Card from './card';
 
 class Game {

@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Card from './Card';
 import Cell from './Cell';
 import CellWindow from './CellWindow';
-import PropTypes from 'prop-types';
 import {fetchKeysAndStartConnection, publishMove, sendGameUpdate} from '../modules/apiRequests'
 
 class Game extends Component {
@@ -11,10 +10,11 @@ class Game extends Component {
     this.state = {
       activeDeck: this.props.gameData.activeDeck,
       board: this.props.gameData.currentBoard,
+      confirmMove: false,
       gameId: `game${this.props.gameId}`,
       isLocal: this.props.isLocal,
+      isFlippedBoard: this.props.playerDeck === 'city',
       isOpponentConnected: this.props.isLocal,
-      law: this.props.gameData.law,
       movedCardValue: this.props.gameData.movedCardValue || [],
       movement: {
         active: false,
@@ -34,13 +34,13 @@ class Game extends Component {
     this.clearStatuses = this.clearStatuses.bind(this);
     this.constructSingleListFromMovesBoard = this.constructSingleListFromMovesBoard.bind(this);
     this.displayWinner = this.displayWinner.bind(this);
+    this.docKeyup = this.docKeyup.bind(this);
     this.fetchKeysAndStartConnection = fetchKeysAndStartConnection.bind(this);
     this.flippedBoard = this.flippedBoard.bind(this);
     this.hideStack = this.hideStack.bind(this);
     this.highlightMoves = this.highlightMoves.bind(this);
     this.isSmuggle = this.isSmuggle.bind(this);
     this.isSnuggle = this.isSnuggle.bind(this);
-    this.isOnLaw = this.isOnLaw.bind(this);
     this.legalMoves = this.legalMoves.bind(this);
     this.modifyAllCards = this.modifyAllCards.bind(this);
     this.moveCard = this.moveCard.bind(this);
@@ -50,6 +50,7 @@ class Game extends Component {
     this.sendGameUpdate = sendGameUpdate.bind(this);
     this.setSmuggleAndFlip = this.setSmuggleAndFlip.bind(this);
     this.showStack = this.showStack.bind(this);
+    this.toggleConfirmMove = this.toggleConfirmMove.bind(this);
   }
 
   componentDidMount () {
@@ -57,6 +58,18 @@ class Game extends Component {
     if (!this.props.isLocal) {
       fetchKeysAndStartConnection( gameComponent );
     }
+    document.addEventListener('keyup', this.docKeyup);
+  }
+  componentWillUnmount () {
+    document.removeEventListener('keyup', this.docKeyup);
+  }
+
+  toggleConfirmMove() {
+    this.setState({confirmMove: !this.state.confirmMove});
+  }
+
+  flippedBoard () {
+    return this.state.board.map((row) => row.slice().reverse()).reverse();
   }
 
   displayWinner () {
@@ -79,14 +92,6 @@ class Game extends Component {
     this.setState({stackView: null});
   }
 
-  flippedBoard(){
-    const board = this.state.board;
-    board.map((row) => {
-      return row.reverse();
-    });
-    return board.reverse();
-  }
-
   canMove(board, deck, movedCardValue){
     return board.some((row, rowIndex) => {
       return row.some((cell, colIndex) => {
@@ -97,10 +102,10 @@ class Game extends Component {
   }
 
   setSmuggleAndFlip(previousTop, newTop){
-    if(previousTop.deck && previousTop.deck !== 'laws'){
+    if(previousTop.deck){
       previousTop.isSmuggled = true;
     }
-    if(newTop.deck && newTop.deck !== 'laws') {
+    if(newTop.deck) {
       newTop.isSmuggled = false;
       newTop.faceDown = false;
     }
@@ -127,17 +132,12 @@ class Game extends Component {
     this.setSmuggleAndFlip(previousTop, newTop);
 
     ({movesLeft, movedCardValue, winner, activeDeck} = this.checkScore(endRow, movingCard, board, movesLeft, movedCardValue));
-    if(this.state.law.number === 1 && this.isOnLaw(endRow, endCol)){
-      activeDeck = this.state.activeDeck;
-      movedCardValue.push(movingCard.value);
-    }else if(movesLeft === 1){
+    if(movesLeft === 1){
       ({movesLeft, activeDeck, movedCardValue} = this.newTurnVars(this.state.activeDeck));
     }else if(movesLeft === 2){
       movesLeft = 1;
       activeDeck = this.state.activeDeck;
-      if(!(this.state.law.number === 3 && this.topCard(board[2][1]).deck === activeDeck)){
-        movedCardValue.push(movingCard.value);
-      }
+      movedCardValue.push(movingCard.value);
     }
 
     if(!this.canMove(board, activeDeck, movedCardValue)){
@@ -178,6 +178,12 @@ class Game extends Component {
     this.setState({board, movement: {active: false, startingLocation: []}});
   }
 
+  docKeyup(event){
+    if(event.keyCode === 27){
+      this.cancelMove();
+    }
+  }
+
   topCard(cell){
     if(cell.cards.length){
       return cell.cards[cell.cards.length - 1];
@@ -190,7 +196,7 @@ class Game extends Component {
     board.forEach( (row) => {
       row.forEach((cell) => {
         cell.cards.forEach((card) => {
-          card.deck !== 'laws' && modifier(card);
+          modifier(card);
         });
       });
     });
@@ -233,16 +239,9 @@ class Game extends Component {
     return moves;
   }
 
-  isOnLaw(row, col){
-    return row === 2 && col === 1;
-  }
-
   isSmuggle(startCard, endRow, endCol){
     const endCell = this.state.board[endRow][endCol];
     const end = this.topCard(endCell);
-    if(this.state.law.number === 2 && this.isOnLaw(endRow, endCol)){
-      return startCard.deck === end.deck && end.value < startCard.value;
-    }
     return startCard.deck === end.deck && end.value > startCard.value;
   }
 
@@ -252,27 +251,21 @@ class Game extends Component {
     }
     const endCell = this.state.board[endRow][endCol];
     const end = this.topCard(endCell);
-    if(!end.deck || end.deck === 'laws'){ // not a card or a law
+    if(!end.deck){ // not a card
       return true;
     }else if(end.faceDown){ // pile has scored
       return false;
     }else if(startCard.deck === end.deck){ // moving onto ally
       return true;
-    }else if(this.isSnuggle(startCard, end, endRow, endCol)){ // snuggling
+    }else if(this.isSnuggle(startCard, end)){ // snuggling
       return true;
     }else{ // illegal
       return false;
     }
   }
 
-  isSnuggle(startCard, end, endRow, endCol){
-    if(this.state.law.number === 1 && this.isOnLaw(endRow, endCol)){
-      return true;
-    }else if(this.state.law.number === 4 && this.isOnLaw(endRow, endCol)){
-      return startCard.deck !== end.deck && startCard.value <= end.value;
-    }else{
-      return startCard.deck !== end.deck && startCard.value >= end.value;
-    }
+  isSnuggle(startCard, endCard){
+    return startCard.deck !== endCard.deck && startCard.value >= endCard.value;
   }
 
   clearStatuses(board){
@@ -310,19 +303,24 @@ class Game extends Component {
     if (this.state.pubNubError) {
       gameContents = <h2>A connection error has occured. Please check your internet connection and reload the page.</h2>;
     } else if (this.state.isOpponentConnected) {
-      gameContents = this.state.board.map((row, rowIndex) => {
-        return <div key={`row${rowIndex}`} className="board__row">
+      const flip = this.state.isFlippedBoard;
+      const board = flip ? this.flippedBoard() : this.state.board;
+      gameContents = board.map((row, rowIndex) => {
+        const rowIdx = flip ? (4 - rowIndex) : rowIndex;
+        return <div key={`row${rowIdx}`} className="board__row">
           {row.map((cell, colIndex) => {
+            const col = flip ? (2 - colIndex) : colIndex;
             return  <Cell
-                      key={`column${rowIndex}${colIndex}`}
+                      key={`column${rowIdx}${col}`}
                       cards={cell.cards}
                       highlighted={cell.highlighted}
-                      highlightMoves={this.highlightMoves.bind(this, rowIndex, colIndex)}
+                      highlightMoves={this.highlightMoves.bind(this, rowIdx, col)}
                       cancelMove={this.cancelMove}
                       cityFlippedUrl={this.props.cityFlippedUrl}
+                      confirmMove={this.state.confirmMove}
                       countryFlippedUrl={this.props.countryFlippedUrl}
-                      moveCard={this.moveCard.bind(this, rowIndex, colIndex, !this.state.isLocal, false)}
-                      showStack={this.showStack.bind(this, rowIndex, colIndex)}
+                      moveCard={this.moveCard.bind(this, rowIdx, col, !this.state.isLocal, false)}
+                      showStack={this.showStack.bind(this, rowIdx, col)}
                       hideStack={this.hideStack}
                     />
           })}
@@ -346,6 +344,19 @@ class Game extends Component {
               `It is ${this.state.playerDeck === this.state.activeDeck ? 'your turn' : 'your opponent\'s turn'}`
           }</h3>
           <h3>Moves Left: {this.state.movesLeft}</h3>
+          <div className="game-container__move-confirmation">
+            <input
+              id="confirmMove"
+              type="checkbox"
+              className="game-container__confirmation-checkbox"
+              checked={this.state.confirmMove}
+              onChange={this.toggleConfirmMove}
+            />
+            <label
+              className="game-container__confirmation-label"
+              htmlFor="confirmMove"
+            >Enable move confirmation</label>
+          </div>
           <button
             className='game__cancel-button'
             onClick={this.cancelMove}
@@ -353,20 +364,6 @@ class Game extends Component {
             >
             Cancel move
             </button>
-            {this.state.law.url &&
-              <div className="law-container">
-                <h3>Active Law:</h3>
-                <Card
-                  key={"display-law"}
-                  deck={"laws"}
-                  value={this.state.law.number}
-                  zIndex={1}
-                  url={this.state.law.url}
-                  faceDown={false}
-                  class="card--law-card"
-                />
-              </div>
-            }
         </div>
         <CellWindow
           cards={this.state.stackView ? this.state.board[this.state.stackView.row][this.state.stackView.col].cards.map((i) => i).reverse() : []}

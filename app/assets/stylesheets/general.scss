@@ -1,5 +1,7 @@
+@import 'variables';
+
 #header {
-  background-color: #e67c42;
+  background-color: $cityColor;
   // background-color: #5e7fe4;
   height: 60px;
   width: 100vw;
@@ -16,9 +18,9 @@
 }
 
 #main-content {
-  // width: 100vw;
+  padding: 10px;
+  box-sizing: border-box;
   height: calc(100vh - 60px);
-  y-overflow: scroll;
 }
 
 #title {

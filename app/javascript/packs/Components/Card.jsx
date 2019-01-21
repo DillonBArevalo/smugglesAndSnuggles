@@ -1,6 +1,5 @@
 // react component for a single card
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 
 class Card extends Component {
   constructor(props){
@@ -9,7 +8,7 @@ class Card extends Component {
   }
 
   clickHandler(){
-    if(!(this.props.faceDown || this.props.deck === 'laws' || this.props.isSmuggled)){
+    if(!(this.props.faceDown || this.props.isSmuggled)){
       if(this.props.active){
         this.props.cancelMove();
       }else{

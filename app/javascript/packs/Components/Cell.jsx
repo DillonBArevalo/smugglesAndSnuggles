@@ -1,11 +1,21 @@
 // react component for a board cell
 import React, { Component } from 'react';
 import Card from './Card';
-import PropTypes from 'prop-types';
 
 class Cell extends Component {
   constructor(props){
     super(props);
+    this.highlightClick = this.highlightClick.bind(this);
+  }
+
+  highlightClick () {
+    if(this.props.confirmMove) {
+      if (window.confirm('Move to the highlighted square?')) {
+        this.props.moveCard();
+      }
+    } else {
+      this.props.moveCard();
+    }
   }
 
   render() {
@@ -30,7 +40,7 @@ class Cell extends Component {
         })}
         {this.props.highlighted && <div
           className="board__highlight"
-          onClick={this.props.moveCard}
+          onClick={this.highlightClick}
           ></div>}
       </div>
     );

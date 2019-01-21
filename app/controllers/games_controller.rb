@@ -9,14 +9,11 @@ class GamesController < ApplicationController
 
   def new # pre game lobby
     @game = Game.new
-    # communicate with other via websockets
-    # one sends user_id, other makes game.
   end
 
   def create # creates a new game and redirects to play
-    @game = Game.new(game_log: Game.new_game) #could move to a before create?
+    @game = Game.new(game_log: Game.new_game, is_local: params[:game][:is_local]) #could move to a before create?
     @game.players = [current_user, User.find(params[:player2])].shuffle
-    p params[:player2]
     if @game.save
       redirect_to "/users/#{params[:player2]}/games/#{@game.id}/play"
     else
@@ -34,7 +31,7 @@ class GamesController < ApplicationController
 
   end
 
-  def update # add is over
+  def update
     @game = Game.find(params['id'])
     game_data = @game.game_log
     game_data['movesLeft'] = params['movesLeft']
@@ -46,7 +43,6 @@ class GamesController < ApplicationController
       @game.winner = @game.winner_by_deck(params['winner'])
       @game.completed_at = Time.now
     end
-    # update moveHistory as well
     @game.save
   end
 
