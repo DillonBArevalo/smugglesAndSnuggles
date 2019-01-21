@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Player from "./Player";
 import ChallengeTile from "./ChallengeTile";
+import ChallengeRequests from "./ChallengeRequests";
 import {fetchKeysAndEnterLobby, challengePlayerById} from "../modules/apiRequests";
 
 class Lobby extends Component {
@@ -110,6 +111,7 @@ class Lobby extends Component {
               updateChallengeMessage={this.updateChallengeMessage}
             />
           </div>
+          <ChallengeRequests requests={this.state.requests} />
         </div>
       </div>
     );

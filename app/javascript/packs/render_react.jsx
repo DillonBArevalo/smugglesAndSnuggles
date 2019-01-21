@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import Game from './Components/Game';
 import Lobby from './Components/Lobby';
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('turbolinks:load', () => {
   const game = document.getElementById('game');
   const lobby = document.getElementById('new-game-lobby-container');
   if(!!game) {

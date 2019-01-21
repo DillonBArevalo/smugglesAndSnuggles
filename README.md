@@ -2,6 +2,17 @@
 
 ## This project is not finished yet and thus this readme is for me, the developer, to put my notes. It will be updated to be a proper readme when the project is at a reasonably presentable point
 
+## bugs
+- 3 players online (phone, chrome, and incognito) and all three aren't showing up in the lobby
+- requesting multiple times works (shouldn't)
+  - correct message shows after sending, but when you click the name from the list again it gives you the form again
+  - line 32 in lobby. error is in setPlayerInviteStatus: doesn't save state in players dataset, only in selected player. dumb.
+- phone user seems to trigger a leave event but not leave lobby.
+  - state goes to undefined but stays in lobby. strange. maybe talk to PN about it?
+- people sometimes don't show up in the lobby
+- safari seems to log an error with PN sometimes. more investigating could be good.
+  - looks to be on unsubscribeAll()?
+
 ## next steps
 
 1. ~play online~
