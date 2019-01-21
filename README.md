@@ -2,15 +2,28 @@
 
 ## This project is not finished yet and thus this readme is for me, the developer, to put my notes. It will be updated to be a proper readme when the project is at a reasonably presentable point
 
+## bugs
+- 3 players online (phone, chrome, and incognito) and all three aren't showing up in the lobby
+- requesting multiple times works (shouldn't)
+  - correct message shows after sending, but when you click the name from the list again it gives you the form again
+  - line 32 in lobby. error is in setPlayerInviteStatus: doesn't save state in players dataset, only in selected player. dumb.
+- phone user seems to trigger a leave event but not leave lobby.
+  - state goes to undefined but stays in lobby. strange. maybe talk to PN about it?
+- people sometimes don't show up in the lobby
+- safari seems to log an error with PN sometimes. more investigating could be good.
+  - looks to be on unsubscribeAll()?
+
 ## next steps
 
-1. play online
-  - basic keyboard support
+1. ~play online~
 2. matchmaking
-  - Use react to construct new game lobby
-  - Add pubnub to view online players
   - Add request game function
   - Rework routing appropriately
+    - just games/:id but your id must match a player in that game
+    - also change routing in newGame (in apiRequests)
+  - Only allow proper players into a game
+  - fix w/l to not include local games
+  - add in progress local games so they don't have to remember the url if they wanna pick it back up later?
 3. code cleanup
   - refactor game by extracting methods into new file and extending game with class?
   - remove game container to own component

@@ -1,4 +1,4 @@
-function sendGameStart ( gameComponent ) {
+function sendGameStart (gameComponent) {
   gameComponent.pubnub.publish({
     message: {
       startConnection: true,
@@ -8,15 +8,139 @@ function sendGameStart ( gameComponent ) {
   });
 }
 
-function fetchKeysAndStartConnection ( gameComponent ) {
-  fetch('pnkeys')
+function fetchKeys (component) {
+  return fetch('/pnkeys')
     .then(response => {
       if (response.ok) {
         return response.json();
       } else {
-        gameComponent.setState({pubNubError: true});
+        component.setState({pubNubError: true});
       }
-    })
+    });
+}
+
+function newGame (player2, component) {
+  fetch('/games', {
+    method: 'POST',
+    body: JSON.stringify({
+      game: {is_local: false},
+      player2,
+    }),
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRF-Token': Rails.csrfToken()
+    },
+    credentials: 'same-origin'
+  }).then(response => {
+    if (response.ok) {
+      const message = {
+        type: 'game start',
+        foe: player2,
+        href: response.url,
+      };
+      component.pubnub.publish({
+        message,
+        channel: 'gameLobby',
+      });
+      window.location.href = response.url;
+    }
+  });
+}
+
+function challengePlayerById (handleResponse, event) {
+  event.preventDefault();
+  const message = {
+    type: 'challenge',
+    foe: this.state.selectedPlayer.id,
+    challengerId: this.state.id,
+    challengerName: this.state.name,
+    message: this.state.challengeMessage,
+  };
+  this.pubnub.publish(
+    {
+      message,
+      channel: 'gameLobby',
+    },
+    handleResponse,
+  );
+}
+
+function acceptChallenge (foe) {
+  event.preventDefault();
+  const message = {
+    type: 'accept',
+    foe,
+    challengerId: this.state.id,
+  };
+  this.pubnub.publish(
+    {
+      message,
+      channel: 'gameLobby',
+    }
+  );
+}
+
+function currySetUserState (component, pnData) {
+  return function setUserState(statusEvent) {
+    if (statusEvent.category === "PNConnectedCategory") {
+      component.pubnub.setState({
+        channels: ['gameLobby'],
+        state: {
+          name: component.state.name,
+          id: pnData.uuid,
+        },
+        uuid: pnData.uuid,
+      },
+      () => {
+        component.pubnub.hereNow(
+          {
+            channels: ["gameLobby"],
+            includeUUIDs: true,
+            includeState: true,
+          },
+          currySetupPlayersList(component)
+        );
+      });
+    }
+  }
+}
+
+function currySetupPlayersList (component) {
+  return (status, response) => {
+          const channelOccupants = response.channels.gameLobby.occupants;
+          const players = channelOccupants.reduce(
+            (players, stateObj) => {
+              if(stateObj && stateObj.state && stateObj.state.id !== component.state.id) {
+                players[stateObj.state.id] = stateObj.state;
+              }
+              return players;
+            },
+            {}
+          );
+          component.setState({players});
+        }
+}
+
+function fetchKeysAndEnterLobby (component) {
+  fetchKeys(component)
+    .then(pnData => {
+      component.pubnub = new PubNub(pnData);
+
+      component.pubnub.addListener({
+        presence: component.modifyLobby,
+        status: currySetUserState(component, pnData),
+        message: component.handleMessage,
+      });
+
+      component.pubnub.subscribe({
+        channels: ['gameLobby'],
+        withPresence: true,
+      });
+    });
+}
+
+function fetchKeysAndStartConnection ( gameComponent ) {
+  fetchKeys(gameComponent)
     .then( pnData => {
       gameComponent.pubnub = new PubNub(pnData);
       gameComponent.pubnub.subscribe({
@@ -79,4 +203,4 @@ function sendGameUpdate(movesLeft, activeDeck, board, winner, moveData) {
   );
 }
 
-export { fetchKeysAndStartConnection, publishMove, sendGameUpdate }
+export { newGame, acceptChallenge, fetchKeysAndStartConnection, publishMove, sendGameUpdate, fetchKeysAndEnterLobby, challengePlayerById }
