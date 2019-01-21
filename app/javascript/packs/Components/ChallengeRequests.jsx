@@ -6,7 +6,11 @@ class ChallengeRequests extends Component {
     return (
       <div className="challenge-requests">
         {this.props.requests.map(
-          (requestData) => <Request key={requestData.id} {...requestData} />
+          (requestData) => <Request
+                             key={requestData.id}
+                             {...requestData}
+                             confirmInvitation={this.props.confirmInvitation.bind(this, requestData)}
+                           />
         )}
       </div>
     );

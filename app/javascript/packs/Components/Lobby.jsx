@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Player from "./Player";
 import ChallengeTile from "./ChallengeTile";
 import ChallengeRequests from "./ChallengeRequests";
-import {fetchKeysAndEnterLobby, challengePlayerById} from "../modules/apiRequests";
+import {fetchKeysAndEnterLobby, challengePlayerById, acceptChallenge, newGame} from "../modules/apiRequests";
 
 class Lobby extends Component {
   constructor(props){
@@ -15,16 +15,23 @@ class Lobby extends Component {
       requests: [],
       name: this.props.name,
     };
-    this.pingPlayerById = this.pingPlayerById.bind(this);
+    this.acceptChallenge = acceptChallenge.bind(this);
+    this.confirmInvitation = this.confirmInvitation.bind(this);
+    this.handleMessage = this.handleMessage.bind(this);
     this.modifyLobby = this.modifyLobby.bind(this);
+    this.pingPlayerById = this.pingPlayerById.bind(this);
     this.setPlayerInviteStatus = this.setPlayerInviteStatus.bind(this);
     this.challengePlayerById = challengePlayerById.bind(this, this.setPlayerInviteStatus);
     this.updateChallengeMessage = this.updateChallengeMessage.bind(this);
-    this.displayInvite = this.displayInvite.bind(this);
   }
 
   componentDidMount(){
     fetchKeysAndEnterLobby(this);
+  }
+
+  confirmInvitation(data){
+    this.acceptChallenge(data.id);
+    // change message to accepted and disable button
   }
 
   setPlayerInviteStatus (status, response) {
@@ -34,15 +41,22 @@ class Lobby extends Component {
     }
   }
 
-  displayInvite (message) {
-    if (message.message.type === 'challenge' && message.message.foe === this.state.id) {
-      const requests = this.state.requests;
-      requests.push({
-        id: message.message.challengerId,
-        name: message.message.challengerName,
-        message: message.message.message,
-      });
-      this.setState({requests});
+  handleMessage (message) {
+    if (message.message.foe === this.state.id) {
+
+      if (message.message.type === 'challenge') {
+        const requests = this.state.requests;
+        requests.push({
+          id: message.message.challengerId,
+          name: message.message.challengerName,
+          message: message.message.message,
+        });
+        this.setState({requests});
+      } else if (message.message.type === 'accept') {
+        newGame(message.message.challengerId, this);
+      } else if (message.message.type === 'game start') {
+        window.location.href = message.message.href;
+      }
     }
   }
 
@@ -111,7 +125,10 @@ class Lobby extends Component {
               updateChallengeMessage={this.updateChallengeMessage}
             />
           </div>
-          <ChallengeRequests requests={this.state.requests} />
+          <ChallengeRequests
+            requests={this.state.requests}
+            confirmInvitation={this.confirmInvitation}
+          />
         </div>
       </div>
     );

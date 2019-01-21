@@ -1,4 +1,4 @@
-function sendGameStart ( gameComponent ) {
+function sendGameStart (gameComponent) {
   gameComponent.pubnub.publish({
     message: {
       startConnection: true,
@@ -8,7 +8,7 @@ function sendGameStart ( gameComponent ) {
   });
 }
 
-function fetchKeys(component) {
+function fetchKeys (component) {
   return fetch('/pnkeys')
     .then(response => {
       if (response.ok) {
@@ -17,6 +17,34 @@ function fetchKeys(component) {
         component.setState({pubNubError: true});
       }
     });
+}
+
+function newGame (player2, component) {
+  fetch('/games', {
+    method: 'POST',
+    body: JSON.stringify({
+      game: {is_local: false},
+      player2,
+    }),
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRF-Token': Rails.csrfToken()
+    },
+    credentials: 'same-origin'
+  }).then(response => {
+    if (response.ok) {
+      const message = {
+        type: 'game start',
+        foe: player2,
+        href: response.url,
+      };
+      component.pubnub.publish({
+        message,
+        channel: 'gameLobby',
+      });
+      window.location.href = response.url;
+    }
+  });
 }
 
 function challengePlayerById (handleResponse, event) {
@@ -34,6 +62,21 @@ function challengePlayerById (handleResponse, event) {
       channel: 'gameLobby',
     },
     handleResponse,
+  );
+}
+
+function acceptChallenge (foe) {
+  event.preventDefault();
+  const message = {
+    type: 'accept',
+    foe,
+    challengerId: this.state.id,
+  };
+  this.pubnub.publish(
+    {
+      message,
+      channel: 'gameLobby',
+    }
   );
 }
 
@@ -78,7 +121,7 @@ function currySetupPlayersList (component) {
         }
 }
 
-function fetchKeysAndEnterLobby (component, displayInvite) {
+function fetchKeysAndEnterLobby (component) {
   fetchKeys(component)
     .then(pnData => {
       component.pubnub = new PubNub(pnData);
@@ -86,7 +129,7 @@ function fetchKeysAndEnterLobby (component, displayInvite) {
       component.pubnub.addListener({
         presence: component.modifyLobby,
         status: currySetUserState(component, pnData),
-        message: component.displayInvite,
+        message: component.handleMessage,
       });
 
       component.pubnub.subscribe({
@@ -160,4 +203,4 @@ function sendGameUpdate(movesLeft, activeDeck, board, winner, moveData) {
   );
 }
 
-export { fetchKeysAndStartConnection, publishMove, sendGameUpdate, fetchKeysAndEnterLobby, challengePlayerById }
+export { newGame, acceptChallenge, fetchKeysAndStartConnection, publishMove, sendGameUpdate, fetchKeysAndEnterLobby, challengePlayerById }
