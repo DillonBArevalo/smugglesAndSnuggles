@@ -17,24 +17,20 @@
 
 1. ~play online~
 2. matchmaking
-  - Add request game function
-  - Rework routing appropriately
-    - just games/:id but your id must match a player in that game
-    - also change routing in newGame (in apiRequests)
-  - Only allow proper players into a game
   - fix w/l to not include local games
   - add in progress local games so they don't have to remember the url if they wanna pick it back up later?
-3. code cleanup
-  - refactor game by extracting methods into new file and extending game with class?
-  - remove game container to own component
-  - Clean css/class names
-4. aesthetics
+  - Add content to user page
+3. aesthetics
   - favicon
   - cache images
   - media queries for board size
   - header breakpoints
   - make waiting message nicer for online connection - also make it active? (animated)
   - Integrate amazon [s3](https://aws.amazon.com/s3/) for file storage
+4. code cleanup
+  - refactor game by extracting methods into new file and extending game with class?
+  - remove game container to own component
+  - Clean css/class names
 5. key generation
   - add key generation and keyed sign-up
   - maybe use mailer for sending out keys so it doesn't have to be manual.
@@ -85,3 +81,17 @@ end given a timetoken can give you all the messages newer than your current time
 localStorage.getItem(subkey) for last time token?
 
 ---------
+
+Keys file:
+
+make a dotfile for your keys that looks something like this:
+
+```
+#!/bin/bash
+
+export SUBSCRIBE_KEY="my_pubnub_sub_key"
+export PUBLISH_KEY="my_pubnub_pub_key"
+
+bin/rails s
+```
+and start your server with `sh .keys`
