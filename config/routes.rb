@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   resources :users, only: [:new, :create, :show]
 
   resources :games, only: [:new, :create, :update, :show]
-  get 'users/:user_id/games/:id/play', to: 'games#play'
+  get 'games/:id/play', to: 'games#play'
   get 'pnkeys', to: 'games#keys'
 
   root 'index#home'

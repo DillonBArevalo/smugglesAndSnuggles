@@ -1,12 +1,39 @@
-<h1>this will be your profile page</h1>
+<h1><%= @user.username %></h1>
 
-<p>I want to show your game history here. Maybe even let you review past games / take over and start playing it locally at any point during the game? That could be cool...</p>
+<div class="user-info">
+<%= image_tag(current_user.avatar.url(:medium), class: 'user-info--picture') %>
+<p>Win loss: <%= @user.record %></p>
+</div>
 
-<p>Right now you can only really go to the <%= link_to('create a local game', new_game_path) %> page</p>
-<p>username: <%= @user.username %></p>
-<table class="table">
-  <tr class="table__row">
-    <td class="table__left-col">Win/Loss</td>
-    <td class="table__right-col"><%= @user.record %></td>
-  </tr>
+
+<h2 id="games-header">
+<% if @user == current_user %>
+  Your game history
+<% else %>
+  <%= current_user.username %>'s game history
+<% end %>
+</h2>
+<table aria-labelledby="game-history-table">
+  <thead>
+    <th>Opponent</td>
+    <th>Winner</th>
+    <th>First Move</td>
+    <th>Started</td>
+    <th>Completed</td>
+    <th>Revisit</td>
+  </thead>
+  <tbody>
+    <% @user.games.each do |game| %>
+      <tr
+        class="game-history-table__row game-history-table__row<% if game.winner && game.winner == @user %>game-history-table__row--won-game<% else %>--lost-game<% end %>"
+      >
+        <td><%= game.opponent(@user).username %></td>
+        <td><%= game.winner && game.winner.username || raw("&mdash;") %></td>
+        <td><%= game.winner_by_deck(game.first_move).username %></td>
+        <td><%= game.created_at.strftime('%c') %></td>
+        <td><%= game.completed_at && game.completed_at.strftime('%c') || raw("&mdash;") %></td>
+        <td><%= game.completed_at ? link_to('Revisit game', "/games/#{game.id}") : link_to('Resume game', "/games/#{game.id}/play") %></td>
+      </tr>
+    <% end %>
+  </tbody>
 </table>

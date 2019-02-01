@@ -15,7 +15,8 @@ class GamesController < ApplicationController
     @game = Game.new(game_log: Game.new_game, is_local: params[:game][:is_local]) #could move to a before create?
     @game.players = [current_user, User.find(params[:player2])].shuffle
     if @game.save
-      redirect_to "/users/#{params[:player2]}/games/#{@game.id}/play"
+      redirect_to "/games/#{@game.id}/play"
+      # maybe redirect to "/games/:id" when the show is set up
     else
       p @game.errors
     end
@@ -24,6 +25,9 @@ class GamesController < ApplicationController
   def play
     @player = current_user
     @game = Game.find(params[:id])
+    if !@game.players.include?(current_user)
+      @errors = ['You are not a player in this game']
+    end
     @game_data = @game.json_board
   end
 
