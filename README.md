@@ -17,11 +17,6 @@
 
 1. ~play online~
 2. matchmaking
-  - Add request game function
-  - Rework routing appropriately
-    - just games/:id but your id must match a player in that game
-    - also change routing in newGame (in apiRequests)
-  - Only allow proper players into a game
   - fix w/l to not include local games
   - add in progress local games so they don't have to remember the url if they wanna pick it back up later?
 3. code cleanup
