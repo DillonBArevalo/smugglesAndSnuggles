@@ -14,7 +14,19 @@ class Game < ApplicationRecord
     deck(winner.id)
   end
 
-  def winner_by_deck( deck )
+  def opponent(user)
+    players[(players.index(user) + 1) % 2]
+  end
+
+  def first_move
+    if game_log['moveHistory'].length != 0
+      game_log['moveHistory'][0]['deck']
+    else
+      game_log["activeDeck"]
+    end
+  end
+
+  def winner_by_deck(deck)
     User.find(self.games_users.select {|item| item.deck == deck}[0].user_id)
   end
 
