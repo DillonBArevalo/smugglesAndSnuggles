@@ -19,7 +19,7 @@ class Game < ApplicationRecord
   end
 
   def first_move
-    if game_log['moveHistory'].length != 0
+    if game_log['moveHistory'] && game_log['moveHistory'].length != 0
       game_log['moveHistory'][0]['deck']
     else
       game_log["activeDeck"]
