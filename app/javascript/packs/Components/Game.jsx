@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Card from './Card';
 import Cell from './Cell';
+import PlayerIcons from './PlayerIcons';
 import CellWindow from './CellWindow';
 import {fetchKeysAndStartConnection, publishMove, sendGameUpdate} from '../modules/apiRequests'
 
@@ -333,6 +334,10 @@ class Game extends Component {
   render() {
     return(
       <div className='game-container'>
+        <PlayerIcons
+          flipped={this.state.flippedBoard}
+          active={this.state.activeDeck}
+        />
         <div id='main-game-container' className="board">
           {this.renderGameBoard()}
         </div>

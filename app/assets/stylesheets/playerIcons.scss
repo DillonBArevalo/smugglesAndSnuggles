@@ -1,0 +1,31 @@
+@import 'variables';
+
+.player-icons {
+  width: 30%;
+  height: 100%;
+}
+
+.player-icons__player-container {
+  height: 45%;
+  transition: height 0.5s;
+}
+
+.player-icons__player-container--top {
+  border-radius: 0 0 10px 0;
+}
+
+.player-icons__player-container--bottom {
+  border-radius: 0 10px 0 0;
+}
+
+.player-icons__player-container--city {
+  background-color: $cityPlayerColor;
+}
+
+.player-icons__player-container--country {
+  background-color: $countryPlayerColor;
+}
+
+.player-icons__player-container--active {
+  height: 55%;
+}
