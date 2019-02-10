@@ -17,9 +17,7 @@
 
 1. ~play online~
 2. matchmaking
-  - fix w/l to not include local games
-  - add in progress local games so they don't have to remember the url if they wanna pick it back up later?
-  - Add content to user page
+  remove revisit col if not in game
 3. aesthetics
   - favicon
   - cache images
