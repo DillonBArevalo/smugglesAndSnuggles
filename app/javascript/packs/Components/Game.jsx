@@ -335,8 +335,9 @@ class Game extends Component {
     return(
       <div className='game-container'>
         <PlayerIcons
-          flipped={this.state.flippedBoard}
+          flipped={this.state.isFlippedBoard}
           active={this.state.activeDeck}
+          playersData={this.props.playersData}
         />
         <div id='main-game-container' className="board">
           {this.renderGameBoard()}

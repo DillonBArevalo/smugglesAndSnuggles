@@ -14,6 +14,20 @@ class Game < ApplicationRecord
     deck(winner.id)
   end
 
+  def players_data
+    data = {}
+    games_users.each do |game_user|
+      user = game_user.user
+      user_data = {
+        "url": ActionController::Base.helpers.image_path(user.avatar.url(:medium)),
+        "id": user.id,
+        "username": user.username,
+      }
+      data["#{game_user.deck}"] = user_data
+    end
+    data.to_json
+  end
+
   def opponent(user)
     players[(players.index(user) + 1) % 2]
   end
