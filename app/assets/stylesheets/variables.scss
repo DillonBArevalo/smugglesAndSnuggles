@@ -13,3 +13,12 @@ $countryPlayerColor: #eeb166;
 }
 
 $font: gogono_cocoa_mochi;
+
+@mixin descriptive-text ($large) {
+  font-family: $font;
+  color: white;
+  font-size: 2rem;
+  @if $large {
+    font-size: 2.5rem;
+  }
+}

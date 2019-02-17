@@ -338,6 +338,7 @@ class Game extends Component {
           flipped={this.state.isFlippedBoard}
           active={this.state.activeDeck}
           playersData={this.props.playersData}
+          movesLeft={this.state.movesLeft}
         />
         <div id='main-game-container' className="board">
           {this.renderGameBoard()}

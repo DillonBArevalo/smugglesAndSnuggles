@@ -71,11 +71,46 @@
 
     &--city {
       color: white;
-      @include outline(black)
+      @include outline(black);
     }
     &--country {
       color: black;
-      @include outline(white)
+      @include outline(white);
     }
+  }
+  &__turn-data {
+    @include descriptive-text(true);
+    text-align: center;
+    width: 100%;
+    margin: 0;
+    // this height is a problem for smaller screens,
+    // but makes the transition really nice where it all fits.
+    // could do media queries?
+    height: 2.5rem;
+    transition: height 0.5s;
+    overflow: hidden;
+    &--hidden {
+      height: 0;
+    }
+    &--top {
+      margin-bottom: 1rem
+    }
+    &--bottom {
+      margin-top: 1rem
+    }
+  }
+
+  &__move-data {
+    @include descriptive-text(false);
+    margin-left: 2rem;
+  }
+
+  &__move-bubble {
+    background-color: white;
+    border-radius: 50%;
+    height: 1.75rem;
+    width: 1.75rem;
+    display: inline-block;
+    margin: 0 0.75rem;
   }
 }

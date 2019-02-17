@@ -13,6 +13,8 @@ class PlayerIcons extends Component {
     }
     this.getPlayerData = this.getPlayerData.bind(this);
     this.generateUserPicture = this.generateUserPicture.bind(this);
+    this.generateTurnData = this.generateTurnData.bind(this);
+    this.generateMovesCircles = this.generateMovesCircles.bind(this);
   }
 
   getPlayerData(position, key) {
@@ -31,6 +33,35 @@ class PlayerIcons extends Component {
           {this.getPlayerData(position, 'username')}
         </p>
       </div>
+    );
+  }
+
+  generateMovesCircles() {
+    return new Array(this.props.movesLeft)
+      .fill('')
+      .map((_, i)=> {
+        return (
+          <span
+            key={`bubble-${i}`}
+            className="player-icons__move-bubble"
+          ></span>
+        );
+      });
+  }
+
+  generateTurnData(activePosition, position) {
+    const baseClass = 'player-icons__turn-data';
+    const hiddenClass = activePosition !== position && `${baseClass}--hidden`;
+    const attrs = {
+      className: `${baseClass} ${baseClass}--${position} ${hiddenClass || ''}`,
+      'aria-hidden': position !== activePosition,
+    };
+    return (
+      <p
+        {...attrs}
+      >
+        {`${this.state.mapping[position]} Bears' Turn`}
+      </p>
     );
   }
 
@@ -53,17 +84,24 @@ class PlayerIcons extends Component {
     return (
       <div className="player-icons">
         <div className={classes.top.join(' ')}>
-          {activePosition === 'top' && <div></div>}
-          <div className="player-icons__move-data">
-          </div>
+          {activePosition === 'top' &&
+            <p className="player-icons__move-data" aria-label={`Moves left: ${this.props.movesLeft}`}>
+              Moves: {this.generateMovesCircles()}
+            </p>
+          }
           {this.generateUserPicture('top')}
-          {activePosition === 'top' && <div>{`${this.state.mapping.top} Bears' Turn`}</div>}
+          {this.generateTurnData(activePosition, 'top')}
         </div>
         <div className={classes.bottom.join(' ')}>
-          {activePosition === 'bottom' && <div>{`${this.state.mapping.bottom} Bears' Turn`}</div>}
+          {this.generateTurnData(activePosition, 'bottom')}
           {this.generateUserPicture('bottom')}
           <div className="player-icons__move-data">
           </div>
+          {activePosition === 'bottom' &&
+            <p className="player-icons__move-data" aria-label={`Moves left: ${this.props.movesLeft}`}>
+              Moves: {this.generateMovesCircles()}
+            </p>
+          }
         </div>
       </div>
     );

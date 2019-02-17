@@ -51,9 +51,9 @@
 - Add game chat
 - Add opponent info in game
 
-## implementation thoughts
-
-- For flipping decks. we can say that one deck is always bottom and add a flipping behavior in the js. We can then curry all relevant functions and bind them in the constructor to the appropriate flipped or non-flipped version.
+## TODOS:
+  - add media queries to make sure "x bears' turn" never overflows...
+  - animate removal of move circles and moves <p>
 
 ----------
 ## pubnub notes:
