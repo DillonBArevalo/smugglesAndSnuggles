@@ -45,18 +45,22 @@ class PlayerIcons extends Component {
         'player-icons__player-container--bottom',
       ],
     };
+    const activePosition = this.state.mapping[this.props.active];
     classes[this.state.mapping.country].push('player-icons__player-container--country');
     classes[this.state.mapping.city].push('player-icons__player-container--city');
-    classes[this.state.mapping[this.props.active]].push('player-icons__player-container--active');
+    classes[activePosition].push('player-icons__player-container--active');
 
     return (
       <div className="player-icons">
         <div className={classes.top.join(' ')}>
+          {activePosition === 'top' && <div></div>}
           <div className="player-icons__move-data">
           </div>
           {this.generateUserPicture('top')}
+          {activePosition === 'top' && <div>{`${this.state.mapping.top} Bears' Turn`}</div>}
         </div>
         <div className={classes.bottom.join(' ')}>
+          {activePosition === 'bottom' && <div>{`${this.state.mapping.bottom} Bears' Turn`}</div>}
           {this.generateUserPicture('bottom')}
           <div className="player-icons__move-data">
           </div>

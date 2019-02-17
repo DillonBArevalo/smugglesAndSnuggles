@@ -1,8 +1,21 @@
 @import 'variables';
+@mixin outline ($color) {
+  text-shadow:
+    3px 3px $color,
+    -3px 3px $color,
+    3px -3px $color,
+    -3px -3px $color,
+    0 3px $color,
+    -3px 0 $color,
+    3px 0 $color,
+    0 -3px $color
+  ;
+}
 
 .player-icons {
   width: 30%;
   height: 100%;
+  font-family: $font;
 
   &__player-container {
     height: 45%;
@@ -49,7 +62,7 @@
   }
 
   &__user-name {
-    font-size: 3rem;
+    font-size: 2.5rem;
     font-weight: bold;
     text-align: center;
     margin: 0;
@@ -58,21 +71,11 @@
 
     &--city {
       color: white;
-      text-shadow:
-        1px 1px black,
-        -1px 1px black,
-        1px -1px black,
-        -1px -1px black,
-      ;
+      @include outline(black)
     }
     &--country {
       color: black;
-      text-shadow:
-        1px 1px white,
-        -1px 1px white,
-        1px -1px white,
-        -1px -1px white,
-      ;
+      @include outline(white)
     }
   }
 }

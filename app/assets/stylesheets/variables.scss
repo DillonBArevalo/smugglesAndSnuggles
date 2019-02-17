@@ -3,3 +3,13 @@ $cityColor: #e67c42;
 
 $cityPlayerColor: #0b153d;
 $countryPlayerColor: #eeb166;
+
+@font-face {
+  font-family: 'gogono_cocoa_mochi';
+  src: url('gomarice_gogono_cocoa_mochi.eot');
+  src: url('gomarice_gogono_cocoa_mochi.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+$font: gogono_cocoa_mochi;
