@@ -1,0 +1,116 @@
+@import 'variables';
+@mixin outline ($color) {
+  text-shadow:
+    3px 3px $color,
+    -3px 3px $color,
+    3px -3px $color,
+    -3px -3px $color,
+    0 3px $color,
+    -3px 0 $color,
+    3px 0 $color,
+    0 -3px $color
+  ;
+}
+
+.player-icons {
+  width: 30%;
+  height: 100%;
+  font-family: $font;
+
+  &__player-container {
+    height: 45%;
+    transition: height 0.5s;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    &--top {
+      border-radius: 0 0 1rem 0;
+      justify-content: flex-end
+    }
+    &--bottom {
+      border-radius: 0 1rem 0 0;
+    }
+    &--city {
+      background-color: $cityPlayerColor;
+    }
+    &--country {
+      background-color: $countryPlayerColor;
+    }
+    &--active {
+      height: 55%;
+    }
+  }
+
+  &__profile-picture {
+    border-radius: 50%;
+    border: 2rem solid #bfbfbf;
+    height: 35vh;
+    width: 35vh;
+    flex-shrink: 0;
+    box-sizing: border-box;
+  }
+
+  &__user-data {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    position: relative;
+    margin: 1.5rem 0;
+  }
+
+  &__user-name {
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-align: center;
+    margin: 0;
+    position: absolute;
+    bottom: 1rem;
+
+    &--city {
+      color: white;
+      @include outline(black);
+    }
+    &--country {
+      color: black;
+      @include outline(white);
+    }
+  }
+  &__turn-data {
+    @include descriptive-text(true);
+    text-align: center;
+    width: 100%;
+    margin: 0;
+    // this height is a problem for smaller screens,
+    // but makes the transition really nice where it all fits.
+    // could do media queries?
+    height: 2.5rem;
+    transition: height 0.5s;
+    overflow: hidden;
+    &--hidden {
+      height: 0;
+    }
+    &--top {
+      margin-bottom: 1rem
+    }
+    &--bottom {
+      margin-top: 1rem
+    }
+  }
+
+  &__move-data {
+    @include descriptive-text(false);
+    margin-left: 2rem;
+  }
+
+  &__move-bubble {
+    background-color: white;
+    border-radius: 50%;
+    height: 1.75rem;
+    width: 1.75rem;
+    display: inline-block;
+    margin: 0 0.75rem;
+  }
+}

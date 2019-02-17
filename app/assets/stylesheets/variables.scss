@@ -1,2 +1,24 @@
 $countryColor: #5e7fe4;
 $cityColor: #e67c42;
+
+$cityPlayerColor: #0b153d;
+$countryPlayerColor: #eeb166;
+
+@font-face {
+  font-family: 'gogono_cocoa_mochi';
+  src: url('gomarice_gogono_cocoa_mochi.eot');
+  src: url('gomarice_gogono_cocoa_mochi.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+$font: gogono_cocoa_mochi;
+
+@mixin descriptive-text ($large) {
+  font-family: $font;
+  color: white;
+  font-size: 2rem;
+  @if $large {
+    font-size: 2.5rem;
+  }
+}
