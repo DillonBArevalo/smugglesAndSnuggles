@@ -31,53 +31,6 @@
   padding-left: 0.5rem;
 }
 
-.board {
-  width: 660px;
-  min-width: 350px;
-  flex-shrink: 1;
-  height:100%;
-  max-height: 65rem;
-  border: 1px solid black;
-  display:flex;
-  flex-direction: column;
-  align-items: stretch;
-}
-
-.board__row {
-  border: 1px solid black;
-  flex-basis:20%;
-  display: flex;
-  flex-direction:row;
-  flex-wrap: nowrap;
-  align-items: stretch;
-  justify-content: space-around;
-}
-
-.board__cell{
-  display: inline-block;
-  position: relative;
-  flex-basis: 33%;
-  border-right: 1px solid black;
-  border-left: 1px solid black;
-}
-
-@for $i from 0 through 15 {
-  .stack-#{$i} {
-    z-index: #{$i};
-    @if $i < 3 {
-      right: #{$i}0%;
-    }
-  }
-}
-
-.card {
-  height: 100%;
-  position: absolute;
-  border: 1px solid gray;
-  box-sizing: border-box;
-  border-radius: 5px;
-}
-
 .cell-window {
   height: 80%;
   display: flex;
@@ -101,34 +54,6 @@
   flex-shrink: 0;
   margin-bottom: 10px;
   box-shadow: 5px 10px 10px black;
-}
-
-.board__highlight {
-  height: 100%;
-  width: 100%;
-  background-color: green;
-  position: absolute;
-  opacity: 0.33;
-  z-index: 11;
-
-  &:hover {
-    background-color: blue;
-  }
-}
-
-.game__cancel-button {
-  height: 40px;
-  font-weight: 800;
-  align-self: center
-}
-
-.new-game {
-  display: flex;
-  justify-content: space-between;
-}
-
-.new-game__container {
-  flex-basis: 45%;
 }
 
 .lobby__players-tile {
