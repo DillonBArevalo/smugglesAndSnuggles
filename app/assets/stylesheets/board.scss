@@ -1,36 +1,78 @@
+@import 'variables';
+
+@mixin beforeSquare {
+  position: absolute;
+  top: 10%;
+  bottom: 10%;
+  left: 5%;
+  right: 5%;
+  content: '';
+}
+
 .board {
-  width: 660px;
+  width: 45vw;
   min-width: 350px;
-  flex-shrink: 1;
-  height:100%;
+  flex-shrink: 0;
+  height: 100%;
   max-height: 65rem;
-  border: 1px solid black;
-  display:flex;
+  // border: 1px solid black;
+  display: flex;
   flex-direction: column;
   align-items: stretch;
 }
 
 .board__row {
-  border: 1px solid black;
+  // border: 1px solid black;
   flex-basis:20%;
   display: flex;
   flex-direction:row;
   flex-wrap: nowrap;
   align-items: stretch;
   justify-content: space-around;
+
+  &--country {
+    background-color: $countryPlayerColor;
+  }
+  &--city {
+    background-color: $cityPlayerColor;
+  }
+  &--odd {
+    .board__cell:nth-of-type(2n)::before {
+      background-color: $cellLight;
+    }
+    .board__cell:nth-of-type(2n + 1)::before {
+      background-color: $cellDark;
+    }
+  }
+  &--even {
+    .board__cell:nth-of-type(2n + 1)::before {
+      background-color: $cellLight;
+    }
+    .board__cell:nth-of-type(2n)::before {
+      background-color: $cellDark;
+    }
+  }
 }
 
-.board__cell{
-  display: inline-block;
+.board__cell {
+  display: inline-flex;
+  align-items: center;
   position: relative;
   flex-basis: 33%;
-  border-right: 1px solid black;
-  border-left: 1px solid black;
+
+  &::before {
+    @include beforeSquare;
+  }
+  &--highlighted::after {
+    @include beforeSquare;
+    border: .5rem solid white;
+    box-shadow: 0 0 4rem #828080, inset 0 0 3rem;
+  }
 }
 
 @for $i from 0 through 15 {
   .stack-#{$i} {
-    z-index: #{$i};
+    z-index: #{1 + $i};
     @if $i < 3 {
       right: #{$i}0%;
     }
@@ -38,24 +80,11 @@
 }
 
 .card {
-  height: 100%;
+  height: 95%;
   position: absolute;
-  border: 1px solid gray;
+  // border: 1px solid gray;
   box-sizing: border-box;
-  border-radius: 5px;
-}
-
-.board__highlight {
-  height: 100%;
-  width: 100%;
-  background-color: green;
-  position: absolute;
-  opacity: 0.33;
-  z-index: 11;
-
-  &:hover {
-    background-color: blue;
-  }
+  // border-radius: 5px;
 }
 
 .game__cancel-button {

@@ -9,6 +9,7 @@ class Cell extends Component {
   }
 
   highlightClick () {
+    this.props.showStack();
     if(this.props.confirmMove) {
       if (window.confirm('Move to the highlighted square?')) {
         this.props.moveCard();
@@ -21,8 +22,8 @@ class Cell extends Component {
   render() {
     return(
       <div
-        className="board__cell"
-        onClick={this.props.showStack}
+        className={`board__cell ${this.props.highlighted && 'board__cell--highlighted'}`}
+        onClick={this.props.highlighted ? this.highlightClick : this.props.showStack}
       >
         {this.props.cards.map((card, idx) => {
           return  <Card
@@ -38,10 +39,6 @@ class Cell extends Component {
                     isSmuggled={card.isSmuggled}
                   />
         })}
-        {this.props.highlighted && <div
-          className="board__highlight"
-          onClick={this.highlightClick}
-          ></div>}
       </div>
     );
   }

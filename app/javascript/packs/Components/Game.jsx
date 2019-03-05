@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Card from './Card';
 import Cell from './Cell';
 import PlayerIcons from './PlayerIcons';
 import CellWindow from './CellWindow';
@@ -299,18 +298,30 @@ class Game extends Component {
     this.setState({board, movement: {active: true, startingLocation: [row, col]}});
   }
 
+  generateRowModifier(index, isFlipped) {
+    const rowParity = `board__row--${index % 2 ? 'even' : 'odd'}`;
+    if (index === 0  && isFlipped || index === 4 && !isFlipped) {
+      return `${rowParity} board__row--country`;
+    } else if (index === 0  && !isFlipped || index === 4 && isFlipped) {
+      return `${rowParity} board__row--city`;
+    } else {
+      return rowParity;
+    }
+  }
+
   renderGameBoard () {
     let gameContents = <h2>Waiting for your opponent to connect...</h2>;
     if (this.state.pubNubError) {
       gameContents = <h2>A connection error has occured. Please check your internet connection and reload the page.</h2>;
     } else if (this.state.isOpponentConnected) {
-      const flip = this.state.isFlippedBoard;
-      const board = flip ? this.flippedBoard() : this.state.board;
+      const isFlipped = this.state.isFlippedBoard;
+      const board = isFlipped ? this.flippedBoard() : this.state.board;
       gameContents = board.map((row, rowIndex) => {
-        const rowIdx = flip ? (4 - rowIndex) : rowIndex;
-        return <div key={`row${rowIdx}`} className="board__row">
+        const rowIdx = isFlipped ? (4 - rowIndex) : rowIndex;
+        const modifier = this.generateRowModifier(rowIndex, isFlipped)
+        return <div key={`row${rowIdx}`} className={`board__row ${modifier}`}>
           {row.map((cell, colIndex) => {
-            const col = flip ? (2 - colIndex) : colIndex;
+            const col = isFlipped ? (2 - colIndex) : colIndex;
             return  <Cell
                       key={`column${rowIdx}${col}`}
                       cards={cell.cards}
