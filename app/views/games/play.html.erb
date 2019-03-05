@@ -4,8 +4,7 @@
   <div
     id='game'
     data-board-state="<%= @game_data %>"
-    data-city-flipped-url="<%= image_url("cards/city/city-flipped.png") %>"
-    data-country-flipped-url="<%= image_url("cards/country/country-flipped.png") %>"
+    data-card-images="<%= generate_card_images_json %>"
     data-player-deck="<%= @game.deck(session[:id]) %>"
     data-is-local="<%= @game.is_local %>"
     data-id="<%= session[:id] %>"

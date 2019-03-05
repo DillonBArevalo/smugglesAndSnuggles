@@ -51,6 +51,8 @@ class Game extends Component {
     this.setSmuggleAndFlip = this.setSmuggleAndFlip.bind(this);
     this.showStack = this.showStack.bind(this);
     this.toggleConfirmMove = this.toggleConfirmMove.bind(this);
+    this.getCardUrl = this.getCardUrl.bind(this);
+    this.isSelectedCell = this.isSelectedCell.bind(this);
   }
 
   componentDidMount () {
@@ -64,7 +66,11 @@ class Game extends Component {
     document.removeEventListener('keyup', this.docKeyup);
   }
 
-  toggleConfirmMove() {
+  getCardUrl (deck, number, flipped = false) {
+    const key = flipped ? 'flipped' : number;
+    return this.props.cardImages[deck][key];
+  }
+  toggleConfirmMove () {
     this.setState({confirmMove: !this.state.confirmMove});
   }
 
@@ -309,6 +315,12 @@ class Game extends Component {
     }
   }
 
+  isSelectedCell (rowIndex, colIndex) {
+    const isCorrectRow = this.state.movement.startingLocation[0] === (this.state.isFlippedBoard ? 4 - rowIndex : rowIndex);
+    const isCorrectCol = this.state.movement.startingLocation[1] === (this.state.isFlippedBoard ? 2 - colIndex : colIndex);
+    return  this.state.movement.active && isCorrectRow && isCorrectCol;
+  }
+
   renderGameBoard () {
     let gameContents = <h2>Waiting for your opponent to connect...</h2>;
     if (this.state.pubNubError) {
@@ -322,15 +334,16 @@ class Game extends Component {
         return <div key={`row${rowIdx}`} className={`board__row ${modifier}`}>
           {row.map((cell, colIndex) => {
             const col = isFlipped ? (2 - colIndex) : colIndex;
+            const selected = this.isSelectedCell(rowIndex, colIndex);
             return  <Cell
                       key={`column${rowIdx}${col}`}
                       cards={cell.cards}
                       highlighted={cell.highlighted}
                       highlightMoves={this.highlightMoves.bind(this, rowIdx, col)}
+                      selected={selected}
                       cancelMove={this.cancelMove}
-                      cityFlippedUrl={this.props.cityFlippedUrl}
                       confirmMove={this.state.confirmMove}
-                      countryFlippedUrl={this.props.countryFlippedUrl}
+                      getCardUrl={this.getCardUrl}
                       moveCard={this.moveCard.bind(this, rowIdx, col, !this.state.isLocal, false)}
                       showStack={this.showStack.bind(this, rowIdx, col)}
                       hideStack={this.hideStack}
@@ -385,8 +398,7 @@ class Game extends Component {
         </div>
         <CellWindow
           cards={this.state.stackView ? this.state.board[this.state.stackView.row][this.state.stackView.col].cards.map((i) => i).reverse() : []}
-          cityFlippedUrl={this.props.cityFlippedUrl}
-          countryFlippedUrl={this.props.countryFlippedUrl}
+          getCardUrl={this.getCardUrl}
         />
       </div>
     );

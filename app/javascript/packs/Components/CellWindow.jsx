@@ -18,7 +18,7 @@ class CellWindow extends Component {
                     deck={card.deck}
                     value={card.value}
                     zIndex={idx}
-                    url={card.faceDown ? this.props[`${card.deck}FlippedUrl`] : card.url}
+                    url={this.props.getCardUrl(card.deck, card.value, card.faceDown)}
                     faceDown={card.faceDown}
                     class="cell-window__card"
                     highlightMoves={_ => {}}

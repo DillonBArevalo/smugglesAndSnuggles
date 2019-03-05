@@ -22,7 +22,7 @@ class Cell extends Component {
   render() {
     return(
       <div
-        className={`board__cell ${this.props.highlighted && 'board__cell--highlighted'}`}
+        className={`board__cell ${(this.props.highlighted && 'board__cell--highlighted') || ''}`}
         onClick={this.props.highlighted ? this.highlightClick : this.props.showStack}
       >
         {this.props.cards.map((card, idx) => {
@@ -31,12 +31,13 @@ class Cell extends Component {
                     deck={card.deck}
                     value={card.value}
                     zIndex={idx}
-                    url={card.faceDown ? this.props[`${card.deck}FlippedUrl`] : card.url}
+                    url={this.props.getCardUrl(card.deck, card.value, card.faceDown)}
                     faceDown={card.faceDown}
                     highlightMoves={this.props.highlightMoves}
                     cancelMove={this.props.cancelMove}
                     active={card.active}
                     isSmuggled={card.isSmuggled}
+                    class={(this.props.selected && idx === this.props.cards.length - 1 && 'card--selected') || ''}
                   />
         })}
       </div>

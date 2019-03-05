@@ -19,8 +19,8 @@
 2. ~matchmaking~
 3. aesthetics
   - play redesign:
-    - user pictures section
     - game board section
+      - 4 card class categories, for if there are 1, 2, 3, or 4 cards. A little sloppy, but fine short term.
     - stack
     - move confirmation
   - cache images
@@ -54,6 +54,7 @@
 ## TODOS:
   - add media queries to make sure "x bears' turn" never overflows...
   - animate removal of move circles and moves <p>
+  - move render card out so I don't have to repeat code in cell window and cell
 
 ----------
 ## pubnub notes:
