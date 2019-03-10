@@ -15,6 +15,7 @@
 .player-icons {
   width: 30%;
   height: 100%;
+  flex-shrink: 0;
   font-family: $font-mochi;
 
   &__player-container {
@@ -44,7 +45,7 @@
 
   &__profile-picture {
     border-radius: 50%;
-    border: 2rem solid #bfbfbf;
+    border: 1.5rem solid #bfbfbf;
     height: 35vh;
     width: 35vh;
     flex-shrink: 0;
@@ -102,7 +103,7 @@
 
   &__move-data {
     @include descriptive-text(false);
-    margin-left: 2rem;
+    margin: 1rem 0 1rem 2rem;
   }
 
   &__move-bubble {

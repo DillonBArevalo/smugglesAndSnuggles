@@ -9,6 +9,11 @@
   content: '';
 }
 
+@mixin cardXOfY ($x, $y) {
+  z-index: $y - $x + 1;
+  left: (($x - ($y/2) - 0.5) * 3) + vh;
+}
+
 .board {
   width: 45vw;
   min-width: 21.875rem;
@@ -53,11 +58,8 @@
 }
 
 .board__cell {
-  display: inline-flex;
-  align-items: center;
   position: relative;
   flex-basis: 33%;
-
   &::before {
     @include beforeSquare;
   }
@@ -68,24 +70,36 @@
   }
 }
 
-@for $i from 0 through 15 {
-  .stack-#{$i} {
-    z-index: #{1 + $i};
-    @if $i < 3 {
-      right: #{$i}0%;
-    }
+.card {
+  height: 85%;
+  position: relative;
+  top: 7.5%;
+  box-sizing: border-box;
+  box-shadow: 0 0 0.625rem 0 #163b52;
+  pointer-events: auto;
+  &--selected {
+    height: 100%;
+    top: 0;
+    box-shadow: 0 0 1rem 0.5rem white;
+  }
+  &--hidden {
+    display: none;
   }
 }
 
-.card {
-  height: 85%;
-  position: absolute;
-  box-sizing: border-box;
-  box-shadow: 0 0 0.625rem 0 #163b52;
-  &--selected {
-    height: 100%;
-    box-shadow: 0 0 1rem 0.5rem white;
+@for $i from 1 through 4 {
+  @for $j from 1 through $i {
+    .card--#{$j}-of-#{$i} {
+      @include cardXOfY($j, $i)
+    }
   }
+}
+.card-container {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  pointer-events: none;
+  text-align: center;
 }
 
 .game__cancel-button {
@@ -101,4 +115,9 @@
 
 .new-game__container {
   flex-basis: 45%;
+}
+
+.board__overflowing-card-notification {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
 }
