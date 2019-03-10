@@ -31,7 +31,7 @@
   padding-left: 0.5rem;
 }
 
-.cell-window {
+.stack-preview {
   height: 80%;
   display: flex;
   overflow-y: scroll;
@@ -44,7 +44,7 @@
   border: 1px solid black;
 }
 
-.cell-window__card {
+.stack-preview__card {
   display: block;
   position: static;
   height: 215px;

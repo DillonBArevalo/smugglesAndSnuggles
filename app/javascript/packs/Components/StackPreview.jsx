@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import Card from './Card';
 
-class CellWindow extends Component {
+class stackPreview extends Component {
   constructor(props){
     super(props);
   }
@@ -10,7 +10,7 @@ class CellWindow extends Component {
   render() {
     return(
       <div
-        className="cell-window"
+        className="stack-preview"
       >
         {this.props.cards.map((card, idx) => {
           return  <Card
@@ -20,7 +20,7 @@ class CellWindow extends Component {
                     zIndex={idx}
                     url={this.props.getCardUrl(card.deck, card.value, card.faceDown)}
                     faceDown={card.faceDown}
-                    class="cell-window__card"
+                    class="stack-preview__card"
                     highlightMoves={_ => {}}
                   />
         })}
@@ -29,4 +29,4 @@ class CellWindow extends Component {
   }
 }
 
-export default CellWindow;
+export default stackPreview;

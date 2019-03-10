@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Cell from './Cell';
 import PlayerIcons from './PlayerIcons';
-import CellWindow from './CellWindow';
+import StackPreview from './StackPreview';
 import {fetchKeysAndStartConnection, publishMove, sendGameUpdate} from '../modules/apiRequests'
 
 class Game extends Component {
@@ -396,7 +396,7 @@ class Game extends Component {
             Cancel move
             </button>
         </div>
-        <CellWindow
+        <StackPreview
           cards={this.state.stackView ? this.state.board[this.state.stackView.row][this.state.stackView.col].cards.map((i) => i).reverse() : []}
           getCardUrl={this.getCardUrl}
         />
