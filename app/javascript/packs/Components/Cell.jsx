@@ -30,7 +30,7 @@ class Cell extends Component {
         {this.props.cards.map((card, idx) => {
           const position = numCards - idx;
           const stackSize = numCards - 3;
-          return idx >= stackSize && <div className="card-container"><Card
+          return idx >= stackSize && <div key={`${card.deck}${card.value}-container`} className="card-container"><Card
               key={`${card.deck}${card.value}`}
               deck={card.deck}
               value={card.value}

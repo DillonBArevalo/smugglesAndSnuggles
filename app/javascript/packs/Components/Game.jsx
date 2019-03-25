@@ -3,6 +3,7 @@ import Cell from './Cell';
 import PlayerIcons from './PlayerIcons';
 import StackPreview from './StackPreview';
 import {fetchKeysAndStartConnection, publishMove, sendGameUpdate} from '../modules/apiRequests'
+import MoveConfirmation from './MoveConfirmation';
 
 class Game extends Component {
   constructor(props){
@@ -367,39 +368,19 @@ class Game extends Component {
         <div id='main-game-container' className="board">
           {this.renderGameBoard()}
         </div>
-        <div className="game-container__center-box">
-          {this.displayWinner()}
-          <h3>{
-            this.state.isLocal ?
-              `Active Deck: ${this.state.activeDeck} bears` :
-              `It is ${this.state.playerDeck === this.state.activeDeck ? 'your turn' : 'your opponent\'s turn'}`
-          }</h3>
-          <h3>Moves Left: {this.state.movesLeft}</h3>
-          <div className="game-container__move-confirmation">
-            <input
-              id="confirmMove"
-              type="checkbox"
-              className="game-container__confirmation-checkbox"
-              checked={this.state.confirmMove}
-              onChange={this.toggleConfirmMove}
-            />
-            <label
-              className="game-container__confirmation-label"
-              htmlFor="confirmMove"
-            >Enable move confirmation</label>
-          </div>
-          <button
-            className='game__cancel-button'
-            onClick={this.cancelMove}
-            disabled={!this.state.movement.active}
-            >
-            Cancel move
-            </button>
+        <div className="game-container__right-cell">
+          <StackPreview
+            cards={this.state.stackView ? this.state.board[this.state.stackView.row][this.state.stackView.col].cards.map((i) => i).reverse() : []}
+            getCardUrl={this.getCardUrl}
+          />
+          <MoveConfirmation
+            displayWinner={this.displayWinner}
+            confirmMove={this.state.confirmMove}
+            toggleConfirmMove={this.toggleConfirmMove}
+            cancelMove={this.cancelMove}
+            movement={this.state.movement}
+          />
         </div>
-        <StackPreview
-          cards={this.state.stackView ? this.state.board[this.state.stackView.row][this.state.stackView.col].cards.map((i) => i).reverse() : []}
-          getCardUrl={this.getCardUrl}
-        />
       </div>
     );
   }

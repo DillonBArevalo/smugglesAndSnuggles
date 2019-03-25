@@ -16,44 +16,34 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+
+  &__center-box {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    text-align: center;
+  }
+
+  &__confirmation-label {
+    padding-left: 0.5rem;
+  }
+
+  &__right-cell {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 25vw;
+  }
 }
 
-.game-container__center-box {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-  text-align: center;
-}
-
-.game-container__confirmation-label {
-  padding-left: 0.5rem;
-}
-
-.stack-preview {
-  height: 80%;
-  display: flex;
-  overflow-y: scroll;
-  flex-direction: column;
-  align-items: center;
-  flex-wrap: nowrap;
-  flex-shrink: 0;
-  width: 200px;
-  margin: 0 40px 0 0; // media query here
-  border: 1px solid black;
-}
-
-.stack-preview__card {
-  display: block;
-  position: static;
-  height: 215px;
-  width: 153px;
-  z-index: 1;
-  border: 0;
-  flex-shrink: 0;
-  margin: 5px 0;
-  box-shadow: 5px 10px 10px black;
+.game__cancel-button {
+  height: 2.5rem;
+  font-weight: 800;
+  align-self: center;
+  background-color: $cancelMoveColor;
+  color: white;
 }
 
 .lobby__players-tile {
