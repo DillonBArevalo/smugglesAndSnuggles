@@ -2,10 +2,12 @@ module GamesHelper
   def generate_card_images_json
     cards = {
       'city' => {
-        'flipped' => image_url("cards/city/city-flipped.png")
+        'flipped' => image_url("cards/city/city-flipped.png"),
+        'overflow' => image_url("cards/city/city-overflow.png")
       },
       'country' => {
-        'flipped' => image_url("cards/country/country-flipped.png")
+        'flipped' => image_url("cards/country/country-flipped.png"),
+        'overflow' => image_url("cards/country/country-overflow.png")
       }
     }
     8.times do |num|

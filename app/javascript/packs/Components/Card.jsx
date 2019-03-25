@@ -5,6 +5,7 @@ class Card extends Component {
   constructor(props){
     super(props);
     this.clickHandler = this.clickHandler.bind(this);
+    this.generateAlt = this.generateAlt.bind(this);
   }
 
   clickHandler(){
@@ -17,13 +18,24 @@ class Card extends Component {
     }
   }
 
+  generateAlt(){
+    let alt = `${this.props.deck} ${this.props.value} card`;
+    if (this.props.faceDown) {
+      alt = `Facedown ${this.props.deck} card`;
+    } else if (this.props.isOverflow) {
+      // maybe use alt to list all extra cards?
+      alt = 'more cards';
+    }
+    return alt;
+  }
+
   render() {
     return(
       <img
         src={this.props.url}
         className={`card ${this.props.stackClass} card--${this.props.deck} ${this.props.selected ? 'card--selected' : ''} ${this.props.class || ''}`}
         onClick={this.clickHandler}
-        alt={this.props.faceDown ? `Facedown ${this.props.deck} card` : `${this.props.deck} ${this.props.value} card`}
+        alt={this.generateAlt()}
       />
     );
   }
