@@ -17,19 +17,6 @@
   justify-content: space-between;
   align-items: center;
 
-  &__center-box {
-    flex: 1 1 auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    text-align: center;
-  }
-
-  &__confirmation-label {
-    padding-left: 0.5rem;
-  }
-
   &__right-cell {
     display: flex;
     flex-direction: column;
@@ -38,13 +25,6 @@
   }
 }
 
-.game__cancel-button {
-  height: 2.5rem;
-  font-weight: 800;
-  align-self: center;
-  background-color: $cancelMoveColor;
-  color: white;
-}
 
 .lobby__players-tile {
   display: flex;

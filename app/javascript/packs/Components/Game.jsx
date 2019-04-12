@@ -34,7 +34,7 @@ class Game extends Component {
     this.canMove = this.canMove.bind(this);
     this.clearStatuses = this.clearStatuses.bind(this);
     this.constructSingleListFromMovesBoard = this.constructSingleListFromMovesBoard.bind(this);
-    this.displayWinner = this.displayWinner.bind(this);
+    // this.displayWinner = this.displayWinner.bind(this);
     this.docKeyup = this.docKeyup.bind(this);
     this.fetchKeysAndStartConnection = fetchKeysAndStartConnection.bind(this);
     this.flippedBoard = this.flippedBoard.bind(this);
@@ -79,17 +79,17 @@ class Game extends Component {
     return this.state.board.map((row) => row.slice().reverse()).reverse();
   }
 
-  displayWinner () {
-    let winnerHeader;
-    if (!this.state.winner) {
-      winnerHeader = '';
-    } else if (this.state.isLocal) {
-      winnerHeader = <h2>{this.state.winner} Bears Win!</h2>;
-    } else {
-      winnerHeader = <h2>You { this.state.winner === this.state.playerDeck ? 'Win!' : 'Lose'}</h2>;
-    }
-    return winnerHeader;
-  }
+  // displayWinner () {
+  //   let winnerHeader;
+  //   if (!this.state.winner) {
+  //     winnerHeader = '';
+  //   } else if (this.state.isLocal) {
+  //     winnerHeader = <h2>{this.state.winner} Bears Win!</h2>;
+  //   } else {
+  //     winnerHeader = <h2>You { this.state.winner === this.state.playerDeck ? 'Win!' : 'Lose'}</h2>;
+  //   }
+  //   return winnerHeader;
+  // }
 
   showStack(row, col){
     this.state.board[row][col].cards.length && this.setState({stackView: {row: row, col: col}});
@@ -374,7 +374,6 @@ class Game extends Component {
             getCardUrl={this.getCardUrl}
           />
           <MoveConfirmation
-            displayWinner={this.displayWinner}
             confirmMove={this.state.confirmMove}
             toggleConfirmMove={this.toggleConfirmMove}
             cancelMove={this.cancelMove}

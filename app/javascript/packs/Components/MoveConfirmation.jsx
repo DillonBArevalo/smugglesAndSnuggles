@@ -5,32 +5,31 @@ class MoveConfirmation extends Component {
     super(props);
   }
 
-  
-
   render() {
     return(
-      <div className="game-container__center-box">
-        {this.props.displayWinner()}
-        <div className="game-container__move-confirmation">
+      <div className="move-confirmation">
+        <div className="move-confirmation__input-container">
           <input
             id="confirmMove"
             type="checkbox"
-            className="game-container__confirmation-checkbox"
+            className="move-confirmation__confirmation-checkbox"
             checked={this.props.confirmMove}
             onChange={this.props.toggleConfirmMove}
           />
           <label
-            className="game-container__confirmation-label"
+            className="move-confirmation__confirmation-label"
             htmlFor="confirmMove"
-          >Enable move confirmation</label>
+          >
+            enable move confirmation
+          </label>
         </div>
         <button
-          className='game__cancel-button'
-          onClick={this.cancelMove}
+          className='move-confirmation__cancel-button'
+          onClick={this.props.cancelMove}
           disabled={!this.props.movement.active}
-          >
-          Cancel move
-          </button>
+        >
+          CANCEL MOVE
+        </button>
       </div>
     );
   }

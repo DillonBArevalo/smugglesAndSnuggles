@@ -1,0 +1,49 @@
+@import 'variables';
+
+.move-confirmation {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    flex-grow: 1;
+
+    &__input-container {
+        display: flex;
+        align-items: center;
+    }
+
+    &__center-box {
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+        text-align: center;
+    }
+    
+    &__confirmation-label {
+        padding-left: 0.5rem;
+        font-size: 2.5rem;
+        font-family: $font-myriad;
+    }
+    
+    &__right-cell {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        width: 25vw;
+    }
+    
+    //center me
+    &__cancel-button {
+        height: 6rem;
+        width: 12rem;
+        font-size: 2.5rem;
+        line-height: 2.25rem;
+        font-weight: 800;
+        align-self: center;
+        background-color: $cancelMoveColor;
+        color: white;
+        font-family: $font-myriad;
+    }
+}

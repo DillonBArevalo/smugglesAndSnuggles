@@ -24,7 +24,6 @@ class Cell extends Component {
     const isOverflowing = numCards > 3;
     const stackSize = numCards - 3;
     const overflowingCard = this.props.cards[stackSize - 1];
-    console.log(overflowingCard);
     return(
       <div
         className={`board__cell ${(this.props.highlighted && 'board__cell--highlighted') || ''}`}
