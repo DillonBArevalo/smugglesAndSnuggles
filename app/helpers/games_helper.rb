@@ -20,10 +20,10 @@ module GamesHelper
   end
   def generate_move_confirmation_images
     {
-      'checkboxChecked' => image_url("checkBox_ticked"),
-      'checkboxUnchecked' => image_url("checkBox_unticked"),
-      'checkIcon' => image_url("checkMark_button"),
-      'xIcon' => image_url("X_button")
+      'checkboxChecked' => image_url("checkBox_ticked.png"),
+      'checkboxUnchecked' => image_url("checkBox_unticked.png"),
+      'checkIcon' => image_url("checkMark_button.png"),
+      'xIcon' => image_url("X_button.png")
     }
   end
   def generate_image_assets_json
