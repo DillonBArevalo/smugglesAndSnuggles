@@ -29,6 +29,7 @@ class GamesController < ApplicationController
       @errors = ['You are not a player in this game']
     end
     @game_data = @game.json_board
+    render layout: 'game'
   end
 
   def show # review an already played game

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Smuggles 'N Snuggles - Game <%= @game.id %></title>
+    <%= csrf_meta_tags %>
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_pack_tag 'render_react' %>
+  </head>
+
+  <body>
+    <main id='game-main'>
+      <%= yield %>
+    </main>
+  </body>
+</html>

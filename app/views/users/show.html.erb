@@ -20,7 +20,9 @@
     <th>First Move</td>
     <th>Started</td>
     <th>Completed</td>
-    <th>Revisit</td>
+    <% if current_user?(@user) %>
+      <th>Revisit</td>
+    <% end %>
   </thead>
   <tbody>
     <% @user.games.each do |game| %>
@@ -32,7 +34,9 @@
         <td><%= game.winner_by_deck(game.first_move).username %></td>
         <td><%= game.created_at.strftime('%c') %></td>
         <td><%= game.completed_at && game.completed_at.strftime('%c') || raw("&mdash;") %></td>
-        <td><%= game.completed_at ? link_to('Revisit game', "/games/#{game.id}") : link_to('Resume game', "/games/#{game.id}/play") %></td>
+        <% if current_user?(@user) %>
+          <td><%= game.completed_at ? link_to('Revisit game', "/games/#{game.id}") : link_to('Resume game', "/games/#{game.id}/play") %></td>
+        <% end %>
       </tr>
     <% end %>
   </tbody>

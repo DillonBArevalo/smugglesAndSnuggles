@@ -1,2 +1,39 @@
 $countryColor: #5e7fe4;
 $cityColor: #e67c42;
+
+$cityPlayerColor: #0b153d;
+$countryPlayerColor: #eeb166;
+
+$cellDark: #b4b4b4;
+$cellLight: #e5e5e5;
+
+$cancelMoveColor: #5e5e5e;
+$stackPreviewColor: #6f6f6f;
+$sliderBackgroundColor: #b3b7b9;
+
+@font-face {
+  font-family: 'gogono_cocoa_mochi';
+  src: url('gomarice_gogono_cocoa_mochi.eot');
+  src: url('gomarice_gogono_cocoa_mochi.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'myriad_pro_regular';
+  src: url('MYRIADPRO-REGULAR.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+$font-mochi: gogono_cocoa_mochi;
+$font-myriad: myriad_pro_regular;
+
+@mixin descriptive-text ($large) {
+  font-family: $font-mochi;
+  color: white;
+  font-size: 2rem;
+  @if $large {
+    font-size: 2.5rem;
+  }
+}
