@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import Card from './Card';
 import Cell from './Cell';
 import PlayerIcons from './PlayerIcons';
-import CellWindow from './CellWindow';
+import StackPreview from './StackPreview';
 import {fetchKeysAndStartConnection, publishMove, sendGameUpdate} from '../modules/apiRequests'
+import MoveConfirmation from './MoveConfirmation';
 
 class Game extends Component {
   constructor(props){
@@ -34,7 +34,7 @@ class Game extends Component {
     this.canMove = this.canMove.bind(this);
     this.clearStatuses = this.clearStatuses.bind(this);
     this.constructSingleListFromMovesBoard = this.constructSingleListFromMovesBoard.bind(this);
-    this.displayWinner = this.displayWinner.bind(this);
+    // this.displayWinner = this.displayWinner.bind(this);
     this.docKeyup = this.docKeyup.bind(this);
     this.fetchKeysAndStartConnection = fetchKeysAndStartConnection.bind(this);
     this.flippedBoard = this.flippedBoard.bind(this);
@@ -52,6 +52,8 @@ class Game extends Component {
     this.setSmuggleAndFlip = this.setSmuggleAndFlip.bind(this);
     this.showStack = this.showStack.bind(this);
     this.toggleConfirmMove = this.toggleConfirmMove.bind(this);
+    this.getCardUrl = this.getCardUrl.bind(this);
+    this.isSelectedCell = this.isSelectedCell.bind(this);
   }
 
   componentDidMount () {
@@ -61,11 +63,17 @@ class Game extends Component {
     }
     document.addEventListener('keyup', this.docKeyup);
   }
+
   componentWillUnmount () {
     document.removeEventListener('keyup', this.docKeyup);
   }
 
-  toggleConfirmMove() {
+  getCardUrl (deck, number, flipped = false) {
+    const key = flipped ? 'flipped' : number;
+    return this.props.assets.cards[deck][key];
+  }
+
+  toggleConfirmMove () {
     this.setState({confirmMove: !this.state.confirmMove});
   }
 
@@ -73,17 +81,17 @@ class Game extends Component {
     return this.state.board.map((row) => row.slice().reverse()).reverse();
   }
 
-  displayWinner () {
-    let winnerHeader;
-    if (!this.state.winner) {
-      winnerHeader = '';
-    } else if (this.state.isLocal) {
-      winnerHeader = <h2>{this.state.winner} Bears Win!</h2>;
-    } else {
-      winnerHeader = <h2>You { this.state.winner === this.state.playerDeck ? 'Win!' : 'Lose'}</h2>;
-    }
-    return winnerHeader;
-  }
+  // displayWinner () {
+  //   let winnerHeader;
+  //   if (!this.state.winner) {
+  //     winnerHeader = '';
+  //   } else if (this.state.isLocal) {
+  //     winnerHeader = <h2>{this.state.winner} Bears Win!</h2>;
+  //   } else {
+  //     winnerHeader = <h2>You { this.state.winner === this.state.playerDeck ? 'Win!' : 'Lose'}</h2>;
+  //   }
+  //   return winnerHeader;
+  // }
 
   showStack(row, col){
     this.state.board[row][col].cards.length && this.setState({stackView: {row: row, col: col}});
@@ -299,27 +307,46 @@ class Game extends Component {
     this.setState({board, movement: {active: true, startingLocation: [row, col]}});
   }
 
+  generateRowModifier(index, isFlipped) {
+    const rowParity = `board__row--${index % 2 ? 'even' : 'odd'}`;
+    if (index === 0  && isFlipped || index === 4 && !isFlipped) {
+      return `${rowParity} board__row--country`;
+    } else if (index === 0  && !isFlipped || index === 4 && isFlipped) {
+      return `${rowParity} board__row--city`;
+    } else {
+      return rowParity;
+    }
+  }
+
+  isSelectedCell (rowIndex, colIndex) {
+    const isCorrectRow = this.state.movement.startingLocation[0] === (this.state.isFlippedBoard ? 4 - rowIndex : rowIndex);
+    const isCorrectCol = this.state.movement.startingLocation[1] === (this.state.isFlippedBoard ? 2 - colIndex : colIndex);
+    return  this.state.movement.active && isCorrectRow && isCorrectCol;
+  }
+
   renderGameBoard () {
     let gameContents = <h2>Waiting for your opponent to connect...</h2>;
     if (this.state.pubNubError) {
       gameContents = <h2>A connection error has occured. Please check your internet connection and reload the page.</h2>;
     } else if (this.state.isOpponentConnected) {
-      const flip = this.state.isFlippedBoard;
-      const board = flip ? this.flippedBoard() : this.state.board;
+      const isFlipped = this.state.isFlippedBoard;
+      const board = isFlipped ? this.flippedBoard() : this.state.board;
       gameContents = board.map((row, rowIndex) => {
-        const rowIdx = flip ? (4 - rowIndex) : rowIndex;
-        return <div key={`row${rowIdx}`} className="board__row">
+        const rowIdx = isFlipped ? (4 - rowIndex) : rowIndex;
+        const modifier = this.generateRowModifier(rowIndex, isFlipped)
+        return <div key={`row${rowIdx}`} className={`board__row ${modifier}`}>
           {row.map((cell, colIndex) => {
-            const col = flip ? (2 - colIndex) : colIndex;
+            const col = isFlipped ? (2 - colIndex) : colIndex;
+            const selected = this.isSelectedCell(rowIndex, colIndex);
             return  <Cell
                       key={`column${rowIdx}${col}`}
                       cards={cell.cards}
                       highlighted={cell.highlighted}
                       highlightMoves={this.highlightMoves.bind(this, rowIdx, col)}
+                      selected={selected}
                       cancelMove={this.cancelMove}
-                      cityFlippedUrl={this.props.cityFlippedUrl}
                       confirmMove={this.state.confirmMove}
-                      countryFlippedUrl={this.props.countryFlippedUrl}
+                      getCardUrl={this.getCardUrl}
                       moveCard={this.moveCard.bind(this, rowIdx, col, !this.state.isLocal, false)}
                       showStack={this.showStack.bind(this, rowIdx, col)}
                       hideStack={this.hideStack}
@@ -343,40 +370,19 @@ class Game extends Component {
         <div id='main-game-container' className="board">
           {this.renderGameBoard()}
         </div>
-        <div className="game-container__center-box">
-          {this.displayWinner()}
-          <h3>{
-            this.state.isLocal ?
-              `Active Deck: ${this.state.activeDeck} bears` :
-              `It is ${this.state.playerDeck === this.state.activeDeck ? 'your turn' : 'your opponent\'s turn'}`
-          }</h3>
-          <h3>Moves Left: {this.state.movesLeft}</h3>
-          <div className="game-container__move-confirmation">
-            <input
-              id="confirmMove"
-              type="checkbox"
-              className="game-container__confirmation-checkbox"
-              checked={this.state.confirmMove}
-              onChange={this.toggleConfirmMove}
-            />
-            <label
-              className="game-container__confirmation-label"
-              htmlFor="confirmMove"
-            >Enable move confirmation</label>
-          </div>
-          <button
-            className='game__cancel-button'
-            onClick={this.cancelMove}
-            disabled={!this.state.movement.active}
-            >
-            Cancel move
-            </button>
+        <div className="game-container__right-cell">
+          <StackPreview
+            cards={this.state.stackView ? this.state.board[this.state.stackView.row][this.state.stackView.col].cards.map((i) => i).reverse() : []}
+            getCardUrl={this.getCardUrl}
+          />
+          <MoveConfirmation
+            confirmMove={this.state.confirmMove}
+            toggleConfirmMove={this.toggleConfirmMove}
+            cancelMove={this.cancelMove}
+            movement={this.state.movement}
+            assets={this.props.assets.moveConfirmation}
+          />
         </div>
-        <CellWindow
-          cards={this.state.stackView ? this.state.board[this.state.stackView.row][this.state.stackView.col].cards.map((i) => i).reverse() : []}
-          cityFlippedUrl={this.props.cityFlippedUrl}
-          countryFlippedUrl={this.props.countryFlippedUrl}
-        />
       </div>
     );
   }

@@ -19,8 +19,8 @@
 2. ~matchmaking~
 3. aesthetics
   - play redesign:
-    - user pictures section
     - game board section
+      - 4 card class categories, for if there are 1, 2, 3, or 4 cards. A little sloppy, but fine short term.
     - stack
     - move confirmation
   - cache images
@@ -31,6 +31,8 @@
   - remove game container to own component
   - Clean css/class names
   - remove extra data from move history (card details beyond card number and deck)
+  - better alt for overflow (also probably rework order of cards in stack for SR?)
+  - maybe use straight websockets instead of pubnub?
 5. key generation
   - add key generation and keyed sign-up
   - maybe use mailer for sending out keys so it doesn't have to be manual.
@@ -54,6 +56,7 @@
 ## TODOS:
   - add media queries to make sure "x bears' turn" never overflows...
   - animate removal of move circles and moves <p>
+  - move render card out so I don't have to repeat code in cell window and cell
 
 ----------
 ## pubnub notes:

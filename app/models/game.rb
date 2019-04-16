@@ -121,7 +121,6 @@ class Game < ApplicationRecord
     self.game_log['currentBoard'].each do |row|
       row.each do |cell|
         cell['cards'].each do |card|
-          card['url'] = ActionController::Base.helpers.image_path("cards/#{card['deck']}/#{card['deck']}#{card['value']}.png")
           card['active'] = false
         end
         cell['highlighted'] = false
