@@ -9,7 +9,41 @@
 
     &__input-container {
         display: flex;
-        align-items: center;
+        align-items: flex-end;
+        @media (max-width: 1200px) {
+            flex-direction: column;
+            align-items: center;
+            .move-confirmation__label {
+                text-align: center;
+            }
+        }
+    }
+
+    &__checkbox-container {
+        position: relative;
+        height: 8.125rem;
+        width: 7rem;
+        flex-shrink: 0;
+    }
+
+    &__checkbox {
+        position: absolute;
+        opacity: 0;
+        // &:focus + .move-confirmation__checkbox-image {
+        //     outline: 1px dashed grey;
+        // }
+    }
+
+    &__checkbox-image {
+        position: absolute;
+        bottom: 0;
+
+        &--unchecked {
+            left: 0.5rem;
+        }
+        &--checked {
+            left: 0.0625rem;
+        }
     }
 
     &__center-box {
@@ -21,24 +55,41 @@
         text-align: center;
     }
     
-    &__confirmation-label {
+    &__label {
         padding-left: 0.5rem;
-        font-size: 2.5rem;
+        font-size: 2rem;
         font-family: $font-myriad;
     }
-    
-    &__right-cell {
+
+    &__button-container {
         display: flex;
-        flex-direction: column;
-        height: 100%;
-        width: 25vw;
+        width: 80%;
+    }
+
+    &__button-image {
+        max-width: 100%;
+        max-height: 100%;
+    }
+
+    &__button {
+        border-radius: 0.5rem;
+        flex: 1 1 50%;
+        padding: 0.5rem;
+        height: 6rem;
+
+        &--confirm {
+            background-color: #55b979;
+        }
+        &--cancel {
+            background-color: #ef6b4e;
+        }
     }
     
     //center me
-    &__cancel-button {
+    &__cancel-move-button {
         height: 6rem;
         width: 12rem;
-        font-size: 2.5rem;
+        font-size: 2rem;
         line-height: 2.25rem;
         font-weight: 800;
         align-self: center;

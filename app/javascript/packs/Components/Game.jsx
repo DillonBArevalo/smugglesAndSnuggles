@@ -63,14 +63,16 @@ class Game extends Component {
     }
     document.addEventListener('keyup', this.docKeyup);
   }
+
   componentWillUnmount () {
     document.removeEventListener('keyup', this.docKeyup);
   }
 
   getCardUrl (deck, number, flipped = false) {
     const key = flipped ? 'flipped' : number;
-    return this.props.cardImages[deck][key];
+    return this.props.assets.cards[deck][key];
   }
+
   toggleConfirmMove () {
     this.setState({confirmMove: !this.state.confirmMove});
   }
@@ -378,6 +380,7 @@ class Game extends Component {
             toggleConfirmMove={this.toggleConfirmMove}
             cancelMove={this.cancelMove}
             movement={this.state.movement}
+            assets={this.props.assets.moveConfirmation}
           />
         </div>
       </div>

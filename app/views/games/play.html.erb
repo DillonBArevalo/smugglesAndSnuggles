@@ -4,7 +4,7 @@
   <div
     id='game'
     data-board-state="<%= @game_data %>"
-    data-card-images="<%= generate_card_images_json %>"
+    data-assets="<%= generate_image_assets_json %>"
     data-player-deck="<%= @game.deck(session[:id]) %>"
     data-is-local="<%= @game.is_local %>"
     data-id="<%= session[:id] %>"

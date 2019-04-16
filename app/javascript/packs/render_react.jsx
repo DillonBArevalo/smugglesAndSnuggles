@@ -10,7 +10,7 @@ document.addEventListener('turbolinks:load', () => {
     const gameData = {
       gameData: JSON.parse(game.dataset.boardState),
       playerDeck: game.dataset.playerDeck,
-      cardImages: JSON.parse(game.dataset.cardImages),
+      assets: JSON.parse(game.dataset.assets),
       isLocal: game.dataset.isLocal === 'true',
       id: game.dataset.id,
       gameId: game.dataset.gameId,
