@@ -13,6 +13,16 @@
 - safari seems to log an error with PN sometimes. more investigating could be good.
   - looks to be on unsubscribeAll()?
 
+- previously moved card isn't maintained when page is reloaded. allows for cheating by moving, reloading, moving same card.
+- loading old games sometimes gives wrong board states. maybe an issue with flipped? maybe history?
+
+## decisions that need to be made:
+
+1. victory/defeat screen
+2. back button
+3. move potential (transparent overlay?)
+4. possible move notifier on stacked tiles
+
 ## next steps
 
 1. ~play online~
