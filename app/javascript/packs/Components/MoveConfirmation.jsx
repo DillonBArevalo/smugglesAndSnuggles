@@ -17,10 +17,16 @@ class MoveConfirmation extends Component {
 
   renderMoveConfirmation () {
     return (<div className="move-confirmation__button-container">
-              <button className="move-confirmation__button move-confirmation__button--cancel">
+              <button
+                onClick={this.props.cancelMove}
+                className="move-confirmation__button move-confirmation__button--cancel"
+              >
                 <img className="move-confirmation__button-image" src={this.props.assets.xIcon} alt="Cancel Move"/>
               </button>
-              <button className="move-confirmation__button move-confirmation__button--confirm">
+              <button
+                onClick={this.props.makeMove}
+                className="move-confirmation__button move-confirmation__button--confirm"
+              >
                 <img className="move-confirmation__button-image" src={this.props.assets.checkIcon} alt="Confirm Move"/>
               </button>
             </div>)

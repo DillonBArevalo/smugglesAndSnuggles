@@ -13,7 +13,7 @@ class Card extends Component {
       if(this.props.active){
         this.props.cancelMove();
       }else{
-        this.props.highlightMoves();
+        this.props.highlightMoves && this.props.highlightMoves();
       }
     }
   }
