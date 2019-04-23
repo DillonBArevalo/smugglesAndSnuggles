@@ -11,9 +11,7 @@ class Cell extends Component {
   highlightClick () {
     this.props.showStack();
     if(this.props.confirmMove) {
-      if (window.confirm('Move to the highlighted square?')) {
-        this.props.moveCard();
-      }
+        this.props.setPreppedMove(this.props.moveCard);
     } else {
       this.props.moveCard();
     }
@@ -49,7 +47,7 @@ class Cell extends Component {
               value={card.value}
               url={this.props.getCardUrl(card.deck, card.value, card.faceDown)}
               faceDown={card.faceDown}
-              highlightMoves={this.props.highlightMoves}
+              highlightMoves={!(this.props.confirmMove && this.props.highlighted) && this.props.highlightMoves}
               cancelMove={this.props.cancelMove}
               active={card.active}
               isSmuggled={card.isSmuggled}
@@ -57,6 +55,13 @@ class Cell extends Component {
               stackClass={`card--${position}-of-${isOverflowing ? 4 : numCards}`}
             /></div>
         })}
+        {this.props.hoverCard && ((card) => <Card
+            deck={card.deck}
+            value={card.value}
+            url={this.props.getCardUrl(card.deck, card.value)}
+            faceDown={false}
+            class={'card--hovering'}
+          />)(this.props.hoverCard)}
       </div>
     );
   }

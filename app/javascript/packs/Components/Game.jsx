@@ -24,6 +24,7 @@ class Game extends Component {
       movesLeft: this.props.gameData.movesLeft,
       playerDeck: this.props.playerDeck,
       playerId: this.props.id,
+      preppedMove: {},
       stackView: null,
       winner: this.props.gameData.winner || null,
     };
@@ -33,7 +34,6 @@ class Game extends Component {
     this.cancelMove = this.cancelMove.bind(this);
     this.canMove = this.canMove.bind(this);
     this.clearStatuses = this.clearStatuses.bind(this);
-    this.constructSingleListFromMovesBoard = this.constructSingleListFromMovesBoard.bind(this);
     // this.displayWinner = this.displayWinner.bind(this);
     this.docKeyup = this.docKeyup.bind(this);
     this.fetchKeysAndStartConnection = fetchKeysAndStartConnection.bind(this);
@@ -41,19 +41,16 @@ class Game extends Component {
     this.hideStack = this.hideStack.bind(this);
     this.highlightMoves = this.highlightMoves.bind(this);
     this.isSmuggle = this.isSmuggle.bind(this);
-    this.isSnuggle = this.isSnuggle.bind(this);
     this.legalMoves = this.legalMoves.bind(this);
-    this.modifyAllCards = this.modifyAllCards.bind(this);
     this.moveCard = this.moveCard.bind(this);
-    this.newTurnVars = this.newTurnVars.bind(this);
     this.publishMove = publishMove.bind(this);
     this.renderGameBoard = this.renderGameBoard.bind(this);
     this.sendGameUpdate = sendGameUpdate.bind(this);
-    this.setSmuggleAndFlip = this.setSmuggleAndFlip.bind(this);
     this.showStack = this.showStack.bind(this);
     this.toggleConfirmMove = this.toggleConfirmMove.bind(this);
     this.getCardUrl = this.getCardUrl.bind(this);
     this.isSelectedCell = this.isSelectedCell.bind(this);
+    this.setPreppedMove = this.setPreppedMove.bind(this);
   }
 
   componentDidMount () {
@@ -71,6 +68,12 @@ class Game extends Component {
   getCardUrl (deck, number, flipped = false) {
     const key = flipped ? 'flipped' : number;
     return this.props.assets.cards[deck][key];
+  }
+
+  setPreppedMove (location, boundMoveFunction) {
+    const {startingLocation} = this.state.movement;
+    const card = this.topCard(this.state.board[ startingLocation[0] ][ startingLocation[1] ])
+    this.setState({preppedMove: {card, location, boundMoveFunction}});
   }
 
   toggleConfirmMove () {
@@ -133,8 +136,7 @@ class Game extends Component {
     const movingCard = board[startingLocation[0]][startingLocation[1]].cards.pop();
     const newTop = this.topCard(board[startingLocation[0]][startingLocation[1]]);
     const moveData = this.generateMoveData(endRow, endCol, startingLocation, movingCard);
-    let movesLeft = this.state.movesLeft; // use destructuring for this and movedCardValue
-    let movedCardValue = this.state.movedCardValue;
+    let {movesLeft, movedCardValue} = this.state;
     let activeDeck, winner;
     board[endRow][endCol].cards.push(movingCard);
 
@@ -155,7 +157,7 @@ class Game extends Component {
 
     this.publishMove(send, endRow, endCol, movesLeft, activeDeck, board, winner, moveData);
     this.clearStatuses(board);
-    this.setState({board, movesLeft, activeDeck, movedCardValue, winner, movement: {active:false, startingLocation: []}});
+    this.setState({board, movesLeft, activeDeck, movedCardValue, winner, movement: {active:false, startingLocation: []}, preppedMove: {}});
   }
 
   newTurnVars(activeDeck){
@@ -184,7 +186,7 @@ class Game extends Component {
   cancelMove(){
     const board = this.state.board.slice();
     this.clearStatuses(board);
-    this.setState({board, movement: {active: false, startingLocation: []}});
+    this.setState({board, preppedMove: {}, movement: {active: false, startingLocation: []}});
   }
 
   docKeyup(event){
@@ -338,6 +340,7 @@ class Game extends Component {
           {row.map((cell, colIndex) => {
             const col = isFlipped ? (2 - colIndex) : colIndex;
             const selected = this.isSelectedCell(rowIndex, colIndex);
+            const hasHover = this.state.preppedMove.location && this.state.preppedMove.location[0] === rowIndex && this.state.preppedMove.location[1] === colIndex;
             return  <Cell
                       key={`column${rowIdx}${col}`}
                       cards={cell.cards}
@@ -350,6 +353,8 @@ class Game extends Component {
                       moveCard={this.moveCard.bind(this, rowIdx, col, !this.state.isLocal, false)}
                       showStack={this.showStack.bind(this, rowIdx, col)}
                       hideStack={this.hideStack}
+                      setPreppedMove={this.state.confirmMove && this.setPreppedMove.bind(this, [rowIndex, colIndex])}
+                      hoverCard={hasHover && this.state.preppedMove.card}
                     />
           })}
         </div>
@@ -378,9 +383,11 @@ class Game extends Component {
           <MoveConfirmation
             confirmMove={this.state.confirmMove}
             toggleConfirmMove={this.toggleConfirmMove}
+            makeMove={this.state.preppedMove.boundMoveFunction}
             cancelMove={this.cancelMove}
             movement={this.state.movement}
             assets={this.props.assets.moveConfirmation}
+            preppedMove={this.state.preppedMove}
           />
         </div>
       </div>

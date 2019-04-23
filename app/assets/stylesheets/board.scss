@@ -60,6 +60,12 @@
 .board__cell {
   position: relative;
   flex-basis: 33%;
+
+  // for hovering card. other cards are in a position absolute contianer so they ignore flex
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   &::before {
     @include beforeSquare;
   }
@@ -84,6 +90,12 @@
   }
   &--hidden {
     display: none;
+  }
+  &--hovering {
+    opacity: 0.75;
+    height: 20vh;
+    position: static;
+    z-index: 10;
   }
 }
 
