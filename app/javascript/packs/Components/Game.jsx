@@ -190,9 +190,11 @@ class Game extends Component {
   }
 
   cancelMove(){
-    const board = this.state.board.slice();
-    this.clearStatuses(board);
-    this.setState({board, preppedMove: {}, movement: {active: false, startingLocation: []}});
+    if (this.state.movement.active) {
+      const board = this.state.board.slice();
+      this.clearStatuses(board);
+      this.setState({board, preppedMove: {}, movement: {active: false, startingLocation: []}});
+    }
   }
 
   docKeyup(event){
