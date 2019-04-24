@@ -50,6 +50,7 @@
     width: 35vh;
     flex-shrink: 0;
     box-sizing: border-box;
+    @include background-image-default;
   }
 
   &__user-data {
