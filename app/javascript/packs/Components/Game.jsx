@@ -103,7 +103,7 @@ class Game extends Component {
   // }
 
   showStack(row, col){
-    this.state.board[row][col].cards.length && this.setState({stackView: {row: row, col: col}});
+    this.setState({stackView: {row: row, col: col}});
   }
 
   hideStack(){

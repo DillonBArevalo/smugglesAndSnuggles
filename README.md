@@ -19,10 +19,7 @@
 ## decisions that need to be made:
 
 1. victory/defeat screen - mockup
-  - have a function to communicate to the server and other player that the game is over. maybe run it on component unmount as well?
-2. back button - over stack preview
-3. move potential (transparent overlay?)
-4. possible move notifier on stacked tiles - cards shrink
+  - have a function to communicate to the server and other player that the game is over. This needs to get run when a player resigns. maybe run it on component unmount as well (probably don't want an internet disconnect to resign though... so maybe not)?
 
 ## next steps
 
