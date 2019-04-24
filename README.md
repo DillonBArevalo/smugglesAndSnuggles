@@ -18,10 +18,11 @@
 
 ## decisions that need to be made:
 
-1. victory/defeat screen
-2. back button
+1. victory/defeat screen - mockup
+  - have a function to communicate to the server and other player that the game is over. maybe run it on component unmount as well?
+2. back button - over stack preview
 3. move potential (transparent overlay?)
-4. possible move notifier on stacked tiles
+4. possible move notifier on stacked tiles - cards shrink
 
 ## next steps
 
