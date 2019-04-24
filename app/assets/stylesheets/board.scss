@@ -69,10 +69,16 @@
   &::before {
     @include beforeSquare;
   }
-  &--highlighted::after {
-    @include beforeSquare;
-    border: .5rem solid white;
-    box-shadow: 0 0 4rem #828080, inset 0 0 3rem;
+  &--highlighted {
+    .card:not(.card--hovering) {
+      height: 65%;
+      top: 17.5%;
+    }
+    &::after {
+      @include beforeSquare;
+      border: .5rem solid white;
+      box-shadow: 0 0 4rem #828080, inset 0 0 3rem;
+    }
   }
 }
 
@@ -83,6 +89,7 @@
   box-sizing: border-box;
   box-shadow: 0 0 0.625rem 0 #163b52;
   pointer-events: auto;
+  transition: height 0.5s, top 0.5s;
   &--selected {
     height: 100%;
     top: 0;
