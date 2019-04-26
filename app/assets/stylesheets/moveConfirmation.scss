@@ -37,13 +37,6 @@
     &__checkbox-image {
         position: absolute;
         bottom: 0;
-
-        &--unchecked {
-            left: 0.5rem;
-        }
-        &--checked {
-            left: 0.0625rem;
-        }
     }
 
     &__center-box {
@@ -54,7 +47,7 @@
         align-items: center;
         text-align: center;
     }
-    
+
     &__label {
         padding-left: 0.5rem;
         font-size: 2rem;
@@ -84,7 +77,7 @@
             background-color: #ef6b4e;
         }
     }
-    
+
     //center me
     &__cancel-move-button {
         height: 6rem;

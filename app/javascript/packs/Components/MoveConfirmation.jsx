@@ -9,7 +9,6 @@ class MoveConfirmation extends Component {
     return  (<button
               className="move-confirmation__cancel-move-button"
               onClick={this.props.cancelMove}
-              disabled={!this.props.movement.active}
             >
               CANCEL MOVE
             </button>)
@@ -45,7 +44,7 @@ class MoveConfirmation extends Component {
               onChange={this.props.toggleConfirmMove}
               />
             <img
-              className={'move-confirmation__checkbox-image move-confirmation__checkbox-image--' + (this.props.confirmMove ? 'checked' : 'unchecked')}
+              className={'move-confirmation__checkbox-image'}
               onClick={this.props.toggleConfirmMove}
               src={this.props.assets[this.props.confirmMove ? 'checkboxChecked' : 'checkboxUnchecked']}
               alt=""

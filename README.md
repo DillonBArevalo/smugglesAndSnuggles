@@ -18,10 +18,10 @@
 
 ## decisions that need to be made:
 
-1. victory/defeat screen
-2. back button
-3. move potential (transparent overlay?)
-4. possible move notifier on stacked tiles
+1. victory/defeat screen - mockup
+  - have a function to communicate to the server and other player that the game is over. This needs to get run when a player resigns. maybe run it on component unmount as well (probably don't want an internet disconnect to resign though... so maybe not)?
+2. We should standardize grays. We're using a different gray for the cancel move button, thes stack preview,the profile picture border,the checkbox border,and the backgrounds on the tiles. We should limit it to 2 or 3.
+3. when/how do they upload profile pictures? that data isn't on teh login. what does the form look like when they click their profile picture to edit it?
 
 ## next steps
 
@@ -62,6 +62,8 @@
 
 - Add game chat
 - Add opponent info in game
+- Can fix profile picture rubber banding by setting the growth amount on the flipping (not 55%, but 50% -/+ relevant size)
+- can lessen profile picture rubber banding by using a media query to only allow for 3 lines of text if we need it
 
 ## TODOS:
   - add media queries to make sure "x bears' turn" never overflows...

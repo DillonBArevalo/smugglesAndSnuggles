@@ -23,7 +23,7 @@ class PlayerIcons extends Component {
 
   generateUserPicture(position){
     return (
-      <div className="player-icons__user-data">
+      <div className="player-icons__user-picture-container">
         <img
           alt={`user ${this.getPlayerData(position, 'username')}'s' profile picture`}
           src={this.getPlayerData(position, 'url')}
@@ -84,24 +84,26 @@ class PlayerIcons extends Component {
     return (
       <div className="player-icons">
         <div className={classes.top.join(' ')}>
-          {activePosition === 'top' &&
-            <p className="player-icons__move-data" aria-label={`Moves left: ${this.props.movesLeft}`}>
-              Moves: {this.generateMovesCircles()}
-            </p>
-          }
+          <div className='player-icons__move-container'>
+            {activePosition === 'top' &&
+              <p className="player-icons__move-data" aria-label={`Moves left: ${this.props.movesLeft}`}>
+                Moves: {this.generateMovesCircles()}
+              </p>
+            }
+          </div>
           {this.generateUserPicture('top')}
           {this.generateTurnData(activePosition, 'top')}
         </div>
         <div className={classes.bottom.join(' ')}>
           {this.generateTurnData(activePosition, 'bottom')}
           {this.generateUserPicture('bottom')}
-          <div className="player-icons__move-data">
+          <div className='player-icons__move-container'>
+            {activePosition === 'bottom' &&
+              <p className="player-icons__move-data" aria-label={`Moves left: ${this.props.movesLeft}`}>
+                Moves: {this.generateMovesCircles()}
+              </p>
+            }
           </div>
-          {activePosition === 'bottom' &&
-            <p className="player-icons__move-data" aria-label={`Moves left: ${this.props.movesLeft}`}>
-              Moves: {this.generateMovesCircles()}
-            </p>
-          }
         </div>
       </div>
     );
