@@ -43,6 +43,7 @@
   - remove extra data from move history (card details beyond card number and deck)
   - better alt for overflow (also probably rework order of cards in stack for SR?)
   - maybe use straight websockets instead of pubnub?
+  - Make sure all pages have appropriate landmarks
 5. key generation
   - add key generation and keyed sign-up
   - maybe use mailer for sending out keys so it doesn't have to be manual.

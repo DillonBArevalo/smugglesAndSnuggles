@@ -36,8 +36,12 @@ class Game < ApplicationRecord
     if game_log['moveHistory'] && game_log['moveHistory'].length != 0
       game_log['moveHistory'][0]['deck']
     else
-      game_log["activeDeck"]
+      game_log['activeDeck']
     end
+  end
+
+  def turn
+    (game_log['moveHistory'].length / 2.0).ceil + 1
   end
 
   def winner_by_deck(deck)
