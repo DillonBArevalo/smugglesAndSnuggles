@@ -6,7 +6,10 @@
   height: 100%;
   width: 100%;
   padding: 1rem;
+  padding-top: 2rem;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
 
   &__heading {
     position: absolute;
@@ -25,11 +28,43 @@
   @include background-image-default;
 }
 
+.user-info {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  &__top-container {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__record {
+    margin: 0;
+    text-align: left;
+    padding-left: 2rem;
+    &--losses {
+      font-size: 1.375rem;
+    }
+    &--wins {
+      font-size: 2rem;
+    }
+  }
+
+  &__joined-date {
+    font-size: 2rem;
+  }
+}
+
 .player-icons__profile-picture {
   &.player-icons__profile-picture--user-page {
     height: 15rem;
     width: 15rem;
   }
+}
+
+.past-games {
+  padding: 2rem;
 }
 
 .game-history-table {

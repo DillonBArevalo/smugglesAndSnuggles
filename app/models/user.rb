@@ -9,12 +9,12 @@ class User < ApplicationRecord
   has_attached_file :avatar, styles: { medium: "300x300>", thumb: "100x100>" }, default_url: "no-photo.png"
   validates_attachment_content_type :avatar, content_type: /\Aimage\/.*\z/
 
-  def record # currently includes local games
-    wins = won_games.length
-    # not optimized, but with small numbers of games not much of a concern
-    # if need to optimize, write custom SQL query
-    losses = games.select{|game| game.completed_at}.length - wins
-    "#{wins}/#{losses}"
+  def wins
+    won_games.length
+  end
+
+  def losses
+    games.select{|game| game.completed_at}.length - wins
   end
 
   def deck(game)
