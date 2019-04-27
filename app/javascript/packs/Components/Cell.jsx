@@ -24,7 +24,7 @@ class Cell extends Component {
     const overflowingCard = this.props.cards[stackSize - 1];
     return(
       <div
-        className={`board__cell ${(this.props.highlighted && 'board__cell--highlighted') || ''}`}
+        className={`board__cell${this.props.highlighted ? ' board__cell--highlighted' : ''}`}
         onClick={this.props.highlighted ? this.highlightClick : this.props.showStack}
       >
         {isOverflowing && <div key={`${overflowingCard.deck}${overflowingCard.value}-container`} className="card-container"><Card

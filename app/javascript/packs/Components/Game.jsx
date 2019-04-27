@@ -65,6 +65,12 @@ class Game extends Component {
     document.removeEventListener('keyup', this.docKeyup);
   }
 
+  resign () {
+    if(window.confirm('Are you sure you want to quit this game? You will forefit and lose.')) {
+      window.location.href = '/games/new';
+    }
+  }
+
   getCardUrl (deck, number, flipped = false) {
     const key = flipped ? 'flipped' : number;
     return this.props.assets.cards[deck][key];
@@ -97,7 +103,7 @@ class Game extends Component {
   // }
 
   showStack(row, col){
-    this.state.board[row][col].cards.length && this.setState({stackView: {row: row, col: col}});
+    this.setState({stackView: {row: row, col: col}});
   }
 
   hideStack(){
@@ -184,9 +190,11 @@ class Game extends Component {
   }
 
   cancelMove(){
-    const board = this.state.board.slice();
-    this.clearStatuses(board);
-    this.setState({board, preppedMove: {}, movement: {active: false, startingLocation: []}});
+    if (this.state.movement.active) {
+      const board = this.state.board.slice();
+      this.clearStatuses(board);
+      this.setState({board, preppedMove: {}, movement: {active: false, startingLocation: []}});
+    }
   }
 
   docKeyup(event){
@@ -376,6 +384,12 @@ class Game extends Component {
           {this.renderGameBoard()}
         </div>
         <div className="game-container__right-cell">
+          <button
+            className="resign-game-button"
+            onClick={this.resign}
+          >
+            RESIGN GAME AND RETURN TO LOBBY
+          </button>
           <StackPreview
             cards={this.state.stackView ? this.state.board[this.state.stackView.row][this.state.stackView.col].cards.map((i) => i).reverse() : []}
             getCardUrl={this.getCardUrl}

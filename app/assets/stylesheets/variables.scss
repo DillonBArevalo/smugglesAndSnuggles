@@ -11,17 +11,23 @@ $cancelMoveColor: #5e5e5e;
 $stackPreviewColor: #6f6f6f;
 $sliderBackgroundColor: #b3b7b9;
 
+@mixin background-image-default {
+  background-image: image-url('no-photo.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
 @font-face {
   font-family: 'gogono_cocoa_mochi';
-  src: url('gomarice_gogono_cocoa_mochi.eot');
-  src: url('gomarice_gogono_cocoa_mochi.ttf') format('truetype');
+  src: font-url('gomarice_gogono_cocoa_mochi.eot');
+  src: font-url('gomarice_gogono_cocoa_mochi.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'myriad_pro_regular';
-  src: url('MYRIADPRO-REGULAR.woff') format('woff');
+  src: font-url('MYRIADPRO-REGULAR.woff') format('woff');
   font-weight: normal;
   font-style: normal;
 }
