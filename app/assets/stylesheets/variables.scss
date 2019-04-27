@@ -11,6 +11,26 @@ $cancelMoveColor: #5e5e5e;
 $stackPreviewColor: #6f6f6f;
 $sliderBackgroundColor: #b3b7b9;
 
+$profileBackgroundColor: #0f0f3e;
+
+$profileHeader1: #23235b;
+$profileHeader2: #4b4b82;
+$profileHeader3: #424279;
+$profileHeader4: #383870;
+$profileHeader5: #2e2e66;
+
+$profileBodyOdd1: #555599;
+$profileBodyOdd2: #6f6faf;
+$profileBodyOdd3: #6969aa;
+$profileBodyOdd4: #6363a5;
+$profileBodyOdd5: #5c5c9f;
+
+$profileBodyEven1: #47478b;
+$profileBodyEven2: #6565a5;
+$profileBodyEven3: #5e5e9f;
+$profileBodyEven4: #575799;
+$profileBodyEven5: #4f4f92;
+
 @mixin background-image-default {
   background-image: image-url('no-photo.png');
   background-size: cover;

@@ -1,9 +1,42 @@
 @import 'variables';
+.profile {
+  font-family: $font-mochi;
+  color: white;
+  background-color: $profileBackgroundColor;
+  height: 100%;
+  width: 100%;
+  padding: 1rem;
+  box-sizing: border-box;
 
+  &__heading {
+    position: absolute;
+    height: 1px; width: 1px;
+    overflow: hidden;
+    clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+    clip: rect(1px, 1px, 1px, 1px);
+    clip-path: polygon(0px 0px, 0px 0px,0px 0px, 0px 0px);
+  }
+}
 .profile-picture--thumb {
   border-radius: 50%;
   height: 50px;
   width: 50px;
   margin: 5px;
   @include background-image-default;
+}
+
+.player-icons__profile-picture {
+  &.player-icons__profile-picture--user-page {
+    height: 15rem;
+    width: 15rem;
+  }
+}
+
+.game-history-table {
+  &__data {
+    text-align: center;
+    &--unfinished {
+      font-family: auto;
+    }
+  }
 }

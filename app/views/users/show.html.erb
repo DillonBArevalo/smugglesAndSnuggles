@@ -1,42 +1,42 @@
-<h1><%= @user.username %></h1>
+<h1 class="profile__heading">Your Profile</h1>
 
 <div class="user-info">
-<%= image_tag(current_user.avatar.url(:medium), class: 'user-info--picture') %>
-<p>Win loss: <%= @user.record %></p>
+
+  <div class="player-icons__user-picture-container">
+    <img
+      alt="Your profile picture."
+      src=<%= current_user.avatar.url(:medium) %>
+      class="player-icons__profile-picture player-icons__profile-picture--user-page"
+    />
+    <p class="player-icons__user-name player-icons__user-name--city">
+      <%= current_user.username.capitalize %>
+    </p>
+  </div>
+  <p>Win loss: <%= current_user.record %></p>
 </div>
 
 
 <h2 id="games-header">
-<% if @user == current_user %>
-  Your game history
-<% else %>
-  <%= current_user.username %>'s game history
-<% end %>
+  Past Games
 </h2>
 <table aria-labelledby="game-history-table">
   <thead>
-    <th>Opponent</td>
-    <th>Winner</th>
-    <th>First Move</td>
-    <th>Started</td>
-    <th>Completed</td>
-    <% if current_user?(@user) %>
-      <th>Revisit</td>
-    <% end %>
+    <th aria-label="Continue or revisit"></td>
+    <th>OPPONENT</td>
+    <th>DATE</th>
+    <th>RESULT</td>
+    <th>TURN #</td>
   </thead>
   <tbody>
-    <% @user.games.each do |game| %>
+    <% current_user.games.each do |game| %>
       <tr
-        class="game-history-table__row game-history-table__row<% if game.winner && game.winner == @user %>game-history-table__row--won-game<% else %>--lost-game<% end %>"
+        class="game-history-table__row game-history-table__row<% if is_winner(game) %>--won<% elsif game.winner %>--lost<% else %>--unfinished<% end %>"
       >
-        <td><%= game.opponent(@user).username %></td>
-        <td><%= game.winner && game.winner.username || raw("&mdash;") %></td>
-        <td><%= game.winner_by_deck(game.first_move).username %></td>
-        <td><%= game.created_at.strftime('%c') %></td>
-        <td><%= game.completed_at && game.completed_at.strftime('%c') || raw("&mdash;") %></td>
-        <% if current_user?(@user) %>
-          <td><%= game.completed_at ? link_to('Revisit game', "/games/#{game.id}") : link_to('Resume game', "/games/#{game.id}/play") %></td>
-        <% end %>
+        <td class="game-history-table__data"><%= game.completed_at ? link_to('Revisit game', "/games/#{game.id}") : link_to('Resume game', "/games/#{game.id}/play") %></td>
+        <td class="game-history-table__data"><%= game.opponent(current_user).username %></td>
+        <td class="game-history-table__data"><%= game.created_at.strftime('%-m/%e/%Y') %></td>
+        <td class="game-history-table__data<% if !game.winner %> game-history-table__data--unfinished<% end %>"><%= winOrLoss(game) %></td>
+        <td class="game-history-table__data"><%= "Turn Number" %></td>
       </tr>
     <% end %>
   </tbody>
