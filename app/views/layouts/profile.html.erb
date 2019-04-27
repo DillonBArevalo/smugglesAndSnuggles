@@ -5,10 +5,11 @@
     <%= csrf_meta_tags %>
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_pack_tag 'render_react' %>
   </head>
 
-  <body>
-    <main class='profile'>
+  <body class="profile-body">
+    <main class="profile">
       <%= yield %>
     </main>
   </body>
