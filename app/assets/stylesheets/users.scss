@@ -1,9 +1,122 @@
 @import 'variables';
 
+@mixin rowColors($colorList) {
+  @for $i from 1 through 5 {
+    &:nth-child(#{$i}) {
+      background-color: nth($colorList, $i);
+    }
+  }
+}
+.profile-body {
+  background-color: $profileBackgroundColor;
+}
+
+.profile {
+  font-family: $font-mochi;
+  color: white;
+  background-color: $profileBackgroundColor;
+  height: 100%;
+  width: 100%;
+  padding: 1rem;
+  padding-top: 2rem;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+
+  &__heading {
+    position: absolute;
+    height: 1px; width: 1px;
+    overflow: hidden;
+    clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+    clip: rect(1px, 1px, 1px, 1px);
+    clip-path: polygon(0px 0px, 0px 0px,0px 0px, 0px 0px);
+  }
+}
 .profile-picture--thumb {
   border-radius: 50%;
   height: 50px;
   width: 50px;
   margin: 5px;
   @include background-image-default;
+}
+
+.user-info {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-shrink: 0;
+
+  &__top-container {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__record {
+    margin: 0;
+    text-align: left;
+    padding-left: 2rem;
+    &--losses {
+      font-size: 1.375rem;
+    }
+    &--wins {
+      font-size: 2rem;
+    }
+  }
+
+  &__joined-date {
+    font-size: 1.75rem;
+  }
+}
+
+.player-icons__profile-picture {
+  &.player-icons__profile-picture--user-page {
+    height: 15rem;
+    width: 15rem;
+  }
+}
+
+.past-games {
+  padding: 4rem 2rem 0 2rem;
+  font-size: 2rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  &__heading {
+    font-size: 2rem;
+  }
+}
+
+
+.game-history-table-container {
+  overflow-y: auto;
+}
+.game-history-table {
+  border-spacing: 0;
+  width: 100%;
+  &__row-heading {
+    padding: 0.5rem;
+    @include rowColors($profileHeaderColors);
+  }
+  &__data {
+    text-align: center;
+    &--unfinished {
+      font-family: auto;
+    }
+  }
+  &__row {
+    .game-history-table__data {
+      padding: 0.5rem;
+    }
+    &:nth-child(2n){
+      .game-history-table__data {
+        @include rowColors(($profileBodyEvenColors))
+      }
+    }
+    &:nth-child(2n - 1){
+      .game-history-table__data {
+        @include rowColors(($profileBodyOddColors))
+      }
+    }
+  }
 }
