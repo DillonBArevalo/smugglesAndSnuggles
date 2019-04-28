@@ -41,7 +41,7 @@ class Game < ApplicationRecord
   end
 
   def turn
-    (game_log['moveHistory'].length / 2.0).ceil + 1
+    game_log['moveHistory'] ? (game_log['moveHistory'].length / 2.0).ceil + 1 : '-'
   end
 
   def winner_by_deck(deck)
