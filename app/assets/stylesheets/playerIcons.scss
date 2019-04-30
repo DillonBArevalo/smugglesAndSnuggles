@@ -1,16 +1,5 @@
 @import 'variables';
-@mixin outline ($color) {
-  text-shadow:
-    3px 3px $color,
-    -3px 3px $color,
-    3px -3px $color,
-    -3px -3px $color,
-    0 3px $color,
-    -3px 0 $color,
-    3px 0 $color,
-    0 -3px $color
-  ;
-}
+
 
 .player-icons {
   width: 30vw;

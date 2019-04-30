@@ -1,0 +1,61 @@
+@import 'variables';
+
+.winner-notification {
+  border-radius: 1rem 0 0;
+  flex-grow: 1;
+  display:flex;
+  flex-direction: column;
+  &--city {
+    background-color: $cityPlayerColor;
+  }
+  &--country {
+    background-color: $countryPlayerColor;
+  }
+
+  &__heading {
+    color: white;
+    font-family: $font-mochi;
+    font-size: 3rem;
+    @include outline(black);
+    text-align: center;
+    letter-spacing: 0.25rem;
+    margin: 1rem 0;
+  }
+
+  &__options-container {
+    background-color: white;
+    border-radius: 4rem 4rem 0 0;
+    margin: 1rem 1rem 0;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem 1rem;
+  }
+
+  &__button {
+    color: white;
+    font-family: $font-mochi;
+    font-size: 2rem;
+    height: 6rem;
+    @include outline(black);
+    border-radius: 5rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+
+    &--city {
+      background-color: $cityPlayerColor;
+    }
+    &--country {
+      background-color: $countryPlayerColor;
+    }
+  }
+
+  &__icon {
+    height: 5rem;
+  }
+
+  &__button-label {
+    flex-grow: 1;
+  }
+}
