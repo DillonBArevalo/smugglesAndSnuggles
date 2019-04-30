@@ -2,7 +2,7 @@
 
 .stack-preview {
   flex: 0 0 45%;
-  margin: 0.5rem 1rem;
+  margin: 0 1rem;
   background-color: $stackPreviewColor;
   display: flex;
   flex-direction: column;
@@ -18,16 +18,6 @@
   }
 
   &__card {
-    // display: block;
-    // position: static;
-    // height: 215px;
-    // width: 153px;
-    // z-index: 1;
-    // border: 0;
-    // flex-shrink: 0;
-    // margin: 5px 0;
-    // box-shadow: 5px 10px 10px black;
-    //height breaks on safari
     max-height: 80%;
     height: 80%;
     margin: 0.25rem;
@@ -35,8 +25,6 @@
 
   &__stack-container {
     display: flex;
-    flex-direction: row;
-    // overflow: hidden;
     overflow: auto;
     flex-grow: 1;
     flex-shrink: 1;

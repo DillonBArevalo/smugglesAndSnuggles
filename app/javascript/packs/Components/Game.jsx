@@ -385,10 +385,10 @@ class Game extends Component {
         </div>
         <div className="game-container__right-cell">
           <button
-            className="resign-game-button"
+            className={`resign-game-button resign-game-button--${this.state.playerDeck}`}
             onClick={this.resign}
           >
-            RESIGN GAME AND RETURN TO LOBBY
+            RETURN TO LOBBY
           </button>
           <StackPreview
             cards={this.state.stackView ? this.state.board[this.state.stackView.row][this.state.stackView.col].cards.map((i) => i).reverse() : []}
