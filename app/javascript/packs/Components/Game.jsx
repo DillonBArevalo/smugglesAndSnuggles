@@ -4,6 +4,7 @@ import PlayerIcons from './PlayerIcons';
 import StackPreview from './StackPreview';
 import {fetchKeysAndStartConnection, publishMove, sendGameUpdate} from '../modules/apiRequests'
 import MoveConfirmation from './MoveConfirmation';
+import WinnerNotification from './WinnerNotification';
 
 class Game extends Component {
   constructor(props){
@@ -51,6 +52,7 @@ class Game extends Component {
     this.getCardUrl = this.getCardUrl.bind(this);
     this.isSelectedCell = this.isSelectedCell.bind(this);
     this.setPreppedMove = this.setPreppedMove.bind(this);
+    this.resign = this.resign.bind(this);
   }
 
   componentDidMount () {
@@ -66,7 +68,7 @@ class Game extends Component {
   }
 
   resign () {
-    if(window.confirm('Are you sure you want to quit this game? You will forefit and lose.')) {
+    if(this.state.winner || window.confirm('Are you sure you want to quit this game? You will forefit and lose.')) {
       window.location.href = '/games/new';
     }
   }
@@ -394,15 +396,22 @@ class Game extends Component {
             cards={this.state.stackView ? this.state.board[this.state.stackView.row][this.state.stackView.col].cards.map((i) => i).reverse() : []}
             getCardUrl={this.getCardUrl}
           />
-          <MoveConfirmation
-            confirmMove={this.state.confirmMove}
-            toggleConfirmMove={this.toggleConfirmMove}
-            makeMove={this.state.preppedMove.boundMoveFunction}
-            cancelMove={this.cancelMove}
-            movement={this.state.movement}
-            assets={this.props.assets.moveConfirmation}
-            preppedMove={this.state.preppedMove}
-          />
+          {this.state.winner ?
+            <WinnerNotification
+              winner={this.state.winner}
+              playerDeck={this.state.playerDeck}
+              icons={this.props.assets.icons}
+            />
+            : <MoveConfirmation
+              confirmMove={this.state.confirmMove}
+              toggleConfirmMove={this.toggleConfirmMove}
+              makeMove={this.state.preppedMove.boundMoveFunction}
+              cancelMove={this.cancelMove}
+              movement={this.state.movement}
+              assets={this.props.assets.moveConfirmation}
+              preppedMove={this.state.preppedMove}
+            />
+          }
         </div>
       </div>
     );

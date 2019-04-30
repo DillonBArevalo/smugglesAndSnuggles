@@ -26,13 +26,18 @@ module GamesHelper
       'xIcon' => image_url("X_button.png")
     }
   end
+  def generate_icon_images
+    {
+      'inspectIcon' => image_url("inspectIcon.png"),
+      'redoIcon' => image_url("redoIcon.png")
+    }
+  end
   def generate_image_assets_json
     assets = {
       'cards' => generate_card_images(),
-      'moveConfirmation' => generate_move_confirmation_images()
+      'moveConfirmation' => generate_move_confirmation_images(),
+      'icons' => generate_icon_images()
     }
-    p assets
-    p assets.to_json
     return assets.to_json
   end
 end
