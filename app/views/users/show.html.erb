@@ -22,11 +22,11 @@
     <table class="game-history-table" aria-labelledby="games-header">
       <thead>
         <tr>
-          <th class="game-history-table__row-heading" aria-label="Continue or revisit"></td>
-          <th class="game-history-table__row-heading">OPPONENT</td>
-          <th class="game-history-table__row-heading">DATE</th>
-          <th class="game-history-table__row-heading">RESULT</td>
-          <th class="game-history-table__row-heading">TURN #</td>
+          <th scope="col" class="game-history-table__row-heading" aria-label="Continue or revisit"></td>
+          <th scope="col" class="game-history-table__row-heading">OPPONENT</td>
+          <th scope="col" class="game-history-table__row-heading">DATE</th>
+          <th scope="col" class="game-history-table__row-heading">RESULT</td>
+          <th scope="col" class="game-history-table__row-heading">TURN #</td>
         </tr>
       </thead>
       <tbody>
@@ -34,7 +34,9 @@
           <tr
             class="game-history-table__row game-history-table__row<% if is_winner(game) %>--won<% elsif game.winner %>--lost<% else %>--unfinished<% end %>"
           >
-            <td class="game-history-table__data"><%= game.completed_at ? link_to('Revisit game', "/games/#{game.id}") : link_to('Resume game', "/games/#{game.id}/play") %></td>
+            <td class="game-history-table__data game-history-table__data--icon-container">
+              <%= generateIcon(game) %>
+            </td>
             <td class="game-history-table__data"><%= game.opponent(current_user).username %></td>
             <td class="game-history-table__data"><%= game.created_at.strftime('%-m/%e/%Y') %></td>
             <td class="game-history-table__data<% if !game.winner %> game-history-table__data--unfinished<% end %>"><%= winOrLoss(game) %></td>
