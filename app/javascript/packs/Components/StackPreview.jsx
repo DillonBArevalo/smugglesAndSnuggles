@@ -35,6 +35,7 @@ class StackPreview extends Component {
               class="stack-preview__card"
             />
           })}
+          <div className="stack-preview__spacer"></div>
         </div>
         {/* <input
           className="stack-preview__slider"
