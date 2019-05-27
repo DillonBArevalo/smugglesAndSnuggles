@@ -4,11 +4,11 @@
 <%= render partial: '/errors' %>
 
 <%= form_for @user, url: sessions_path, method: 'post', html: {class: 'sessions__form'} do |f| %>
-    <%= f.label 'Username', class: 'sessions__label' %>
+    <%= f.label 'username', class: 'sessions__label' %>
     <%= f.text_field :username, class: 'sessions__input' %>
-    <%= f.label 'Password', class: 'sessions__label' %>
+    <%= f.label 'password', class: 'sessions__label' %>
     <%= f.password_field :password, class: 'sessions__input' %>
-    <%= f.submit 'Log In', class: 'form__submit' %>
+    <%= f.submit 'Log In', class: 'sessions__button' %>
 <% end %>
-<p>New?</p>
-<button>Create an account</button>
+<p class="sessions__label">New?</p>
+<%= link_to('Create an account', new_user_path, class: 'sessions__button sessions__button--anchor')%>
