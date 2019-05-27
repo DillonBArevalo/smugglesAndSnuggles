@@ -4,9 +4,9 @@
 <%= render partial: '/errors' %>
 
 <%= form_for @user, url: sessions_path, method: 'post', html: {class: 'sessions__form'} do |f| %>
-    <%= f.label 'Username:', class: 'sessions__label' %>
+    <%= f.label 'Username', class: 'sessions__label' %>
     <%= f.text_field :username, class: 'sessions__input' %>
-    <%= f.label 'Password:', class: 'sessions__label' %>
+    <%= f.label 'Password', class: 'sessions__label' %>
     <%= f.password_field :password, class: 'sessions__input' %>
     <%= f.submit 'Log In', class: 'form__submit' %>
 <% end %>

@@ -44,6 +44,22 @@
     flex-direction: column;
     align-items: center;
   }
-  &__label {}
-  &__input {}
+  &__label {
+    font-family: $font-mochi;
+    font-size: 1.5rem;
+  }
+  &__input {
+    height: 3rem;
+    width: 12rem;
+    background-color: #a8845c;
+    color: white;
+    border: none;
+    border-radius: .5rem;
+    box-shadow: inset -0.25rem 0.25rem #d6bfa6;
+    font-size: 1.5rem;
+    font-family: $font-mochi;
+    padding: 0.5rem;
+    box-sizing: border-box;
+    margin-bottom: 1rem;
+  }
 }
