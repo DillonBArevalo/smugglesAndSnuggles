@@ -19,6 +19,8 @@ $profileBodyOddColors: #555599 #6f6faf #6969aa #6363a5 #5c5c9f;
 
 $profileBodyEvenColors: #47478b #6565a5 #5e5e9f #575799 #4f4f92;
 
+$sessionsBackground: #f6af5d;
+
 @mixin background-image-default {
   background-image: image-url('no-photo.png');
   background-size: cover;
