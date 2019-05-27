@@ -108,4 +108,10 @@
     display: inline-block;
     margin: 0 0.75rem;
   }
+
+  &__winner-banner {
+    position: absolute;
+    width: 100%;
+    top: -1.5rem;
+  }
 }
