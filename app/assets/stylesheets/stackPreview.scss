@@ -7,6 +7,11 @@
   display: flex;
   flex-direction: column;
   padding: 0.25rem 0.5rem;
+  max-height: 45%;
+
+  &__spacer {
+    width: 100%; //crude solution to flex breaking aspect ratio
+  }
 
   &__title {
     font-family: $font-mochi;
@@ -19,7 +24,6 @@
 
   &__card {
     max-height: 80%;
-    height: 80%;
     margin: 0.25rem;
   }
 

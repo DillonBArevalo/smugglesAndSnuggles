@@ -11,10 +11,6 @@ class PlayerIcons extends Component {
         bottom: this.props.flipped ? 'city' : 'country',
       }
     }
-    this.getPlayerData = this.getPlayerData.bind(this);
-    this.generateUserPicture = this.generateUserPicture.bind(this);
-    this.generateTurnData = this.generateTurnData.bind(this);
-    this.generateMovesCircles = this.generateMovesCircles.bind(this);
   }
 
   getPlayerData(position, key) {
@@ -22,14 +18,22 @@ class PlayerIcons extends Component {
   }
 
   generateUserPicture(position){
+    const deck = this.state.mapping[position];
     return (
       <div className="player-icons__user-picture-container">
+        {this.props.winner && this.props.winner === deck &&
+          <img
+            alt="Winner"
+            src={this.props.banners[deck]}
+            className="player-icons__winner-banner"
+          />
+        }
         <img
           alt={`user ${this.getPlayerData(position, 'username')}'s' profile picture`}
           src={this.getPlayerData(position, 'url')}
           className="player-icons__profile-picture"
         />
-        <p className={`player-icons__user-name player-icons__user-name--${this.state.mapping[position]}`}>
+        <p className={`player-icons__user-name player-icons__user-name--${deck}`}>
           {this.getPlayerData(position, 'username')}
         </p>
       </div>

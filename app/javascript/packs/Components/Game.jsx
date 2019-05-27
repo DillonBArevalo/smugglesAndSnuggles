@@ -381,6 +381,8 @@ class Game extends Component {
           active={this.state.activeDeck}
           playersData={this.props.playersData}
           movesLeft={this.state.movesLeft}
+          banners={this.props.assets.banners}
+          winner={this.state.winner}
         />
         <div id='main-game-container' className="board">
           {this.renderGameBoard()}
