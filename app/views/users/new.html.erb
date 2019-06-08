@@ -4,12 +4,12 @@
 
 <%= form_for @user, html: {class: 'sessions__form'} do |f| %>
   <%= f.label 'username', class: 'sessions__label' %>
-  <%= f.text_field 'username', class: 'sessions__input' %>
+  <%= f.text_field 'username', class: 'sessions__input', required: true %>
   <%= f.label 'email', class: 'sessions__label' %>
-  <%= f.email_field 'email', class: 'sessions__input' %>
+  <%= f.email_field 'email', class: 'sessions__input', required: true %>
   <%= f.label 'profile_picture', class: 'sessions__label' %>
   <%= f.file_field 'avatar', class: 'sessions__button', id: 'user_profile_picture' %>
-  <%= f.label 'password' , class: 'sessions__label'%>
-  <%= f.password_field 'password', class: 'sessions__input' %>
-  <%= f.submit :Register, class: 'sessions__button' %>
+  <%= f.label 'password' , class: 'sessions__label' %>
+  <%= f.password_field 'password', class: 'sessions__input', required: true %>
+  <%= f.submit :Register, class: 'sessions__button sessions__button--submit' %>
 <% end %>
