@@ -20,7 +20,7 @@ $profileBodyOddColors: #555599 #6f6faf #6969aa #6363a5 #5c5c9f;
 $profileBodyEvenColors: #47478b #6565a5 #5e5e9f #575799 #4f4f92;
 
 $sessionsBackground: #f6af5d;
-$sessionsButtonBackground: #f8c081;
+$darkOrange: #bb7b36;
 $buttonShadowColor: #7c8185;
 
 @mixin background-image-default {
@@ -92,4 +92,13 @@ $font-myriad: myriad_pro_regular;
     2px 0 $color1,
     0 -2px $color1,
     -2px 2px 4px $color2;
+}
+
+@mixin clickableRegion () {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }

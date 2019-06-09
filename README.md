@@ -70,6 +70,7 @@
   - add media queries to make sure "x bears' turn" never overflows...
   - animate removal of move circles and moves <p>
   - move render card out so I don't have to repeat code in cell window and cell
+  - dynamic page titles
 
 ----------
 ## pubnub notes:
