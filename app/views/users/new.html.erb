@@ -13,14 +13,14 @@
         We collect anonymous data from the games played, which we use to make the game better and learn from it. (Required)
       </p>
       <%= label_tag "data_collection_consent", class: 'sessions__checkbox-label' do %>
-        <%= check_box_tag "data_collection_consent", 'consented', false, required: true %>
+        <%= check_box_tag "data_collection_consent", 'consented', false, required: true, 'aria-label' => 'Confirm game data collection consent', 'aria-describedby' => 'explanation1' %>
         Yes! For Science!
       <% end %>
       <p id="explanation2" class="sessions__explanation">
         We'd also like to send you infrequent emails about new games we're working on as well as updates to this one!
       </p>
         <%= f.label 'email_consent', class: 'sessions__checkbox-label' do %>
-          <%= f.check_box 'email_consent', class: 'sessions__check-box' %>
+          <%= f.check_box 'email_consent', class: 'sessions__check-box', 'aria-label' => 'I would like to receive emails about new games', 'aria-describedby' => 'explanation2' %>
           Sounds Great
         <% end %>
     </div>
