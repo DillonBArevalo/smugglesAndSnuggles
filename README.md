@@ -67,6 +67,8 @@
   - move render card out so I don't have to repeat code in cell window and cell
   - dynamic page titles
   - form validation rework (and rerouting correctly (ajax?))
+  - Better solution for spacing in stack preview
+  - make winner not automatically switch turns
 
 ----------
 ## pubnub notes:
