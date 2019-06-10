@@ -28,11 +28,6 @@
 1. ~play online~
 2. ~matchmaking~
 3. aesthetics
-  - play redesign:
-    - game board section
-      - 4 card class categories, for if there are 1, 2, 3, or 4 cards. A little sloppy, but fine short term.
-    - stack
-    - move confirmation
   - cache images
   - make waiting message nicer for online connection - also make it active? (animated)
   - Integrate amazon [s3](https://aws.amazon.com/s3/) for file storage
@@ -70,6 +65,8 @@
   - add media queries to make sure "x bears' turn" never overflows...
   - animate removal of move circles and moves <p>
   - move render card out so I don't have to repeat code in cell window and cell
+  - dynamic page titles
+  - form validation rework (and rerouting correctly (ajax?))
   - Better solution for spacing in stack preview
   - make winner not automatically switch turns
 

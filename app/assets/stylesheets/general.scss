@@ -35,6 +35,30 @@
   font-weight: bold;
 }
 
+.nav {
+  position: fixed;
+  top: 0;
+  right: 2rem;
+  height: 2.5rem;
+  display: flex;
+
+  &__link {
+    position: relative;
+    font-family: $font-mochi;
+    text-decoration: none;
+    color: white;
+    font-size: 1.5rem;
+    padding: 0.5rem;
+    &::after {
+      @include clickableRegion();
+    }
+  }
+
+  &--country {
+    background-color: $darkOrange;
+  }
+}
+
 .sessions-link {
   padding-right: 10px;
   color: white;
