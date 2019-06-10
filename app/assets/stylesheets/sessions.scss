@@ -33,11 +33,47 @@
     border-radius: 1.125rem;
     color: black;
     font-family: $font-mochi;
+    &--register {
+      right: 4.375rem;
+    }
   }
   &__form {
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    &--register {
+      flex-direction: row;
+      width: 28rem;
+    }
+  }
+  &__form-pannel {
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 16rem;
+    align-items: center;
+    &--left {
+      flex-basis: 12rem;
+      width: 12rem;
+    }
+  }
+  &__checkbox-grouping {
+    background-color: $lightOrange;
+    padding: 0.5rem 0;
+    text-align: center;
+    font-family: $font-myriad;
+    font-size: 1.125rem;
+    border-radius: 0.5rem;
+  }
+  &__checkbox-label {
+    width: 100%;
+    background-color: $veryLightOrange;
+    padding: 0.125rem;
+    display: block;
+    box-sizing: border-box;
+  }
+  &__explanation {
+    margin: 0;
   }
   &__label {
     font-family: $font-mochi;
@@ -62,6 +98,32 @@
     padding: 0.5rem;
     box-sizing: border-box;
     margin: 0.25rem;
+  }
+  &__file-field {
+    position: absolute;
+    opacity: 0;
+    &:focus + .sessions__profile-label {
+      outline: 1px dotted #000;
+      outline: -webkit-focus-ring-color auto 5px;
+    }
+  }
+  &__profile-label {
+    height: 10rem;
+    width: 10rem;
+    border: 0.5rem solid #d7d7d7;
+    border-radius: 50%;
+    margin-bottom: 0.25rem;
+    @include background-image-default;
+    font-family: $font-mochi;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  &__profile-label-text{
+    width: 6rem;
+    text-align: center;
+    display: block;
+    font-size: 1.5rem;
   }
   &__button {
     background-color: white;
