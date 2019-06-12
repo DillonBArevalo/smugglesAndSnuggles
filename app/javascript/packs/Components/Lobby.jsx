@@ -103,11 +103,15 @@ class Lobby extends Component {
   render() {
     return(
       <div className="lobby">
-        <h2>Online Game Lobby:</h2>
-        <p>
-          To play an online game select a potential opponent from the list below to challenge them to a match!
-        </p>
-        <div className="lobby__players-tile">
+        <h2 className="lobby__heading">Challenge Players</h2>
+        <div className="lobby__container">
+          <div className="lobby__pending-invite-container">
+            <h3 className="lobby__grouping-heading">Pending Invites <hr className="lobby__heading-rule" aria-hidden="true"/></h3>
+          </div>
+          <div className="lobby__pending-invite-container">
+            <h3 className="lobby__grouping-heading">Players Online <hr className="lobby__heading-rule" aria-hidden="true"/></h3>
+          </div>
+
           <div className="lobby__player-container">
             {Object.keys(this.state.players).map(
               playerId => <Player

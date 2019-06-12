@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Smuggles 'N Snuggles - Game Lobby</title>
+    <%= csrf_meta_tags %>
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_pack_tag 'render_react' %>
+  </head>
+
+  <body>
+    <nav class="nav nav--country">
+      <%= link_to 'home', root_path, class: 'nav__link' %>
+    </nav>
+    <main id='game-main' class="lobby-container" aria-labelledby="lobby-heading">
+      <%= yield %>
+    </main>
+    <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.21.2.min.js"></script>
+  </body>
+
+</html>

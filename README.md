@@ -69,6 +69,7 @@
   - form validation rework (and rerouting correctly (ajax?))
   - Better solution for spacing in stack preview
   - make winner not automatically switch turns
+  - rename css variables to match new contexts
 
 ----------
 ## pubnub notes:

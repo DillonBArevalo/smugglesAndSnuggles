@@ -30,7 +30,7 @@ class ChallengeTile extends Component {
           <h3>{this.props.player.name}</h3>
           {this.props.player.requestSent ? this.renderMessage() : this.renderForm()}
         </div> :
-        <p>Select a player from the list to see their details</p>
+        <p></p>
   };
 }
 

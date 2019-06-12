@@ -1,29 +1,12 @@
-<div>
-  <h1>Game Lobby</h1>
 
-  <% if logged_in? %>
-    <div class="new-game">
-      <div class="new-game__container">
-        <h2>Local Game:</h2>
-        <p>Play a local game of Smuggles 'N Snuggles where both players will move with the same keyboard and mouse.</p>
-        <%= form_for @game, html: {class: 'form'} do |f| %>
-          <%= f.hidden_field :is_local, value: true %>
-          <%= hidden_field_tag 'player2', 1 %>
-          <%= f.submit "Play Locally", class: "form__submit" %>
-        <% end %>
-      </div>
-      <div
-        id="new-game-lobby-container"
-        class="new-game__container"
-        data-auth-token="<%= form_authenticity_token %>"
-        data-id="<%= session[:id] %>"
-        data-name="<%= current_user.username %>"
-      >
-      </div>
-    </div>
-  <% else %>
-    <p>To play a game of Smuggles 'N Snuggles, please <%= link_to('log in', new_sessions_path) %> or <%= link_to('create an account', new_user_path) %>.</p>
-  <% end %>
+<h1 id="lobby-heading" class="lobby-main-heading">Online Play</h1>
+
+<%  render partial: 'local_game' %>
+<div
+  id="new-game-lobby-container"
+  class="new-game__container"
+  data-auth-token="<%= form_authenticity_token %>"
+  data-id="<%= session[:id] %>"
+  data-name="<%= current_user.username %>"
+>
 </div>
-
-<script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.21.2.min.js"></script>
