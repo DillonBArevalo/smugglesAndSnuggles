@@ -127,7 +127,7 @@ function fetchKeysAndEnterLobby (component) {
       component.pubnub = new PubNub(pnData);
 
       component.pubnub.addListener({
-        presence: component.modifyLobby,
+        presence: component.managePlayerPresence,
         status: currySetUserState(component, pnData),
         message: component.handleMessage,
       });
