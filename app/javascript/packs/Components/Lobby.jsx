@@ -18,7 +18,7 @@ class Lobby extends Component {
     this.acceptChallenge = acceptChallenge.bind(this);
     this.confirmInvitation = this.confirmInvitation.bind(this);
     this.handleMessage = this.handleMessage.bind(this);
-    this.modifyLobby = this.modifyLobby.bind(this);
+    this.managePlayerPresence = this.managePlayerPresence.bind(this);
     this.pingPlayerById = this.pingPlayerById.bind(this);
     this.setPlayerInviteStatus = this.setPlayerInviteStatus.bind(this);
     this.challengePlayerById = challengePlayerById.bind(this, this.setPlayerInviteStatus);
@@ -43,7 +43,6 @@ class Lobby extends Component {
 
   handleMessage (message) {
     if (message.message.foe === this.state.id) {
-
       if (message.message.type === 'challenge') {
         const requests = this.state.requests;
         requests.push({
@@ -64,8 +63,8 @@ class Lobby extends Component {
     this.setState({challengeMessage: event.target.value});
   }
 
-  // this probably wants to move to apiRequests
-  modifyLobby (presenceEvent) {
+  // this probably wants to move to apiRequests?
+  managePlayerPresence (presenceEvent) {
     const players = this.state.players;
     let selectedPlayer = this.state.selectedPlayer;
     if (presenceEvent.action === 'state-change') {
@@ -95,42 +94,119 @@ class Lobby extends Component {
     // render new request
   }
 
-  popup(selectedPlayer){
+  placeholder(selectedPlayer){
     console.log(selectedPlayer)
     this.setState({selectedPlayer, challengeMessage: ''});
+  }
+
+  test() {
+    this.setState({
+      players: {
+        '1': {
+          name: 'name 1',
+          id: '1'
+        },
+        '2': {
+          name: 'name 2',
+          id: '2'
+        },
+        '3': {
+          name: 'name 3',
+          id: '3'
+        },
+        '4': {
+          name: 'name 4',
+          id: '4'
+        },
+        '5': {
+          name: 'name 5',
+          id: '5'
+        },
+        '6': {
+          name: 'name 6',
+          id: '6'
+        },
+        '7': {
+          name: 'name 7',
+          id: '7'
+        },
+      },
+      requests: [
+        {
+          id: '1',
+          name: 'name 1',
+          message: 'not used anymore'
+        },
+        {
+          id: '2',
+          name: 'name 2',
+          message: 'not used anymore'
+        },
+        {
+          id: '3',
+          name: 'name 3',
+          message: 'not used anymore'
+        },
+      ]
+    });
   }
 
   render() {
     return(
       <div className="lobby">
-        <h2>Online Game Lobby:</h2>
-        <p>
-          To play an online game select a potential opponent from the list below to challenge them to a match!
-        </p>
-        <div className="lobby__players-tile">
-          <div className="lobby__player-container">
-            {Object.keys(this.state.players).map(
-              playerId => <Player
-                            name={this.state.players[playerId].name}
-                            id={playerId}
-                            key={playerId}
-                            popup={this.popup.bind(this, this.state.players[playerId])}
-                          />)}
+        <h2 className="lobby__heading">Challenge Players</h2>
+        <div className="lobby__container">
+          <div className="lobby__pending-invite-container">
+            <h3 className="lobby__grouping-heading">Pending Invites <hr className="lobby__heading-rule" aria-hidden="true"/></h3>
+            <ul className="lobby__player-list">
+              {this.state.requests.map(
+                request => {
+                  const playerData = this.state.players[request.id];
+                  return <Player
+                    name={playerData.name}
+                    id={playerData.id}
+                    key={playerData.id}
+                    type="request"
+                  />
+                })}
+            </ul>
           </div>
+          <div className="lobby__players-online-container">
+            <h3 className="lobby__grouping-heading">Players Online <hr className="lobby__heading-rule" aria-hidden="true"/></h3>
+            <ul className="lobby__player-list">
+              {Object.keys(this.state.players).map(
+                playerId => <Player
+                              name={this.state.players[playerId].name}
+                              id={playerId}
+                              key={playerId}
+                              type={this.state.players.type || 'default'}
+                              challenge={this.placeholder.bind(this, this.state.players[playerId])}
+                            />)}
+            </ul>
+          </div>
+          <button className="sessions__button" onClick={this.test.bind(this)}>test</button>
+        </div>
+        {false ?
+        (<div>
+
           <div className="lobby__challenge-tile">
             <ChallengeTile
               player={this.state.selectedPlayer}
               challenge={this.challengePlayerById}
               challengeMessage={this.state.challengeMessage}
               updateChallengeMessage={this.updateChallengeMessage}
-            />
+              />
           </div>
           <ChallengeRequests
             requests={this.state.requests}
             confirmInvitation={this.confirmInvitation}
-          />
-        </div>
+            />
+
+        </div>)
+            : ''
+          }
       </div>
+
     );
   }
 }

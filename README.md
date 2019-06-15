@@ -21,7 +21,6 @@
 1. victory/defeat screen - mockup
   - have a function to communicate to the server and other player that the game is over. This needs to get run when a player resigns. maybe run it on component unmount as well (probably don't want an internet disconnect to resign though... so maybe not)?
 2. We should standardize grays. We're using a different gray for the cancel move button, thes stack preview,the profile picture border,the checkbox border,and the backgrounds on the tiles. We should limit it to 2 or 3.
-3. when/how do they upload profile pictures? that data isn't on teh login. what does the form look like when they click their profile picture to edit it?
 
 ## next steps
 
@@ -69,6 +68,10 @@
   - form validation rework (and rerouting correctly (ajax?))
   - Better solution for spacing in stack preview
   - make winner not automatically switch turns
+  - rename css variables to match new contexts
+  - try catch and any other relevant error handling for lobby
+  - add edit profile picture functionality to profile
+  - remove unused lobby components
 
 ----------
 ## pubnub notes:

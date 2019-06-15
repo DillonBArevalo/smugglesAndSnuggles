@@ -7,8 +7,9 @@ class GamesController < ApplicationController
     @games = Game.all
   end
 
-  def new # pre game lobby
+  def new
     @game = Game.new
+    render layout: 'lobby'
   end
 
   def create # creates a new game and redirects to play

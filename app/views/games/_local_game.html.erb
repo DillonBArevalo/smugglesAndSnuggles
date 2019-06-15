@@ -1,0 +1,9 @@
+<div class="new-game__container">
+  <h2>Local Game:</h2>
+  <p>Play a local game of Smuggles 'N Snuggles where both players will move with the same keyboard and mouse.</p>
+  <%= form_for @game, html: {class: 'form'} do |f| %>
+    <%= f.hidden_field :is_local, value: true %>
+    <%= hidden_field_tag 'player2', 1 %>
+    <%= f.submit "Play Locally", class: "form__submit" %>
+  <% end %>
+</div>
