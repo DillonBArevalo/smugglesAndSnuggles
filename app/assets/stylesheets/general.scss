@@ -57,6 +57,10 @@
   &--country {
     background-color: $darkOrange;
   }
+
+  &--city {
+    background-color: nth($profileHeaderColors, 2);
+  }
 }
 
 .sessions-link {
