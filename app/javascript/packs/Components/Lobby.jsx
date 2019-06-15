@@ -184,6 +184,7 @@ class Lobby extends Component {
                             />)}
             </ul>
           </div>
+          <button className="sessions__button" onClick={this.test.bind(this)}>test</button>
         </div>
         {false ?
         (<div>
@@ -204,7 +205,6 @@ class Lobby extends Component {
         </div>)
             : ''
           }
-        <button className="sessions__button" onClick={this.test.bind(this)}>test</button>
       </div>
 
     );

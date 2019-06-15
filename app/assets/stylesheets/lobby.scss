@@ -34,6 +34,9 @@
     padding: 1rem;
     color: white;
     font-family: $font-mochi;
+    //for now. doesn't work on mobile. must be a better way with flex...
+    max-height: calc(100vh - 16rem);
+    overflow: auto;
   }
   &__player-list {
     margin: 0;
