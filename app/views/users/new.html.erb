@@ -1,15 +1,37 @@
-<h1 class="sessions__header">Register</h1>
+<h1 id="sessionsHeader" class="sessions__header sessions__header--register">Register</h1>
 
 <%= render partial: '/errors' %>
 
-<%= form_for @user, html: {class: 'sessions__form'} do |f| %>
-  <%= f.label 'username', class: 'sessions__label' %>
-  <%= f.text_field 'username', class: 'sessions__input' %>
-  <%= f.label 'email', class: 'sessions__label' %>
-  <%= f.email_field 'email', class: 'sessions__input' %>
-  <%= f.label 'profile_picture', class: 'sessions__label' %>
-  <%= f.file_field 'avatar', class: 'sessions__button', id: 'user_profile_picture' %>
-  <%= f.label 'password' , class: 'sessions__label'%>
-  <%= f.password_field 'password', class: 'sessions__input' %>
-  <%= f.submit :Register, class: 'sessions__button' %>
+<%= form_for @user, html: {class: 'sessions__form sessions__form--register'} do |f| %>
+  <div class="sessions__form-pannel sessions__form-pannel--left">
+    <%= f.file_field 'avatar', class: 'sessions__file-field', id: 'user_profile_picture' %>
+    <%= f.label 'profile_picture', '', class: 'sessions__profile-label' do %>
+      <span class="sessions__profile-label-text">Add Profile Picture</span>
+    <% end %>
+    <div class="sessions__checkbox-grouping">
+      <p id="explanation1" class="sessions__explanation">
+        We collect anonymous data from the games played, which we use to make the game better and learn from it. (Required)
+      </p>
+      <%= label_tag "data_collection_consent", class: 'sessions__checkbox-label' do %>
+        <%= check_box_tag "data_collection_consent", 'consented', false, required: true, 'aria-label' => 'Confirm game data collection consent', 'aria-describedby' => 'explanation1' %>
+        Yes! For Science!
+      <% end %>
+      <p id="explanation2" class="sessions__explanation">
+        We'd also like to send you infrequent emails about new games we're working on as well as updates to this one!
+      </p>
+        <%= f.label 'email_consent', class: 'sessions__checkbox-label' do %>
+          <%= f.check_box 'email_consent', class: 'sessions__check-box', 'aria-label' => 'I would like to receive emails about new games', 'aria-describedby' => 'explanation2' %>
+          Sounds Great
+        <% end %>
+    </div>
+  </div>
+  <div class="sessions__form-pannel">
+    <%= f.label 'username', class: 'sessions__label' %>
+    <%= f.text_field 'username', class: 'sessions__input', required: true %>
+    <%= f.label 'email', class: 'sessions__label' %>
+    <%= f.email_field 'email', class: 'sessions__input', required: true %>
+    <%= f.label 'password' , class: 'sessions__label' %>
+    <%= f.password_field 'password', class: 'sessions__input', required: true %>
+    <%= f.submit "Let's Go!", class: 'sessions__button sessions__button--submit' %>
+  </div>
 <% end %>

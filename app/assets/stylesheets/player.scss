@@ -1,0 +1,57 @@
+@import 'variables';
+.player {
+  list-style-type: none;
+  display: flex;
+  height: 4rem;
+  margin-bottom: 0.25rem;
+
+  &:nth-of-type(2n) {
+    background-color: $lobbyAlternateOrange;
+    .player__button-container {
+      &--single {
+        border-right: 0.25rem solid $sessionsBackground;
+      }
+      &:nth-of-type(2n) {
+        background-color: $sessionsBackground;
+      }
+    }
+  }
+  &:nth-of-type(2n+1) {
+    background-color: $sessionsBackground;
+    .player__button-container {
+      &--single {
+        border-right: 0.25rem solid $lobbyAlternateOrange;
+      }
+      &:nth-of-type(2n) {
+        background-color: $lobbyAlternateOrange;
+      }
+    }
+  }
+  &__button-container {
+    padding: 0.25rem;
+  }
+
+  &__button {
+    height: 3.5rem;
+    border-radius: 1rem;
+    background-color: $lobbyPrimaryButtonColor;
+    color: white;
+    font-size: 2rem;
+    font-family: $font-mochi;
+    width: 8rem;
+    border: none;
+
+    &--secondary {
+      background-color: $lobbySecondaryButtonColor;
+    }
+  }
+
+  &__name-container {
+    flex-grow: 1;
+    font-size: 2rem;
+    letter-spacing: 0.0625rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}

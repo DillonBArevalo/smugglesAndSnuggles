@@ -43,22 +43,20 @@
   }
 }
 
-.lobby__players-tile {
-  display: flex;
+.lobby-container {
+  background-color: $sessionsBackground;
+  height: 100vh;
+  width: 100vw;
+  padding: 0 4rem;
+  box-sizing: border-box;
 }
 
-.lobby__player-container {
-  border: 1px solid black;
-  border-radius: 5px;
-  display: flex;
-  flex-direction: column;
-  .player__card {
-    color: white;
-  }
-  .player__card:nth-of-type(2n) {
-    background-color: $cityColor;
-  }
-  .player__card:nth-of-type(2n - 1) {
-    background-color: $countryColor;
-  }
+.lobby-main-heading {
+  margin-top: 0;
+  padding-top: 1rem;
+  font-family: $font-mochi;
+  color: white;
+  font-size: 3.5rem;
+  letter-spacing: 0.25rem;
+  @include outline(black);
 }

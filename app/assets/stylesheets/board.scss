@@ -23,61 +23,61 @@
   display: flex;
   flex-direction: column;
   align-items: stretch;
-}
 
-.board__row {
-  flex-basis:20%;
-  display: flex;
-  flex-direction:row;
-  flex-wrap: nowrap;
-  align-items: stretch;
-  justify-content: space-around;
+  &__row {
+    flex-basis:20%;
+    display: flex;
+    flex-direction:row;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    justify-content: space-around;
 
-  &--country {
-    background-color: $countryPlayerColor;
-  }
-  &--city {
-    background-color: $cityPlayerColor;
-  }
-  &--odd {
-    .board__cell:nth-of-type(2n)::before {
-      background-color: $cellLight;
+    &--country {
+      background-color: $countryPlayerColor;
     }
-    .board__cell:nth-of-type(2n + 1)::before {
-      background-color: $cellDark;
+    &--city {
+      background-color: $cityPlayerColor;
+    }
+    &--odd {
+      .board__cell:nth-of-type(2n)::before {
+        background-color: $cellLight;
+      }
+      .board__cell:nth-of-type(2n + 1)::before {
+        background-color: $cellDark;
+      }
+    }
+    &--even {
+      .board__cell:nth-of-type(2n + 1)::before {
+        background-color: $cellLight;
+      }
+      .board__cell:nth-of-type(2n)::before {
+        background-color: $cellDark;
+      }
     }
   }
-  &--even {
-    .board__cell:nth-of-type(2n + 1)::before {
-      background-color: $cellLight;
-    }
-    .board__cell:nth-of-type(2n)::before {
-      background-color: $cellDark;
-    }
-  }
-}
 
-.board__cell {
-  position: relative;
-  flex-basis: 33%;
+  &__cell {
+    position: relative;
+    flex-basis: 33%;
 
-  // for hovering card. other cards are in a position absolute contianer so they ignore flex
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    // for hovering card. other cards are in a position absolute contianer so they ignore flex
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-  &::before {
-    @include beforeSquare;
-  }
-  &--highlighted {
-    .card:not(.card--hovering) {
-      height: 65%;
-      top: 17.5%;
-    }
-    &::after {
+    &::before {
       @include beforeSquare;
-      border: .5rem solid white;
-      box-shadow: 0 0 4rem #828080, inset 0 0 3rem;
+    }
+    &--highlighted {
+      .card:not(.card--hovering) {
+        height: 65%;
+        top: 17.5%;
+      }
+      &::after {
+        @include beforeSquare;
+        border: .5rem solid white;
+        box-shadow: 0 0 4rem #828080, inset 0 0 3rem;
+      }
     }
   }
 }
@@ -119,15 +119,6 @@
   position: absolute;
   pointer-events: none;
   text-align: center;
-}
-
-.new-game {
-  display: flex;
-  justify-content: space-between;
-}
-
-.new-game__container {
-  flex-basis: 45%;
 }
 
 .board__overflowing-card-notification {

@@ -1,0 +1,45 @@
+@import 'variables';
+.lobby {
+  &__heading {
+    margin-bottom: 0;
+    background-color: #d99953;
+    border-radius: 0.5rem 0.5rem 0 0;
+    display: inline-block;
+    padding: 0.5rem;
+    font-family: $font-mochi;
+    color: white;
+    font-size: 2rem;
+    letter-spacing: 0.0625rem;
+  }
+
+  &__grouping-heading {
+    display: flex;
+    font-size: 2rem;
+    letter-spacing: 0.0625rem;
+    margin: 0.5rem 0;
+  }
+
+  &__heading-rule {
+    display: inline-block;
+    flex-grow: 1;
+    margin-left: 1rem;
+    border: 0.125rem solid white;
+    border-radius: 1rem;
+  }
+
+  &__container {
+    background-color: #bb7b36;
+    border-radius: 0 1rem 1rem 1rem;
+    border: 0.5rem solid #d99953;
+    padding: 1rem;
+    color: white;
+    font-family: $font-mochi;
+    //for now. doesn't work on mobile. must be a better way with flex...
+    max-height: calc(100vh - 16rem);
+    overflow: auto;
+  }
+  &__player-list {
+    margin: 0;
+    padding: 0;
+  }
+}
