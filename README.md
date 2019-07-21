@@ -1,6 +1,27 @@
 # README
 
-## This project is not finished yet and thus this readme is for me, the developer, to put my notes. It will be updated to be a proper readme when the project is at a reasonably presentable point
+This project is not finished yet and thus this readme is for me, the developer, to put my notes. It will be updated to be a proper readme when the project is at a reasonably presentable point
+
+## Tasks before initial release:
+- replace pubnub with websockets
+- review game and reamatch functionality
+  - review game can just be an alert
+  - review game needs to be fixed on both the finished game page and the profile page
+- lobby functionality (invite and accept games)
+- home page
+- basic responsivity
+- Basic accessibility
+  - form validation rework (and rerouting correctly (ajax?))
+  - dynamic page titles
+- image caching
+- admin accounts
+- db wipe
+- add edit profile picture functionality to profile
+- emote wheel
+- color cleanup
+- make waiting message nicer for online connection - also make it active? (animated)
+  - player disconnect message in game
+  - different message for resign vs disconnect
 
 ## bugs
 - 3 players online (phone, chrome, and incognito) and all three aren't showing up in the lobby
@@ -12,93 +33,34 @@
 - people sometimes don't show up in the lobby
 - safari seems to log an error with PN sometimes. more investigating could be good.
   - looks to be on unsubscribeAll()?
-
 - previously moved card isn't maintained when page is reloaded. allows for cheating by moving, reloading, moving same card.
+  - component did mount look at last move?
 - loading old games sometimes gives wrong board states. maybe an issue with flipped? maybe history?
 
-## decisions that need to be made:
-
-1. victory/defeat screen - mockup
-  - have a function to communicate to the server and other player that the game is over. This needs to get run when a player resigns. maybe run it on component unmount as well (probably don't want an internet disconnect to resign though... so maybe not)?
-2. We should standardize grays. We're using a different gray for the cancel move button, thes stack preview,the profile picture border,the checkbox border,and the backgrounds on the tiles. We should limit it to 2 or 3.
-
-## next steps
-
-1. ~play online~
-2. ~matchmaking~
-3. aesthetics
-  - cache images
-  - make waiting message nicer for online connection - also make it active? (animated)
-  - Integrate amazon [s3](https://aws.amazon.com/s3/) for file storage
-4. code cleanup
+## code cleanup
   - refactor game by extracting methods into new file and extending game with class?
   - remove game container to own component
-  - Clean css/class names
+  - Clean css/class names/variable names
   - remove extra data from move history (card details beyond card number and deck)
   - better alt for overflow (also probably rework order of cards in stack for SR?)
-  - maybe use straight websockets instead of pubnub?
   - Make sure all pages have appropriate landmarks
-5. key generation
-  - add key generation and keyed sign-up
-  - maybe use mailer for sending out keys so it doesn't have to be manual.
-6. initial release
-7. laws
-  - add new version of laws
-8. game reviews
-  - add ability to locally revisit
-9. Additional features
-  - move timer for comp/competitive
-  - undo last move
-  - advanced keyboard support
-  - SR support for gameplay
-  - settings for default move confirmation state
+  - move render card out so I don't have to repeat code in cell window and cell
+  - remove unused code
 
 ## Other items of low priority
 
-- Add game chat
-- Add opponent info in game
-- Can fix profile picture rubber banding by setting the growth amount on the flipping (not 55%, but 50% -/+ relevant size)
-- can lessen profile picture rubber banding by using a media query to only allow for 3 lines of text if we need it
+- advanced keyboard support
+- SR support for gameplay
+- make winner not automatically switch turns
+- undo last move
+- animate removal of move circles and moves \<p\> (rubber band)
+- move timer for comp/competitive
+- add new version of laws
 
-## TODOS:
-  - add media queries to make sure "x bears' turn" never overflows...
-  - animate removal of move circles and moves <p>
-  - move render card out so I don't have to repeat code in cell window and cell
-  - dynamic page titles
-  - form validation rework (and rerouting correctly (ajax?))
-  - Better solution for spacing in stack preview
-  - make winner not automatically switch turns
-  - rename css variables to match new contexts
-  - try catch and any other relevant error handling for lobby
-  - add edit profile picture functionality to profile
-  - remove unused lobby components
-
-----------
-## pubnub notes:
-subscribe:
-loading message until connect callback at which time a message with a time delay to remove itself gets posted saying you're connected.
-local storage for uuid?
-restore: true
-and a start timestamp to make sure i get missed messages if i reload
-callback is what happens when you get a message
-
-in subscribe can have presence. when one person gets a presence message from the other you can send a message to the other notifying that both are in the room. when someone leaves your opponent has disconnected (or reconnected) can be displayed.
-can attach a state object that other users get in the join event.
-
-pubnub.state can get you the state of another user. pass it the channel and a uuid. you can then use a callback and an error. if you pass state you are setting state
-
-publish:
-has channel, message, callback, and error in an object
-do not stringify stuff, just send actual object. they stringify for you
-within publish add a callback and an error. minimum console.logs, but they are success and failure for sending.
-
-history:
-pubnub.history can give you the history of a channel. Make this happen on reconnect to make sure you have the latest game state.
-can specify count: 1 to just get latest state
-end given a timetoken can give you all the messages newer than your current timetoken.
-localStorage.getItem(subkey) for last time token?
 
 ---------
+
+## Running a local version:
 
 Keys file:
 
