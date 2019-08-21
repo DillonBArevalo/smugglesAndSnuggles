@@ -2,6 +2,12 @@
 
 This project is not finished yet and thus this readme is for me, the developer, to put my notes. It will be updated to be a proper readme when the project is at a reasonably presentable point
 
+## implementation notes
+- action cable
+  - enable auth
+  - might want to include turn number and move number in move data sent to server/stored in db so people can't move twice if internet gets screwed up...
+  - might not work in production yet. i think i need to enable redis in a config file somewhere
+
 ## Tasks before initial release:
 - replace pubnub with websockets
 - review game and reamatch functionality
