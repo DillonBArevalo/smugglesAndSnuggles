@@ -5,6 +5,7 @@ import StackPreview from './StackPreview';
 import {fetchKeysAndStartConnection, publishMove, sendGameUpdate} from '../modules/apiRequests'
 import MoveConfirmation from './MoveConfirmation';
 import WinnerNotification from './WinnerNotification';
+import { createConsumer } from '@rails/actioncable';
 
 class Game extends Component {
   constructor(props){
@@ -13,8 +14,6 @@ class Game extends Component {
       activeDeck: this.props.gameData.activeDeck,
       board: this.props.gameData.currentBoard,
       confirmMove: false,
-      gameId: `game${this.props.gameId}`,
-      isLocal: this.props.isLocal,
       isFlippedBoard: this.props.playerDeck === 'city',
       isOpponentConnected: this.props.isLocal,
       movedCardValue: this.props.gameData.movedCardValue || [],
@@ -24,7 +23,6 @@ class Game extends Component {
       },
       movesLeft: this.props.gameData.movesLeft,
       playerDeck: this.props.playerDeck,
-      playerId: this.props.id,
       preppedMove: {},
       stackView: null,
       winner: this.props.gameData.winner || null,
@@ -57,6 +55,16 @@ class Game extends Component {
 
   componentDidMount () {
     const gameComponent = this;
+    this.consumer = createConsumer();
+    console.log('this.consumer', this.consumer);
+    this.gameChannel = this.consumer.subscriptions.create({channel: 'GameChannel', room: this.props.gameId}, {
+      connected() {
+        console.log('connected')
+      },
+      received(data) {
+        console.log('recieved', data);
+      }
+    })
     if (!this.props.isLocal) {
       fetchKeysAndStartConnection( gameComponent );
     }
@@ -96,7 +104,7 @@ class Game extends Component {
   //   let winnerHeader;
   //   if (!this.state.winner) {
   //     winnerHeader = '';
-  //   } else if (this.state.isLocal) {
+  //   } else if (this.props.isLocal) {
   //     winnerHeader = <h2>{this.state.winner} Bears Win!</h2>;
   //   } else {
   //     winnerHeader = <h2>You { this.state.winner === this.state.playerDeck ? 'Win!' : 'Lose'}</h2>;
@@ -303,7 +311,7 @@ class Game extends Component {
   highlightMoves(row, col) {
     const card = this.topCard(this.state.board[row][col]);
     if(card.deck !== this.state.activeDeck
-      || (!this.state.isLocal && card.deck !== this.state.playerDeck)
+      || (!this.props.isLocal && card.deck !== this.state.playerDeck)
       || this.state.movedCardValue.some((value) => card.value === value)
       || this.state.winner ){
       return;
@@ -360,7 +368,7 @@ class Game extends Component {
                       cancelMove={this.cancelMove}
                       confirmMove={this.state.confirmMove}
                       getCardUrl={this.getCardUrl}
-                      moveCard={this.moveCard.bind(this, rowIdx, col, !this.state.isLocal, false)}
+                      moveCard={this.moveCard.bind(this, rowIdx, col, !this.props.isLocal, false)}
                       showStack={this.showStack.bind(this, rowIdx, col)}
                       hideStack={this.hideStack}
                       setPreppedMove={this.state.confirmMove && this.setPreppedMove.bind(this, [rowIndex, colIndex])}
