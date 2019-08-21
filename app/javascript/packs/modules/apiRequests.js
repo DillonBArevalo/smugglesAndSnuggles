@@ -144,7 +144,7 @@ function fetchKeysAndStartConnection ( gameComponent ) {
     .then( pnData => {
       gameComponent.pubnub = new PubNub(pnData);
       gameComponent.pubnub.subscribe({
-        channels: [gameComponent.state.gameId],
+        channels: [gameComponent.props.gameId],
       });
       gameComponent.pubnub.addListener({
         message: (m) => {
@@ -182,7 +182,7 @@ function publishMove (send, endRow, endCol, movesLeft, activeDeck, board, winner
         }
       }
     );
-  } else if ( this.state.isLocal ) {
+  } else if ( this.props.isLocal ) {
     this.sendGameUpdate(movesLeft, activeDeck, board, winner, moveData);
   }
 }
