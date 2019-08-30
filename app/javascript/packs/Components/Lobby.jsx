@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import Player from "./Player";
-import ChallengeTile from "./ChallengeTile";
-import ChallengeRequests from "./ChallengeRequests";
 import { enterLobby } from "../modules/apiRequests";
 
 class Lobby extends Component {
