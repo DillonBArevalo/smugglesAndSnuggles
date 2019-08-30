@@ -2,11 +2,13 @@
 # app/channels/appearance_channel.rb
 class GameChannel < ApplicationCable::Channel
   def subscribed
-    stream_from params['room']
+    channel = params['room'] || 'lobby'
+    stream_from channel
   end
 
   def receive(data)
-    ActionCable.server.broadcast(params['room'], data)
+    channel = params['room'] || 'lobby'
+    ActionCable.server.broadcast(channel, data)
   end
 
   def unsubscribed
