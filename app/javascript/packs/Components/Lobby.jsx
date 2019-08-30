@@ -16,6 +16,7 @@ class Lobby extends Component {
       leave: 'removePlayer',
     }
     this.handleMessage = this.handleMessage.bind(this);
+    this.cleanUp = this.cleanUp.bind(this);
   }
 
   componentDidMount(){
@@ -23,10 +24,19 @@ class Lobby extends Component {
       id: this.props.id,
       name: this.props.name,
     });
+    window.addEventListener('beforeunload', this.cleanUp);
   }
 
   componentWillUnmount(){
+    window.removeEventListener('beforeunload', this.cleanUp);
+    this.cleanUp();
+  }
+
+  cleanUp () {
     this.channel.leave();
+    // there's a race condition here where if you disconnect first it will ignore
+    // the leave message and other components won't remove this user from the list
+    window.setTimeout(() => this.channel.consumer.disconnect(), 500);
   }
 
   removePlayer (playerDetails) {

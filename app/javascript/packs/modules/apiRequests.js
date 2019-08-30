@@ -18,7 +18,7 @@ export function enterLobby (component, received, playerDetails) {
         type: 'leave',
         playerDetails,
       })
-    }
+    },
   });
 }
 
