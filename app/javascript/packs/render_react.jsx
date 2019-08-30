@@ -23,4 +23,11 @@ document.addEventListener('turbolinks:load', () => {
     const name = lobby.dataset.name;
     ReactDOM.render(<Lobby id={id} name={name}/>, lobby);
   }
-})
+  function unmount () {
+    game && ReactDOM.unmountComponentAtNode(game);
+    lobby && ReactDOM.unmountComponentAtNode(lobby);
+    document.removeEventListener('turbolinks:before-render', unmount);
+  }
+
+  document.addEventListener('turbolinks:before-render', unmount);
+});
