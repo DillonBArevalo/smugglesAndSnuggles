@@ -42,6 +42,7 @@ This project is not finished yet and thus this readme is for me, the developer, 
 - previously moved card isn't maintained when page is reloaded. allows for cheating by moving, reloading, moving same card.
   - component did mount look at last move?
 - loading old games sometimes gives wrong board states. maybe an issue with flipped? maybe history?
+- you are not a player in this game message doesn't seem to have a layout and thus looks awful.
 
 ## code cleanup
   - refactor game by extracting methods into new file and extending game with class?

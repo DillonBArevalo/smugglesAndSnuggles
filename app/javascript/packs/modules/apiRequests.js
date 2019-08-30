@@ -1,3 +1,27 @@
+import { createConsumer } from '@rails/actioncable';
+
+function createGameSubscription (component, room, callbacks) {
+  component.channel = createConsumer().subscriptions.create({channel: 'GameChannel', room}, callbacks)
+}
+
+export function enterLobby (component, received, playerDetails) {
+  createGameSubscription(component, 'lobby', {
+    connected () {
+      this.send({
+        type: 'join',
+        playerDetails,
+      });
+    },
+    received,
+    leave () {
+      this.send({
+        type: 'leave',
+        playerDetails,
+      })
+    }
+  });
+}
+
 function sendGameStart (gameComponent) {
   gameComponent.pubnub.publish({
     message: {
@@ -8,6 +32,7 @@ function sendGameStart (gameComponent) {
   });
 }
 
+// no longer necessary
 function fetchKeys (component) {
   return fetch('/pnkeys')
     .then(response => {
