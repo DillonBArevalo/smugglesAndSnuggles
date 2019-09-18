@@ -60,7 +60,7 @@ class Cell extends Component {
             value={card.value}
             url={this.props.getCardUrl(card.deck, card.value)}
             faceDown={false}
-            class={'card--hovering'}
+            className={'card--hovering'}
           />)(this.props.hoverCard)}
       </div>
     );
