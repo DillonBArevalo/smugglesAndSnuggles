@@ -13,11 +13,13 @@ class Lobby extends Component {
     this.messageResponseMapper = {
       join: 'addNewPlayer',
       leave: 'removePlayer',
-      request: 'receiveRequest'
+      request: 'receiveRequest',
+      ignore: 'receiveRequestIgnored',
     }
     this.handleMessage = this.handleMessage.bind(this);
     this.cleanUp = this.cleanUp.bind(this);
     this.invite = this.invite.bind(this);
+    this.ignoreRequest = this.ignoreRequest.bind(this);
   }
 
   componentDidMount(){
@@ -87,19 +89,46 @@ class Lobby extends Component {
     return this.state.players[playerId].isRequested;
   }
 
+  receiveRequestIgnored (playerDetails) {
+    console.log('rejecting');
+    this.modifyPlayer(playerDetails.id, {type: 'rejected'});
+    window.setTimeout(
+      this.modifyPlayer.bind(this, playerDetails.id, {type: 'default'}),
+      5000
+    );
+  }
+
+
+  modifyPlayer (playerId, propsToChange) {
+    const {players} = this.state;
+    const player = Object.assign({}, players[playerId]);
+    Object.keys(propsToChange).forEach(prop => {
+      player[prop] = propsToChange[prop];
+    });
+    const newPlayers = Object.assign({}, players, {[playerId]: player});
+    this.setState({players: newPlayers});
+  }
+
   invite (recipient) {
     const {id, name} = this.props;
     const playerDetails = {id, name};
-    const {players} = this.state;
-    const player = Object.assign({}, players[recipient]);
-    player.type = 'pending';
-    const newPlayers = Object.assign({}, players, {[recipient]: player});
     this.channel.send({
       type: 'request',
       recipient,
       playerDetails,
     });
-    this.setState({players: newPlayers});
+    this.modifyPlayer(recipient, {type: 'pending'});
+  }
+
+  ignoreRequest (recipient) {
+    const {id, name} = this.props;
+    const playerDetails = {id, name};
+    this.channel.send({
+      type: 'ignore',
+      recipient: recipient,
+      playerDetails,
+    })
+    this.modifyPlayer(recipient, {isRequested: false});
   }
 
   renderPlayer (playerData, type, callbacks) {
@@ -127,7 +156,8 @@ class Lobby extends Component {
                   const player = this.state.players[playerId];
                   return player.isRequested && this.renderPlayer(
                     this.state.players[playerId],
-                    'request'
+                    'request',
+                    {ignore: this.ignoreRequest}
                   );
                 }
               )}

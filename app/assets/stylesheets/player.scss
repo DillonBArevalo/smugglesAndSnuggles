@@ -29,6 +29,7 @@
   }
   &__button-container {
     padding: 0.25rem;
+    display: flex;
   }
 
   &__button {
@@ -40,6 +41,7 @@
     font-family: $font-mochi;
     width: 8rem;
     border: none;
+    @include outlineLight(black);
 
     &--secondary {
       background-color: $lobbySecondaryButtonColor;
@@ -53,39 +55,51 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    @include outlineLight(black);
   }
 
-  &__pending-notification {
-    margin: 0;
+  &__rejected-notification {
+    font-size: 2rem;
+    width: 8rem;
+
+  }
+
+  &__static-notification {
+    margin: auto;
     width: 8rem;
     text-align: center;
-    @keyframes blink {
-      0% {
-        opacity: 1;
-      }
-      20% {
-        opacity: .2;
-      }
-      100% {
-        opacity: 1;
-      }
-    }
+    @include outlineLight(black);
+    font-size: 2rem;
 
-    .player__loading-dot {
-      font-size: 5rem;
-      line-height: 2rem;
-      animation-name: blink;
-      animation-duration: 1s;
-      animation-iteration-count: 5;
-      animation-fill-mode: both;
-    }
+    &--pending {
+      @keyframes blink {
+        0% {
+          opacity: 1;
+        }
+        20% {
+          opacity: .2;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
 
-    .player__loading-dot:nth-child(2) {
-      animation-delay: .2s;
-    }
+      .player__loading-dot {
+        font-size: 5rem;
+        line-height: 2rem;
+        animation-name: blink;
+        animation-duration: 1s;
+        animation-iteration-count: 5;
+        animation-fill-mode: both;
+      }
 
-    .player__loading-dot:nth-child(3) {
-      animation-delay: .4s;
+      .player__loading-dot:nth-child(2) {
+        animation-delay: .2s;
+      }
+
+      .player__loading-dot:nth-child(3) {
+        animation-delay: .4s;
+      }
     }
   }
 }
