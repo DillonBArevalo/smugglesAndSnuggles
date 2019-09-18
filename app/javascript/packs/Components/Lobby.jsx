@@ -8,15 +8,16 @@ class Lobby extends Component {
     this.state = {
       players: {},
       challengeMessage: '',
-      requests: [],
     };
 
     this.messageResponseMapper = {
       join: 'addNewPlayer',
       leave: 'removePlayer',
+      request: 'receiveRequest'
     }
     this.handleMessage = this.handleMessage.bind(this);
     this.cleanUp = this.cleanUp.bind(this);
+    this.invite = this.invite.bind(this);
   }
 
   componentDidMount(){
@@ -72,6 +73,35 @@ class Lobby extends Component {
     }
   }
 
+  receiveRequest ( playerDetails ) {
+    if(!this.alreadyRequested(playerDetails.id)) {
+      const {players} = this.state;
+      const player = Object.assign({}, players[playerDetails.id]);
+      player.isRequested = true;
+      const newPlayers = Object.assign({}, players, {[playerDetails.id]: player});
+      this.setState({players: newPlayers});
+    }
+  }
+
+  alreadyRequested (playerId) {
+    return this.state.players[playerId].isRequested;
+  }
+
+  invite (recipient) {
+    const {id, name} = this.props;
+    const playerDetails = {id, name};
+    const {players} = this.state;
+    const player = Object.assign({}, players[recipient]);
+    player.type = 'pending';
+    const newPlayers = Object.assign({}, players, {[recipient]: player});
+    this.channel.send({
+      type: 'request',
+      recipient,
+      playerDetails,
+    });
+    this.setState({players: newPlayers});
+  }
+
   renderPlayer (playerData, type, callbacks) {
     return (
       <Player
@@ -92,8 +122,14 @@ class Lobby extends Component {
           <div className="lobby__pending-invite-container">
             <h3 className="lobby__grouping-heading">Pending Invites <hr className="lobby__heading-rule" aria-hidden="true"/></h3>
             <ul className="lobby__player-list">
-              {this.state.requests.map(
-                request => {return this.renderPlayer(this.state.players[request.id], 'request')}
+              {Object.keys(this.state.players).map(
+                playerId => {
+                  const player = this.state.players[playerId];
+                  return player.isRequested && this.renderPlayer(
+                    this.state.players[playerId],
+                    'request'
+                  );
+                }
               )}
             </ul>
           </div>
@@ -106,7 +142,7 @@ class Lobby extends Component {
                   return !player.isRequested && this.renderPlayer(
                     player,
                     player.type || 'default',
-                    // {challenge: this.placeholder.bind(this, this.state.players[playerId])}
+                    {invite: this.invite}
                   );
                 }
               )}
