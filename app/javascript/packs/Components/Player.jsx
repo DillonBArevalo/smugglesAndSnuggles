@@ -1,17 +1,29 @@
 import React, { Component } from 'react';
 
 class Player extends Component {
+  constructor (props) {
+    super(props);
+    this.invitePlayer = this.invitePlayer.bind(this);
+  }
+
+  invitePlayer () {
+    this.props.invite(this.props.id);
+  }
   renderButtons () {
     if(this.props.type === 'default' || !this.props.type) {
       return (
         <div className="player__button-container player__button-container--single">
-          <button className="player__button player__button--primary">Invite</button>
+          <button onClick={this.invitePlayer} className="player__button player__button--primary">Invite</button>
         </div>
         );
     } else if (this.props.type === 'pending'){
       return (
         <div className="player__button-container player__button-container--single">
-          <p className="player__static-notification">Pending...</p>
+          <p className="player__pending-notification" aria-label="invitation pending">
+            <span className="player__loading-dot" aria-hidden="true">.</span>
+            <span className="player__loading-dot" aria-hidden="true">.</span>
+            <span className="player__loading-dot" aria-hidden="true">.</span>
+            </p>
         </div>
       );
     } else if (this.props.type === 'rejected'){
