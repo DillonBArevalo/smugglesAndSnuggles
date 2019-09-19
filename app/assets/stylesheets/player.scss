@@ -43,6 +43,10 @@
     border: none;
     @include outlineLight(black);
 
+    &:disabled {
+      opacity: 0.5;
+    }
+
     &--secondary {
       background-color: $lobbySecondaryButtonColor;
     }
