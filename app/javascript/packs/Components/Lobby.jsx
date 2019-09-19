@@ -8,6 +8,7 @@ class Lobby extends Component {
     this.state = {
       players: {},
       challengeMessage: '',
+      pending: false,
     };
 
     this.messageResponseMapper = {
@@ -15,15 +16,17 @@ class Lobby extends Component {
       leave: 'removePlayer',
       request: 'receiveRequest',
       ignore: 'receiveRequestIgnored',
+      accept: 'receiveRequestAccepted',
+      startGame: 'startGame',
     }
-    this.handleMessage = this.handleMessage.bind(this);
     this.cleanUp = this.cleanUp.bind(this);
     this.invite = this.invite.bind(this);
     this.ignoreRequest = this.ignoreRequest.bind(this);
+    this.acceptRequest = this.acceptRequest.bind(this);
   }
 
   componentDidMount(){
-    enterLobby(this, this.handleMessage, {
+    enterLobby(this, this.handleMessage.bind(this), {
       id: this.props.id,
       name: this.props.name,
     });
@@ -31,6 +34,7 @@ class Lobby extends Component {
   }
 
   componentWillUnmount(){
+    this.acceptTimeout && window.clearTimeout(this.acceptTimeout);
     window.removeEventListener('beforeunload', this.cleanUp);
     this.cleanUp();
   }
@@ -42,14 +46,14 @@ class Lobby extends Component {
     window.setTimeout(() => this.channel.consumer.disconnect(), 500);
   }
 
-  removePlayer (playerDetails) {
+  removePlayer ({playerDetails}) {
     const players = Object.assign({}, this.state.players);
     players[playerDetails.id] && delete players[playerDetails.id];
 
     this.setState({players});
   }
 
-  addNewPlayer (playerDetails, targeted) {
+  addNewPlayer ({playerDetails, recipient}) {
     const players = Object.assign(
       {},
       this.state.players,
@@ -59,23 +63,16 @@ class Lobby extends Component {
     )
     this.setState({players});
 
-    !targeted && this.channel.send({
-      type: 'join',
-      recipient: playerDetails.id,
-      playerDetails: {
-        id: this.props.id,
-        name: this.props.name,
-      },
-    })
+    !recipient && this.channel.sendUpdate('join', playerDetails.id)
   }
 
   handleMessage (message) {
     if (message.playerDetails.id !== this.props.id && (!message.recipient || message.recipient === this.props.id)) {
-      this[this.messageResponseMapper[message.type]](message.playerDetails, !!message.recipient);
+      this[this.messageResponseMapper[message.type]](message);
     }
   }
 
-  receiveRequest ( playerDetails ) {
+  receiveRequest ({playerDetails}) {
     if(!this.alreadyRequested(playerDetails.id)) {
       const {players} = this.state;
       const player = Object.assign({}, players[playerDetails.id]);
@@ -89,8 +86,7 @@ class Lobby extends Component {
     return this.state.players[playerId].isRequested;
   }
 
-  receiveRequestIgnored (playerDetails) {
-    console.log('rejecting');
+  receiveRequestIgnored ({playerDetails}) {
     this.modifyPlayer(playerDetails.id, {type: 'rejected'});
     window.setTimeout(
       this.modifyPlayer.bind(this, playerDetails.id, {type: 'default'}),
@@ -98,6 +94,14 @@ class Lobby extends Component {
     );
   }
 
+  receiveRequestAccepted ({playerDetails, url}) {
+    this.channel.sendUpdate('startGame', playerDetails.id, {url})
+    window.setTimeout(() => window.location.href = url, 500);
+  }
+
+  startGame ({url, errors}) {
+    window.location.href = url;
+  }
 
   modifyPlayer (playerId, propsToChange) {
     const {players} = this.state;
@@ -110,28 +114,33 @@ class Lobby extends Component {
   }
 
   invite (recipient) {
-    const {id, name} = this.props;
-    const playerDetails = {id, name};
-    this.channel.send({
-      type: 'request',
-      recipient,
-      playerDetails,
-    });
+    this.channel.sendUpdate('request', recipient)
     this.modifyPlayer(recipient, {type: 'pending'});
   }
 
   ignoreRequest (recipient) {
-    const {id, name} = this.props;
-    const playerDetails = {id, name};
-    this.channel.send({
-      type: 'ignore',
-      recipient: recipient,
-      playerDetails,
-    })
+    this.channel.sendUpdate('ignore', recipient)
     this.modifyPlayer(recipient, {isRequested: false});
   }
 
-  renderPlayer (playerData, type, callbacks) {
+  acceptRequest (recipient) {
+    this.channel.sendUpdate(
+      'accept',
+      recipient,
+      {
+        isLocal: false,
+        player1: this.props.id,
+        player2: recipient,
+      }
+    );
+    this.setState({pending: true});
+    this.acceptTimeout = window.setTimeout(() => {
+      this.setState({pending: false});
+      window.alert('Something went wrong. the request could not be accepted.');
+    }, 5000);
+  }
+
+  renderPlayer (playerData, type, callbacks, pending) {
     return (
       <Player
         name={playerData.name}
@@ -139,6 +148,7 @@ class Lobby extends Component {
         key={`${type}-${playerData.id}`}
         type={type}
         {...callbacks}
+        pending={pending}
       />
     );
   }
@@ -157,7 +167,11 @@ class Lobby extends Component {
                   return player.isRequested && this.renderPlayer(
                     this.state.players[playerId],
                     'request',
-                    {ignore: this.ignoreRequest}
+                    {
+                      ignore: this.ignoreRequest,
+                      accept: this.acceptRequest,
+                    },
+                    this.state.pending
                   );
                 }
               )}
@@ -172,7 +186,8 @@ class Lobby extends Component {
                   return !player.isRequested && this.renderPlayer(
                     player,
                     player.type || 'default',
-                    {invite: this.invite}
+                    {invite: this.invite},
+                    this.state.pending
                   );
                 }
               )}

@@ -1,11 +1,11 @@
 import { createConsumer } from '@rails/actioncable';
 
-function createGameSubscription (component, room, callbacks) {
-  component.channel = createConsumer().subscriptions.create({channel: 'GameChannel', room}, callbacks)
+function createSubscription (component, channel, room, callbacks) {
+  component.channel = createConsumer().subscriptions.create({channel, room}, callbacks)
 }
 
 export function enterLobby (component, received, playerDetails) {
-  createGameSubscription(component, 'lobby', {
+  createSubscription(component, 'LobbyChannel', 'lobby', {
     connected () {
       this.send({
         type: 'join',
@@ -17,18 +17,11 @@ export function enterLobby (component, received, playerDetails) {
       this.send({
         type: 'leave',
         playerDetails,
-      })
+      });
     },
-  });
-}
-
-function sendGameStart (gameComponent) {
-  gameComponent.pubnub.publish({
-    message: {
-      startConnection: true,
-      connected: gameComponent.state.isOpponentConnected,
-    },
-    channel: gameComponent.state.gameId,
+    sendUpdate (type, recipient, additionalArgs={}) {
+      this.send({type, recipient, playerDetails, ...additionalArgs});
+    }
   });
 }
 
@@ -44,127 +37,7 @@ function fetchKeys (component) {
     });
 }
 
-function newGame (player2, component) {
-  fetch('/games', {
-    method: 'POST',
-    body: JSON.stringify({
-      game: {is_local: false},
-      player2,
-    }),
-    headers: {
-      'Content-Type': 'application/json',
-      'X-CSRF-Token': Rails.csrfToken()
-    },
-    credentials: 'same-origin'
-  }).then(response => {
-    if (response.ok) {
-      const message = {
-        type: 'game start',
-        foe: player2,
-        href: response.url,
-      };
-      component.pubnub.publish({
-        message,
-        channel: 'gameLobby',
-      });
-      window.location.href = response.url;
-    }
-  });
-}
-
-function challengePlayerById (handleResponse, event) {
-  event.preventDefault();
-  const message = {
-    type: 'challenge',
-    foe: this.state.selectedPlayer.id,
-    challengerId: this.state.id,
-    challengerName: this.state.name,
-    message: this.state.challengeMessage,
-  };
-  this.pubnub.publish(
-    {
-      message,
-      channel: 'gameLobby',
-    },
-    handleResponse,
-  );
-}
-
-function acceptChallenge (foe) {
-  event.preventDefault();
-  const message = {
-    type: 'accept',
-    foe,
-    challengerId: this.state.id,
-  };
-  this.pubnub.publish(
-    {
-      message,
-      channel: 'gameLobby',
-    }
-  );
-}
-
-function currySetUserState (component, pnData) {
-  return function setUserState(statusEvent) {
-    if (statusEvent.category === "PNConnectedCategory") {
-      component.pubnub.setState({
-        channels: ['gameLobby'],
-        state: {
-          name: component.state.name,
-          id: pnData.uuid,
-        },
-        uuid: pnData.uuid,
-      },
-      () => {
-        component.pubnub.hereNow(
-          {
-            channels: ["gameLobby"],
-            includeUUIDs: true,
-            includeState: true,
-          },
-          currySetupPlayersList(component)
-        );
-      });
-    }
-  }
-}
-
-function currySetupPlayersList (component) {
-  return (status, response) => {
-          const channelOccupants = response.channels.gameLobby.occupants;
-          const players = channelOccupants.reduce(
-            (players, stateObj) => {
-              if(stateObj && stateObj.state && stateObj.state.id !== component.state.id) {
-                players[stateObj.state.id] = stateObj.state;
-              }
-              return players;
-            },
-            {}
-          );
-          component.setState({players});
-        }
-}
-
-function fetchKeysAndEnterLobby (component) {
-  fetchKeys(component)
-    .then(pnData => {
-      component.pubnub = new PubNub(pnData);
-
-      component.pubnub.addListener({
-        presence: component.managePlayerPresence,
-        status: currySetUserState(component, pnData),
-        message: component.handleMessage,
-      });
-
-      component.pubnub.subscribe({
-        channels: ['gameLobby'],
-        withPresence: true,
-      });
-    });
-}
-
-function fetchKeysAndStartConnection ( gameComponent ) {
+export function fetchKeysAndStartConnection ( gameComponent ) {
   fetchKeys(gameComponent)
     .then( pnData => {
       gameComponent.pubnub = new PubNub(pnData);
@@ -191,7 +64,7 @@ function fetchKeysAndStartConnection ( gameComponent ) {
     });
 }
 
-function publishMove (send, endRow, endCol, movesLeft, activeDeck, board, winner, moveData) {
+export function publishMove (send, endRow, endCol, movesLeft, activeDeck, board, winner, moveData) {
   const gameComponent = this;
   if( send ) {
     this.sendGameUpdate(movesLeft, activeDeck, board, winner, moveData);
@@ -212,7 +85,7 @@ function publishMove (send, endRow, endCol, movesLeft, activeDeck, board, winner
   }
 }
 
-function sendGameUpdate(movesLeft, activeDeck, board, winner, moveData) {
+export function sendGameUpdate(movesLeft, activeDeck, board, winner, moveData) {
   const {playerDeck, playerId, gameId} = this.state;
   const authenticity_token = this.props.authToken;
   const data = JSON.stringify({movesLeft, activeDeck, board, playerDeck, playerId, winner, authenticity_token, moveData});
@@ -227,5 +100,3 @@ function sendGameUpdate(movesLeft, activeDeck, board, winner, moveData) {
     }
   );
 }
-
-export { newGame, acceptChallenge, fetchKeysAndStartConnection, publishMove, sendGameUpdate, fetchKeysAndEnterLobby, challengePlayerById }
