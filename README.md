@@ -19,6 +19,7 @@ This project is not finished yet and thus this readme is for me, the developer, 
 - Basic accessibility
   - form validation rework (and rerouting correctly (ajax?))
   - dynamic page titles
+  - run axe
 - image caching
 - admin accounts
 - db wipe

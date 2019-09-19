@@ -5,6 +5,7 @@ class Player extends Component {
     super(props);
     this.invitePlayer = this.invitePlayer.bind(this);
     this.ignorePlayer = this.ignorePlayer.bind(this);
+    this.acceptRequest = this.acceptRequest.bind(this);
   }
 
   invitePlayer () {
@@ -15,11 +16,16 @@ class Player extends Component {
     this.props.ignore(this.props.id);
   }
 
+  acceptRequest () {
+    this.props.accept(this.props.id);
+  }
+
   renderButtons () {
     if(this.props.type === 'default' || !this.props.type) {
       return (
         <div className="player__button-container player__button-container--single">
           <button
+            disabled={this.props.pending}
             onClick={this.invitePlayer}
             className="player__button player__button--primary"
           >
@@ -47,13 +53,16 @@ class Player extends Component {
       return [
         <div key="primary" className="player__button-container">
           <button
+            disabled={this.props.pending}
             className="player__button player__button--primary"
+            onClick={this.acceptRequest}
           >
             Accept
           </button>
         </div>,
         <div key="secondary" className="player__button-container">
           <button
+            disabled={this.props.pending}
             className="player__button player__button--secondary"
             onClick={this.ignorePlayer}
           >
