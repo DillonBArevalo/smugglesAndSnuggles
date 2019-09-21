@@ -36,23 +36,4 @@ class GamesController < ApplicationController
   def show # review an already played game
 
   end
-
-  def update
-    @game = Game.find(params['id'])
-    game_data = @game.game_log
-    game_data['movesLeft'] = params['movesLeft']
-    game_data['activeDeck'] = params['activeDeck']
-    game_data['currentBoard'] = params['board']
-    game_data['winner'] = params['winner']
-    game_data['moveHistory'].push(params['moveData'])
-    if params['winner']
-      @game.winner = @game.winner_by_deck(params['winner'])
-      @game.completed_at = Time.now
-    end
-    @game.save
-  end
-
-  def keys
-    render json: {publishKey: ENV['PUBLISH_KEY'], subscribeKey: ENV['SUBSCRIBE_KEY'], uuid: session[:id]}
-  end
 end
