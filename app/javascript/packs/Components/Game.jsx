@@ -2,10 +2,9 @@ import React, { Component } from 'react';
 import Cell from './Cell';
 import PlayerIcons from './PlayerIcons';
 import StackPreview from './StackPreview';
-import {fetchKeysAndStartConnection, publishMove, sendGameUpdate} from '../modules/apiRequests'
+import {enterGame, publishMove, sendGameUpdate} from '../modules/apiRequests'
 import MoveConfirmation from './MoveConfirmation';
 import WinnerNotification from './WinnerNotification';
-import { createConsumer } from '@rails/actioncable';
 
 class Game extends Component {
   constructor(props){
@@ -28,14 +27,20 @@ class Game extends Component {
       winner: this.props.gameData.winner || null,
     };
 
+    this.messageResponseMapper = {
+      join: 'startGame',
+      leave: 'leave',
+      move: 'move',
+      message: 'message',
+    };
+
+    // clean these up once game is playable again (so i can test)
     this.adjacentLegal = this.adjacentLegal.bind(this);
     this.buildLegalMovesBoard = this.buildLegalMovesBoard.bind(this);
     this.cancelMove = this.cancelMove.bind(this);
     this.canMove = this.canMove.bind(this);
     this.clearStatuses = this.clearStatuses.bind(this);
-    // this.displayWinner = this.displayWinner.bind(this);
     this.docKeyup = this.docKeyup.bind(this);
-    this.fetchKeysAndStartConnection = fetchKeysAndStartConnection.bind(this);
     this.flippedBoard = this.flippedBoard.bind(this);
     this.hideStack = this.hideStack.bind(this);
     this.highlightMoves = this.highlightMoves.bind(this);
@@ -54,25 +59,25 @@ class Game extends Component {
   }
 
   componentDidMount () {
-    const gameComponent = this;
-    this.consumer = createConsumer();
-    console.log('this.consumer', this.consumer);
-    this.gameChannel = this.consumer.subscriptions.create({channel: 'GameChannel', room: this.props.gameId}, {
-      connected() {
-        console.log('connected')
-      },
-      received(data) {
-        console.log('recieved', data);
-      }
-    })
-    if (!this.props.isLocal) {
-      fetchKeysAndStartConnection( gameComponent );
-    }
+    enterGame(this, this.handleMessage.bind(this), this.props.id, this.props.gameId, this.props.isLocal);
     document.addEventListener('keyup', this.docKeyup);
   }
 
   componentWillUnmount () {
     document.removeEventListener('keyup', this.docKeyup);
+  }
+
+  handleMessage (message) {
+    if (message.playerId !== this.props.id) {
+      this[this.messageResponseMapper[message.type]](message);
+    }
+  }
+
+  startGame({isInitialJoin}) {
+    this.setState({isOpponentConnected: true});
+    if (isInitialJoin) {
+      this.channel.sendUpdate('join');
+    }
   }
 
   resign () {
@@ -99,18 +104,6 @@ class Game extends Component {
   flippedBoard () {
     return this.state.board.map((row) => row.slice().reverse()).reverse();
   }
-
-  // displayWinner () {
-  //   let winnerHeader;
-  //   if (!this.state.winner) {
-  //     winnerHeader = '';
-  //   } else if (this.props.isLocal) {
-  //     winnerHeader = <h2>{this.state.winner} Bears Win!</h2>;
-  //   } else {
-  //     winnerHeader = <h2>You { this.state.winner === this.state.playerDeck ? 'Win!' : 'Lose'}</h2>;
-  //   }
-  //   return winnerHeader;
-  // }
 
   showStack(row, col){
     this.setState({stackView: {row: row, col: col}});
@@ -180,7 +173,7 @@ class Game extends Component {
     return {
       movesLeft: 2,
       activeDeck: activeDeck === 'city' ? 'country' : 'city',
-      movedCardValue: []
+      movedCardValue: [],
     }
   }
 

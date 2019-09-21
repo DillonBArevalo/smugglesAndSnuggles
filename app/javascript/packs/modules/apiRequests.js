@@ -4,6 +4,24 @@ function createSubscription (component, channel, room, callbacks) {
   component.channel = createConsumer().subscriptions.create({channel, room}, callbacks)
 }
 
+export function enterGame (component, received, playerId, gameId, isLocal) {
+  createSubscription(component, 'GameChannel', `game${gameId}`, {
+    received,
+    connected () {
+      this.send({
+        type: 'join',
+        gameId,
+        playerId,
+        isLocal,
+        isInitialJoin: true,
+      });
+    },
+    sendUpdate(type, additionalArgs = {}) {
+      this.send({type, gameId, isLocal, playerId, ...additionalArgs});
+    }
+  });
+}
+
 export function enterLobby (component, received, playerDetails) {
   createSubscription(component, 'LobbyChannel', 'lobby', {
     connected () {
@@ -25,44 +43,32 @@ export function enterLobby (component, received, playerDetails) {
   });
 }
 
-// no longer necessary
-function fetchKeys (component) {
-  return fetch('/pnkeys')
-    .then(response => {
-      if (response.ok) {
-        return response.json();
-      } else {
-        component.setState({pubNubError: true});
-      }
-    });
-}
-
-export function fetchKeysAndStartConnection ( gameComponent ) {
-  fetchKeys(gameComponent)
-    .then( pnData => {
-      gameComponent.pubnub = new PubNub(pnData);
-      gameComponent.pubnub.subscribe({
-        channels: [gameComponent.props.gameId],
-      });
-      gameComponent.pubnub.addListener({
-        message: (m) => {
-          const {endRow, endCol, movement, startConnection, connected} = m.message;
-          if ( m.message.startConnection && m.publisher !== gameComponent.state.playerId ) {
-            gameComponent.setState({isOpponentConnected: true});
-            !connected && sendGameStart( gameComponent );
-          } else {
-            m.publisher !== gameComponent.state.playerId && gameComponent.moveCard(endRow, endCol, false, movement);
-          }
-        },
-        status: (s) => {
-          if (s.error || s.category === "PNNetworkDownCategory") {
-            gameComponent.setState({pubNubError: true});
-          }
-        }
-      });
-      sendGameStart(gameComponent);
-    });
-}
+// export function fetchKeysAndStartConnection ( gameComponent ) {
+//   fetchKeys(gameComponent)
+//     .then( pnData => {
+//       gameComponent.pubnub = new PubNub(pnData);
+//       gameComponent.pubnub.subscribe({
+//         channels: [gameComponent.props.gameId],
+//       });
+//       gameComponent.pubnub.addListener({
+//         message: (m) => {
+//           const {endRow, endCol, movement, startConnection, connected} = m.message;
+//           if ( startConnection && m.publisher !== gameComponent.state.playerId ) {
+//             gameComponent.setState({isOpponentConnected: true});
+//             !connected && sendGameStart( gameComponent );
+//           } else {
+//             m.publisher !== gameComponent.state.playerId && gameComponent.moveCard(endRow, endCol, false, movement);
+//           }
+//         },
+//         status: (s) => {
+//           if (s.error || s.category === "PNNetworkDownCategory") {
+//             gameComponent.setState({pubNubError: true});
+//           }
+//         }
+//       });
+//       sendGameStart(gameComponent);
+//     });
+// }
 
 export function publishMove (send, endRow, endCol, movesLeft, activeDeck, board, winner, moveData) {
   const gameComponent = this;
