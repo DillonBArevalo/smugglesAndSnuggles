@@ -19,7 +19,7 @@
     Past Games
   </h2>
   <div class="game-history-table-container">
-    <table class="game-history-table" aria-labelledby="games-header">
+    <table id="player-table" class="game-history-table" aria-labelledby="games-header">
       <thead>
         <tr>
           <th scope="col" class="game-history-table__row-heading" aria-label="Continue or revisit"></td>
@@ -47,3 +47,11 @@
     </table>
   <div>
 </section>
+<script>
+  document.getElementById('player-table').addEventListener('click', function notify(event) {
+    if (event.target.classList.contains('JSRevisitLink')) {
+      event.preventDefault();
+      window.alert('Review game functionality coming soon.');
+    }
+  });
+</script>

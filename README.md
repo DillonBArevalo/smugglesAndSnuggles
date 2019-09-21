@@ -51,7 +51,6 @@ This project is not finished yet and thus this readme is for me, the developer, 
   - remove unused code
 
 ## Other items of low priority
-
 - advanced keyboard support
 - SR support for gameplay
 - make winner not automatically switch turns
@@ -60,3 +59,4 @@ This project is not finished yet and thus this readme is for me, the developer, 
 - move timer for comp/competitive
 - add new version of laws
 - implement a heartbeat for players connected in a game?
+- Scored cards should show up face up in the stack preview
