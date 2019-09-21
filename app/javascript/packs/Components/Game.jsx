@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Cell from './Cell';
 import PlayerIcons from './PlayerIcons';
 import StackPreview from './StackPreview';
-import {enterGame, publishMove, sendGameUpdate} from '../modules/apiRequests'
+import {enterGame} from '../modules/apiRequests'
 import MoveConfirmation from './MoveConfirmation';
 import WinnerNotification from './WinnerNotification';
 
@@ -30,7 +30,7 @@ class Game extends Component {
     this.messageResponseMapper = {
       join: 'startGame',
       leave: 'leave',
-      move: 'move',
+      move: 'moveOpponent',
       message: 'message',
     };
 
@@ -47,9 +47,7 @@ class Game extends Component {
     this.isSmuggle = this.isSmuggle.bind(this);
     this.legalMoves = this.legalMoves.bind(this);
     this.moveCard = this.moveCard.bind(this);
-    this.publishMove = publishMove.bind(this);
     this.renderGameBoard = this.renderGameBoard.bind(this);
-    this.sendGameUpdate = sendGameUpdate.bind(this);
     this.showStack = this.showStack.bind(this);
     this.toggleConfirmMove = this.toggleConfirmMove.bind(this);
     this.getCardUrl = this.getCardUrl.bind(this);
@@ -78,6 +76,10 @@ class Game extends Component {
     if (isInitialJoin) {
       this.channel.sendUpdate('join');
     }
+  }
+
+  moveOpponent({endRow, endCol, movement}) {
+    this.moveCard(endRow, endCol, movement, true);
   }
 
   resign () {
@@ -138,7 +140,7 @@ class Game extends Component {
     return {endRow, endCol, startCol, startRow, deck, value};
   }
 
-  moveCard(endRow, endCol, send, movement = false){
+  moveCard(endRow, endCol, movement = false, isOpponentMove = false){
     const board = this.state.board.slice();
     const previousTop = this.topCard(board[endRow][endCol]);
     const startingLocation = movement ? movement.startingLocation : this.state.movement.startingLocation;
@@ -164,7 +166,7 @@ class Game extends Component {
       ({movesLeft, activeDeck, movedCardValue} = this.newTurnVars(activeDeck));
     }
 
-    this.publishMove(send, endRow, endCol, movesLeft, activeDeck, board, winner, moveData);
+    !isOpponentMove && this.channel.sendUpdate('move', {endRow, endCol, movesLeft, activeDeck, board, winner, moveData, movement: this.state.movement});
     this.clearStatuses(board);
     this.setState({board, movesLeft, activeDeck, movedCardValue, winner, movement: {active:false, startingLocation: []}, preppedMove: {}});
   }
@@ -339,9 +341,7 @@ class Game extends Component {
 
   renderGameBoard () {
     let gameContents = <h2>Waiting for your opponent to connect...</h2>;
-    if (this.state.pubNubError) {
-      gameContents = <h2>A connection error has occured. Please check your internet connection and reload the page.</h2>;
-    } else if (this.state.isOpponentConnected) {
+    if (this.state.isOpponentConnected) {
       const isFlipped = this.state.isFlippedBoard;
       const board = isFlipped ? this.flippedBoard() : this.state.board;
       gameContents = board.map((row, rowIndex) => {
@@ -361,7 +361,7 @@ class Game extends Component {
                       cancelMove={this.cancelMove}
                       confirmMove={this.state.confirmMove}
                       getCardUrl={this.getCardUrl}
-                      moveCard={this.moveCard.bind(this, rowIdx, col, !this.props.isLocal, false)}
+                      moveCard={this.moveCard.bind(this, rowIdx, col)}
                       showStack={this.showStack.bind(this, rowIdx, col)}
                       hideStack={this.hideStack}
                       setPreppedMove={this.state.confirmMove && this.setPreppedMove.bind(this, [rowIndex, colIndex])}
