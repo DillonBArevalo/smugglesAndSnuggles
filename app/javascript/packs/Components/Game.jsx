@@ -34,25 +34,12 @@ class Game extends Component {
       message: 'message',
     };
 
-    // clean these up once game is playable again (so i can test)
-    this.adjacentLegal = this.adjacentLegal.bind(this);
-    this.buildLegalMovesBoard = this.buildLegalMovesBoard.bind(this);
     this.cancelMove = this.cancelMove.bind(this);
-    this.canMove = this.canMove.bind(this);
-    this.clearStatuses = this.clearStatuses.bind(this);
     this.docKeyup = this.docKeyup.bind(this);
-    this.flippedBoard = this.flippedBoard.bind(this);
     this.hideStack = this.hideStack.bind(this);
     this.highlightMoves = this.highlightMoves.bind(this);
-    this.isSmuggle = this.isSmuggle.bind(this);
-    this.legalMoves = this.legalMoves.bind(this);
-    this.moveCard = this.moveCard.bind(this);
-    this.renderGameBoard = this.renderGameBoard.bind(this);
-    this.showStack = this.showStack.bind(this);
     this.toggleConfirmMove = this.toggleConfirmMove.bind(this);
     this.getCardUrl = this.getCardUrl.bind(this);
-    this.isSelectedCell = this.isSelectedCell.bind(this);
-    this.setPreppedMove = this.setPreppedMove.bind(this);
     this.resign = this.resign.bind(this);
   }
 
