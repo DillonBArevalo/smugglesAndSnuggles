@@ -9,11 +9,10 @@ This project is not finished yet and thus this readme is for me, the developer, 
   - might not work in production yet. i think i need to enable redis in a config file somewhere
 
 ## Tasks before initial release:
-- replace pubnub with websockets
+- Add leave functionality to game (at the very least intentional disconnects should notify opponent)
 - review game and reamatch functionality
   - review game can just be an alert
   - review game needs to be fixed on both the finished game page and the profile page
-- lobby functionality (invite and accept games)
 - home page
 - basic responsivity
 - Basic accessibility
@@ -26,24 +25,20 @@ This project is not finished yet and thus this readme is for me, the developer, 
 - add edit profile picture functionality to profile
 - emote wheel
 - color cleanup
-- make waiting message nicer for online connection - also make it active? (animated)
+- make waiting message nicer for online connection
+  - also make it active? (animated)
   - player disconnect message in game
   - different message for resign vs disconnect
 
 ## bugs
-- 3 players online (phone, chrome, and incognito) and all three aren't showing up in the lobby
-- requesting multiple times works (shouldn't)
-  - correct message shows after sending, but when you click the name from the list again it gives you the form again
-  - line 32 in lobby. error is in setPlayerInviteStatus: doesn't save state in players dataset, only in selected player. dumb.
-- phone user seems to trigger a leave event but not leave lobby.
-  - state goes to undefined but stays in lobby. strange. maybe talk to PN about it?
-- people sometimes don't show up in the lobby
-- safari seems to log an error with PN sometimes. more investigating could be good.
-  - looks to be on unsubscribeAll()?
 - previously moved card isn't maintained when page is reloaded. allows for cheating by moving, reloading, moving same card.
   - component did mount look at last move?
 - loading old games sometimes gives wrong board states. maybe an issue with flipped? maybe history?
 - you are not a player in this game message doesn't seem to have a layout and thus looks awful.
+  - also error page for form. look at layouts in general...
+- if games get out of sync we have a real problem. you can move a card and it'll send it just fine, but if you've missed a move (say dropped offline for a sec and then reconnected having missed a move)
+- TomTom still in lobby after joining game (he invited, i think):
+  Ignoring message processed after the WebSocket was closed: "{\"command\":\"message\",\"identifier\":\"{\\\"channel\\\":\\\"LobbyChannel\\\",\\\"room\\\":\\\"lobby\\\"}\",\"data\":\"{\\\"type\\\":\\\"leave\\\",\\\"playerDetails\\\":{\\\"id\\\":\\\"8\\\",\\\"name\\\":\\\"tomtom\\\"}}\"}")
 
 ## code cleanup
   - refactor game by extracting methods into new file and extending game with class?
@@ -64,22 +59,4 @@ This project is not finished yet and thus this readme is for me, the developer, 
 - animate removal of move circles and moves \<p\> (rubber band)
 - move timer for comp/competitive
 - add new version of laws
-
-
----------
-
-## Running a local version:
-
-Keys file:
-
-make a dotfile for your keys that looks something like this:
-
-```
-#!/bin/bash
-
-export SUBSCRIBE_KEY="my_pubnub_sub_key"
-export PUBLISH_KEY="my_pubnub_pub_key"
-
-bin/rails s
-```
-and start your server with `sh .keys`
+- implement a heartbeat for players connected in a game?
