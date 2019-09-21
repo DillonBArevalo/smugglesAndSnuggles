@@ -6,5 +6,6 @@ test:
 
 production:
   adapter: redis
-  url: redis://localhost:6379/1
+  url: redis://redistogo:bc3ab62a65f38b80a6ca2f34ba425ee4@tetra.redistogo.com:9386/
+  # url: redis://localhost:6379/1
   channel_prefix: smugglesAndSnuggles_production
