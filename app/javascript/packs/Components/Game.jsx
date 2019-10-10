@@ -29,9 +29,12 @@ class Game extends Component {
 
     this.messageResponseMapper = {
       join: 'startGame',
-      leave: 'leave',
+      leave: 'opponentLeave',
       move: 'moveOpponent',
       message: 'message',
+      rematch: 'receiveRematchRequest',
+      accept: 'receiveRequestAccepted',
+      startGame: 'startNewGame',
     };
 
     this.cancelMove = this.cancelMove.bind(this);
@@ -41,15 +44,27 @@ class Game extends Component {
     this.toggleConfirmMove = this.toggleConfirmMove.bind(this);
     this.getCardUrl = this.getCardUrl.bind(this);
     this.resign = this.resign.bind(this);
+    this.requestRematch = this.requestRematch.bind(this);
+    this.acceptRematch = this.acceptRematch.bind(this);
+    this.cleanUp = this.cleanUp.bind(this);
   }
 
   componentDidMount () {
     enterGame(this, this.handleMessage.bind(this), this.props.id, this.props.gameId, this.props.isLocal);
     document.addEventListener('keyup', this.docKeyup);
+    window.addEventListener('beforeunload', this.cleanUp);
   }
 
   componentWillUnmount () {
     document.removeEventListener('keyup', this.docKeyup);
+    this.cleanUp();
+  }
+
+  cleanUp () {
+    this.channel.sendUpdate('leave');
+    // there's a race condition here where if you disconnect first it will ignore
+    // the leave message and other components won't remove this user from the list
+    window.setTimeout(() => this.channel.consumer.disconnect(), 500);
   }
 
   handleMessage (message) {
@@ -67,6 +82,47 @@ class Game extends Component {
 
   moveOpponent({endRow, endCol, movement}) {
     this.moveCard(endRow, endCol, movement, true);
+  }
+
+  requestRematch () {
+    this.channel.sendUpdate('rematch');
+    this.setState({requestPending: true});
+  }
+
+  receiveRematchRequest () {
+    this.setState({rematchRequested: true});
+  }
+
+  acceptRematch () {
+    const player2 = this.props.playersData[this.props.playerDeck === 'city' ? 'country' : 'city'].id
+    this.channel.sendUpdate(
+      'accept',
+      {
+        isLocal: false,
+        player1: this.props.id,
+        player2,
+      }
+    );
+    this.setState({requestPending: true});
+    this.acceptTimeout = window.setTimeout(() => {
+      this.setState({requestPending: false});
+      window.alert('Something went wrong. Please return to the Lobby to try again.');
+    }, 5000);
+  }
+
+  receiveRequestAccepted ({url}) {
+    console.log(url)
+    this.channel.sendUpdate('startGame', {url})
+    window.setTimeout(() => window.location.href = url, 500);
+  }
+
+  startNewGame ({url, errors}) {
+    console.log(url)
+    window.location.href = url;
+  }
+
+  opponentLeave () {
+    this.setState({isOpponentConnected: false});
   }
 
   resign () {
@@ -328,7 +384,7 @@ class Game extends Component {
 
   renderGameBoard () {
     let gameContents = <h2>Waiting for your opponent to connect...</h2>;
-    if (this.state.isOpponentConnected) {
+    if (this.state.isOpponentConnected || this.state.winner) {
       const isFlipped = this.state.isFlippedBoard;
       const board = isFlipped ? this.flippedBoard() : this.state.board;
       gameContents = board.map((row, rowIndex) => {
@@ -391,6 +447,10 @@ class Game extends Component {
               winner={this.state.winner}
               playerDeck={this.state.playerDeck}
               icons={this.props.assets.icons}
+              rematchRequested={this.state.rematchRequested}
+              rematch={this.state.rematchRequested ? this.acceptRematch : this.requestRematch}
+              isOpponentPresent={this.state.isOpponentConnected}
+              requestPending={this.state.requestPending}
             />
             : <MoveConfirmation
               confirmMove={this.state.confirmMove}

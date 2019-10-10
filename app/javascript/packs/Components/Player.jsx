@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { renderPendingDots } from "../modules/sharedJSX";
 
 class Player extends Component {
   constructor (props) {
@@ -36,11 +37,7 @@ class Player extends Component {
     } else if (this.props.type === 'pending'){
       return (
         <div className="player__button-container player__button-container--single">
-          <p className="player__static-notification player__static-notification--pending" aria-label="invitation pending">
-            <span className="player__loading-dot" aria-hidden="true">.</span>
-            <span className="player__loading-dot" aria-hidden="true">.</span>
-            <span className="player__loading-dot" aria-hidden="true">.</span>
-            </p>
+          {renderPendingDots('player', 'static-notification', 'invitation pending')}
         </div>
       );
     } else if (this.props.type === 'rejected'){

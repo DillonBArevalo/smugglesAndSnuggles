@@ -3,10 +3,14 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 // normalize
-:-moz-focusring {
+button:-moz-focusring, input:-moz-focusring {
   outline: 0;
 }
 
 :focus {
   outline: 1px dashed black;
+}
+
+.dark :focus {
+  outline: 1px dashed white;
 }

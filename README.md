@@ -8,13 +8,19 @@ This project is not finished yet and thus this readme is for me, the developer, 
   - might want to include turn number and move number in move data sent to server/stored in db so people can't move twice if internet gets screwed up...
   - might not work in production yet. i think i need to enable redis in a config file somewhere
 
+Rematch:
+- Flash (transition to opposite color) rematch button on yours (aria live?) upon receiving request
+- Button repurposed as an "accept rematch" button.
+- send appropriate info to reroute on accept.
+- Disable button on opponent leave.
+
 ## Tasks before initial release:
 - Add leave functionality to game (at the very least intentional disconnects should notify opponent)
-- review game and reamatch functionality
-  - review game can just be an alert
-  - review game needs to be fixed on both the finished game page and the profile page
+- add rematch functionality
 - home page
 - basic responsivity
+  - vertical stacking
+  - Overlay card number on small cards
 - Basic accessibility
   - form validation rework (and rerouting correctly (ajax?))
   - dynamic page titles
@@ -23,7 +29,6 @@ This project is not finished yet and thus this readme is for me, the developer, 
 - admin accounts
 - db wipe
 - add edit profile picture functionality to profile
-- emote wheel
 - color cleanup
 - make waiting message nicer for online connection
   - also make it active? (animated)
@@ -39,6 +44,9 @@ This project is not finished yet and thus this readme is for me, the developer, 
 - if games get out of sync we have a real problem. you can move a card and it'll send it just fine, but if you've missed a move (say dropped offline for a sec and then reconnected having missed a move)
 - TomTom still in lobby after joining game (he invited, i think):
   Ignoring message processed after the WebSocket was closed: "{\"command\":\"message\",\"identifier\":\"{\\\"channel\\\":\\\"LobbyChannel\\\",\\\"room\\\":\\\"lobby\\\"}\",\"data\":\"{\\\"type\\\":\\\"leave\\\",\\\"playerDetails\\\":{\\\"id\\\":\\\"8\\\",\\\"name\\\":\\\"tomtom\\\"}}\"}")
+- move confirmation
+- routing/error pages
+  - Visiting other peoples' profiles
 
 ## code cleanup
   - refactor game by extracting methods into new file and extending game with class?
@@ -51,6 +59,7 @@ This project is not finished yet and thus this readme is for me, the developer, 
   - remove unused code
 
 ## Other items of low priority
+- emote wheel
 - advanced keyboard support
 - SR support for gameplay
 - make winner not automatically switch turns
