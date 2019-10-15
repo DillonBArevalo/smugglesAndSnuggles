@@ -16,6 +16,8 @@ Rematch:
 
 ## Tasks before initial release:
 - Add leave functionality to game (at the very least intentional disconnects should notify opponent)
+- empty lobby notification
+- show 4th card if only 4 cards
 - add rematch functionality
 - home page
 - basic responsivity

@@ -1,9 +1,22 @@
 import React, { Component } from 'react';
 import { renderPendingDots } from "../modules/sharedJSX";
+import Modal from "./Modal";
 
 class WinnerNotification extends Component {
-  noFeature () {
-    window.alert('Feature coming soon\u2122');
+
+  constructor(props) {
+    super(props);
+    this.state = {renderModal: false};
+    this.renderModal = this.renderModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
+  }
+
+  renderModal () {
+    this.setState({renderModal: true});
+  }
+
+  closeModal () {
+    this.setState({renderModal: false});
   }
 
   renderRequestButton () {
@@ -39,13 +52,15 @@ class WinnerNotification extends Component {
 
   render() {
     const { icons, playerDeck, winner } = this.props;
+    const reviewButtonId = 'reviewGame';
     return(
       <section className={`winner-notification winner-notification--${playerDeck}`} aria-labelledby="victoryState">
         <h2 id="victoryState" className="winner-notification__heading">{playerDeck === winner ? 'Victory!' : 'Defeat'}</h2>
         <div className="winner-notification__options-container">
           <button
-            onClick={this.noFeature}
+            onClick={this.renderModal}
             className={`winner-notification__button winner-notification__button--${playerDeck}`}
+            id={reviewButtonId}
           >
             <img
               className="winner-notification__icon"
@@ -56,6 +71,10 @@ class WinnerNotification extends Component {
           </button>
           {this.renderRequestButton()}
         </div>
+        {this.state.renderModal && <Modal
+          closeModal={this.closeModal}
+          returnFocusTo={reviewButtonId}
+        />}
       </section>
     );
   }
