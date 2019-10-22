@@ -18,7 +18,17 @@ class Modal extends Component {
 
   componentWillUnmount () {
     this.unhideOtherNodes();
+    this.releaseScroll();
     document.getElementById(this.props.returnFocusTo).focus();
+  }
+
+  trapScroll () {
+    this.cachedOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+  }
+
+  releaseScroll () {
+    document.body.style.overflow = this.cachedOverflow;
   }
 
   trapTab (event) {
@@ -42,10 +52,6 @@ class Modal extends Component {
     const direction = event.shiftKey ? -1 : 1;
     const nextIndex = (currentIndex + direction + listLength) % listLength;
     document.getElementById(tabbableElementIds[nextIndex]).focus();
-  }
-
-  trapScroll () {
-
   }
 
   hideOtherContent () {
