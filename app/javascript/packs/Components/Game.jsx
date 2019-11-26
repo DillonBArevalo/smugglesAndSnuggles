@@ -186,7 +186,9 @@ class Game extends Component {
   moveCard(endRow, endCol, movement = false, isOpponentMove = false){
     const board = this.state.board.slice();
     const previousTop = this.topCard(board[endRow][endCol]);
-    const startingLocation = movement ? movement.startingLocation : this.state.movement.startingLocation;
+    const startingLocation = movement && movement.startingLocation ?
+      movement.startingLocation :
+      this.state.movement.startingLocation;
     const movingCard = board[startingLocation[0]][startingLocation[1]].cards.pop();
     const newTop = this.topCard(board[startingLocation[0]][startingLocation[1]]);
     const moveData = this.generateMoveData(endRow, endCol, startingLocation, movingCard);
