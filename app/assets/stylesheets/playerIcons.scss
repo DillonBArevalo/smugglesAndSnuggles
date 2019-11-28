@@ -63,11 +63,11 @@
 
     &--city {
       color: white;
-      @include outline(black);
+      @include textOutline(black);
     }
     &--country {
       color: black;
-      @include outline(white);
+      @include textOutline(white);
     }
   }
   &__turn-data {

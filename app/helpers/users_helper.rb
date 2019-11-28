@@ -13,8 +13,8 @@ module UsersHelper
 
     def generateIcon(game)
         if game.completed_at
-            image = image_tag('inspectIcon.png', alt: 'Revisit game', class: 'game-history-table__icon')
-            link_to(image, "/games/#{game.id}", class: 'game-history-table__icon-link')
+            image = image_tag('inspectIcon.png', alt: 'Revisit game', class: 'game-history-table__icon JSRevisitLink')
+            link_to(image, "/games/#{game.id}", class: 'game-history-table__icon-link JSRevisitLink')
         else
             image = image_tag('redoIcon.png', alt: 'Resume game', class: 'game-history-table__icon')
             link_to(image, "/games/#{game.id}/play", class: 'game-history-table__icon-link')
