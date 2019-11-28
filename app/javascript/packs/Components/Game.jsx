@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import Cell from './Cell';
 import PlayerIcons from './PlayerIcons';
 import StackPreview from './StackPreview';
-import {enterGame} from '../modules/apiRequests'
 import MoveConfirmation from './MoveConfirmation';
+import Modal from "./Modal";
 import WinnerNotification from './WinnerNotification';
+import {enterGame} from '../modules/apiRequests'
 
 class Game extends Component {
   constructor(props){
@@ -47,6 +48,7 @@ class Game extends Component {
     this.requestRematch = this.requestRematch.bind(this);
     this.acceptRematch = this.acceptRematch.bind(this);
     this.cleanUp = this.cleanUp.bind(this);
+    this.toggleRenderResignModal = this.toggleRenderResignModal.bind(this);
   }
 
   componentDidMount () {
@@ -126,9 +128,7 @@ class Game extends Component {
   }
 
   resign () {
-    if(this.state.winner || window.confirm('Are you sure you want to quit this game? You will forefit and lose.')) {
-      window.location.href = '/games/new';
-    }
+    window.location.href = '/games/new';
   }
 
   getCardUrl (deck, number, flipped = false) {
@@ -384,6 +384,14 @@ class Game extends Component {
     return  this.state.movement.active && isCorrectRow && isCorrectCol;
   }
 
+  closeModal () {
+    this.setState({renderResignModal: false})
+  }
+
+  toggleRenderResignModal () {
+    this.setState({renderResignModal: !this.state.renderResignModal});
+  }
+
   renderGameBoard () {
     let gameContents = <h2>Waiting for your opponent to connect...</h2>;
     if (this.state.isOpponentConnected || this.state.winner) {
@@ -419,6 +427,36 @@ class Game extends Component {
     return gameContents;
   }
 
+  renderResignModal () {
+    return (
+      <Modal
+        closeModal={this.toggleRenderResignModal}
+        firstFocusId="modalHeading"
+        returnFocusTo="resignButton"
+        tabbableElementIds={['quitButton', 'cancelButton']}
+      >
+        <h1
+          className="modal__heading"
+          id="modalHeading"
+          tabIndex="-1"
+        >Resign game</h1>
+        <p className="modal__body">Are you sure you want to quit? You will forefit the game!</p>
+        <div className="modal__button-container">
+        <button
+          id="quitButton"
+          className="modal__button modal__button--quit"
+          onClick={this.resign}
+          >Quit game</button>
+        <button
+          id="cancelButton"
+          className="modal__button modal__button--cancel"
+          onClick={this.toggleRenderResignModal}
+        >Cancel</button>
+        </div>
+      </Modal>
+    );
+  }
+
   render() {
     return(
       <div className='game-container'>
@@ -436,7 +474,8 @@ class Game extends Component {
         <div className="game-container__right-cell">
           <button
             className={`resign-game-button resign-game-button--${this.state.playerDeck}`}
-            onClick={this.resign}
+            onClick={this.state.winner ? this.resign : this.toggleRenderResignModal}
+            id="resignButton"
           >
             RETURN TO LOBBY
           </button>
@@ -465,6 +504,7 @@ class Game extends Component {
             />
           }
         </div>
+        {this.state.renderResignModal && this.renderResignModal()}
       </div>
     );
   }

@@ -12,7 +12,6 @@ class Modal extends Component {
     this.root = document.getElementById('modal');
     this.hideOtherContent();
     this.trapScroll();
-    console.log('element', this.props.firstFocusId, document.getElementById(this.props.firstFocusId || 'modalHeading'))
     document.getElementById(this.props.firstFocusId || 'modalHeading').focus();
   }
 
@@ -62,6 +61,7 @@ class Modal extends Component {
       if (node.id !== 'modal') {
         const ariaHiddenState = node.getAttribute('aria-hidden');
         nodeStates.push({node, ariaHiddenState});
+        node.setAttribute('aria-hidden', true);
       }
     }
     this.unhideOtherNodes = this.unhideOtherNodes.bind(this, nodeStates);
@@ -89,7 +89,7 @@ class Modal extends Component {
         {this.props.children ? this.props.children : <Fragment>
           <h1
             id="modalHeading"
-            className="modal__title"
+            className="modal__heading"
             tabIndex="-1"
             >
             Feature coming soon\u2122!
@@ -106,8 +106,6 @@ class Modal extends Component {
     </div>);
   }
   render () {
-    console.log('running render');
-    console.log('body', document.body);
     return ReactDOM.createPortal(this.renderModalContent(), document.body);
   }
 }
