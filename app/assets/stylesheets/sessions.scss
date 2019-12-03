@@ -75,6 +75,10 @@
   &__explanation {
     margin: 0;
   }
+  &__required {
+    font-weight: 800;
+    font-size: 1.5rem;
+  }
   &__label {
     font-family: $font-mochi;
     font-size: 2rem;
@@ -126,17 +130,7 @@
     font-size: 1.5rem;
   }
   &__button {
-    background-color: white;
-    border: none;
-    border-radius: 0.675rem;
-    box-sizing: border-box;
-    padding: 0.25rem 1rem;
-    font-family: $font-mochi;
-    color: black;
-    font-size: 2rem;
-    box-shadow: -0.125rem 0.125rem 0.125rem $buttonShadowColor;
-    white-space: nowrap;
-    @include outlineShadow(white, black);
+    @include whiteButton();
     cursor: pointer;
     &--submit {
       box-sizing: border-box;

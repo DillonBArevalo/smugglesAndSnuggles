@@ -10,7 +10,7 @@
     <% end %>
     <div class="sessions__checkbox-grouping">
       <p id="explanation1" class="sessions__explanation">
-        We collect anonymous data from the games played, which we use to make the game better and learn from it. (Required)
+        We collect anonymous data from the games played, which we use to make the game better and learn from it. <span class="sessions__required">(Required)</span>
       </p>
       <%= label_tag "data_collection_consent", class: 'sessions__checkbox-label' do %>
         <%= check_box_tag "data_collection_consent", 'consented', false, required: true, 'aria-label' => 'Confirm game data collection consent', 'aria-describedby' => 'explanation1' %>

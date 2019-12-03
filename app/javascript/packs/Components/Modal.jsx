@@ -92,15 +92,17 @@ class Modal extends Component {
             className="modal__heading"
             tabIndex="-1"
             >
-            Feature coming soon\u2122!
+            Feature coming soon!
           </h1>
-          <button
-            id="modalCloseButton"
-            className="modal__button"
-            onClick={this.props.closeModal}
-          >
-            Close
-          </button>
+          <div className="modal__button-container">
+            <button
+              id="modalCloseButton"
+              className="modal__button"
+              onClick={this.props.closeModal}
+            >
+              Close
+            </button>
+          </div>
         </Fragment>}
       </div>
     </div>);
