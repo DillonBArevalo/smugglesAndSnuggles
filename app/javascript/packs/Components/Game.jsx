@@ -442,16 +442,16 @@ class Game extends Component {
         >Resign game</h1>
         <p className="modal__body">Are you sure you want to quit? You will forefit the game!</p>
         <div className="modal__button-container">
-        <button
-          id="quitButton"
-          className="modal__button modal__button--quit"
-          onClick={this.resign}
-          >Quit game</button>
-        <button
-          id="cancelButton"
-          className="modal__button modal__button--cancel"
-          onClick={this.toggleRenderResignModal}
-        >Cancel</button>
+          <button
+            id="quitButton"
+            className="modal__button modal__button--quit"
+            onClick={this.resign}
+            >Quit game</button>
+          <button
+            id="cancelButton"
+            className="modal__button modal__button--cancel"
+            onClick={this.toggleRenderResignModal}
+          >Cancel</button>
         </div>
       </Modal>
     );
