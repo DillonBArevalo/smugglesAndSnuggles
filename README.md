@@ -6,19 +6,11 @@ This project is not finished yet and thus this readme is for me, the developer, 
 - action cable
   - enable auth
   - might want to include turn number and move number in move data sent to server/stored in db so people can't move twice if internet gets screwed up...
-  - might not work in production yet. i think i need to enable redis in a config file somewhere
-
-Rematch:
-- Flash (transition to opposite color) rematch button on yours (aria live?) upon receiving request
-- Button repurposed as an "accept rematch" button.
-- send appropriate info to reroute on accept.
-- Disable button on opponent leave.
 
 ## Tasks before initial release:
 - Add leave functionality to game (at the very least intentional disconnects should notify opponent)
 - empty lobby notification
 - show 4th card if only 4 cards
-- add rematch functionality
 - home page
 - basic responsivity
   - vertical stacking
@@ -46,7 +38,6 @@ Rematch:
 - if games get out of sync we have a real problem. you can move a card and it'll send it just fine, but if you've missed a move (say dropped offline for a sec and then reconnected having missed a move)
 - TomTom still in lobby after joining game (he invited, i think):
   Ignoring message processed after the WebSocket was closed: "{\"command\":\"message\",\"identifier\":\"{\\\"channel\\\":\\\"LobbyChannel\\\",\\\"room\\\":\\\"lobby\\\"}\",\"data\":\"{\\\"type\\\":\\\"leave\\\",\\\"playerDetails\\\":{\\\"id\\\":\\\"8\\\",\\\"name\\\":\\\"tomtom\\\"}}\"}")
-- move confirmation
 - routing/error pages
   - Visiting other peoples' profiles
 
