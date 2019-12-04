@@ -179,19 +179,24 @@ class Lobby extends Component {
           </div>
           <div className="lobby__players-online-container">
             <h3 className="lobby__grouping-heading">Players Online <hr className="lobby__heading-rule" aria-hidden="true"/></h3>
-            <ul className="lobby__player-list">
-              {Object.keys(this.state.players).map(
-                playerId => {
-                  const player = this.state.players[playerId];
-                  return !player.isRequested && this.renderPlayer(
-                    player,
-                    player.type || 'default',
-                    {invite: this.invite},
-                    this.state.pending
-                  );
-                }
-              )}
-            </ul>
+            {  Object.keys(this.state.players).length ?
+              <ul className="lobby__player-list">
+                {Object.keys(this.state.players).map(
+                  playerId => {
+                    const player = this.state.players[playerId];
+                    return !player.isRequested && this.renderPlayer(
+                      player,
+                      player.type || 'default',
+                      {invite: this.invite},
+                      this.state.pending
+                    );
+                  }
+                )}
+              </ul> :
+              <p className="lobby__message">
+                There are currently no other players in the lobby
+              </p>
+            }
           </div>
         </div>
       </div>
