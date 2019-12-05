@@ -70,7 +70,7 @@ class Game extends Component {
   }
 
   handleMessage (message) {
-    if (message.playerId !== this.props.id) {
+    if (message.playerId !== this.props.id || (this.props.isLocal && message.type === 'accept')) {
       this[this.messageResponseMapper[message.type]](message);
     }
   }
@@ -87,8 +87,20 @@ class Game extends Component {
   }
 
   requestRematch () {
-    this.channel.sendUpdate('rematch');
-    this.setState({requestPending: true});
+    if (this.props.isLocal) {
+      this.channel.sendUpdate(
+        'accept',
+        {
+          isLocal: true,
+          player1: this.props.id,
+          player2: 1,
+        }
+      );
+      this.setState({requestPending: true});
+    } else {
+      this.channel.sendUpdate('rematch');
+      this.setState({requestPending: true});
+    }
   }
 
   receiveRematchRequest () {
@@ -113,13 +125,11 @@ class Game extends Component {
   }
 
   receiveRequestAccepted ({url}) {
-    console.log(url)
     this.channel.sendUpdate('startGame', {url})
     window.setTimeout(() => window.location.href = url, 500);
   }
 
   startNewGame ({url, errors}) {
-    console.log(url)
     window.location.href = url;
   }
 
