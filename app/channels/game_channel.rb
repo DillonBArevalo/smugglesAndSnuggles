@@ -31,7 +31,7 @@ class GameChannel < ApplicationCable::Channel
         data['errors'] = @game.errors
       end
     end
-    data['isLocal'].to_s.downcase == "false" && ActionCable.server.broadcast(channel, data)
+    (data['isLocal'].to_s.downcase == 'false' || type == 'accept') && ActionCable.server.broadcast(channel, data)
   end
 
   def unsubscribed(args)
