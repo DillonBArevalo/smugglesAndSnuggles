@@ -67,6 +67,42 @@
   &__joined-date {
     font-size: 1.75rem;
   }
+
+  &__edit-form {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+  &__edit-label {
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 1.25rem;
+    @include outlineShadow(black, black);
+
+    &:hover {
+      opacity: 1;
+      background-color: rgba(0, 0, 0, 0.8);
+    }
+  }
+  &__edit-input {
+    position: absolute;
+    height: 1px;
+    width: 1px;
+    overflow: hidden;
+    opacity: 0.01;
+
+    &:focus + .user-info__edit-label {
+      opacity: 1;
+      background-color: rgba(0, 0, 0, 0.8);
+    }
+  }
 }
 
 .player-icons__profile-picture {

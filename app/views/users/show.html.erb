@@ -7,6 +7,10 @@
       <p class="player-icons__user-name player-icons__user-name--city">
         <%= current_user.username.capitalize %>
       </p>
+      <form class="user-info__edit-form" action="">
+        <input class="user-info__edit-input" id='editProfilePicture' type="file">
+        <label class="user-info__edit-label" for="editProfilePicture">Edit profile picture</label>
+      </form>
     </div>
     <p class="user-info__record user-info__record--wins">Wins: <%= current_user.wins %></p>
     <p class="user-info__record user-info__record--losses">Losses: <%= current_user.losses %></p>

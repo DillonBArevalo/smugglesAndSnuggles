@@ -8,6 +8,8 @@ This project is not finished yet and thus this readme is for me, the developer, 
   - might want to include turn number and move number in move data sent to server/stored in db so people can't move twice if internet gets screwed up...
 
 ## Tasks before initial release:
+- add edit profile picture functionality to profile
+  - ajax on edit to propagate to current profile page
 - Add leave functionality to game (at the very least intentional disconnects should notify opponent)
 - empty lobby notification
 - show 4th card if only 4 cards
@@ -22,7 +24,6 @@ This project is not finished yet and thus this readme is for me, the developer, 
 - image caching
 - admin accounts
 - db wipe
-- add edit profile picture functionality to profile
 - color cleanup
 - make waiting message nicer for online connection
   - also make it active? (animated)
