@@ -10,7 +10,7 @@
   flex-direction: column;
 
   &__player-container {
-    height: 45%;
+    height: 40%;
     transition: height 0.5s;
     display: flex;
     flex-direction: column;
@@ -29,11 +29,13 @@
       background-color: $countryPlayerColor;
     }
     &--active {
-      height: 55%;
+      height: 60%;
     }
   }
 
   &__profile-picture {
+    transition: height 0.5s, width 0.5s;
+    display: flex;
     max-width: 100%;
     width: auto;
     height: 100%;
@@ -72,12 +74,15 @@
   }
   &__turn-data {
     @include descriptive-text(true);
+    @include textOutline(black);
     text-align: center;
     width: 100%;
     margin: 0;
     max-height: 7.5rem;
     transition: max-height 0.5s;
     overflow: hidden;
+    box-sizing: border-box;
+    padding: 0 0.5rem;
     &--hidden {
       max-height: 0;
     }
@@ -92,12 +97,14 @@
   &__move-container {
     width: 100%;
     height: 3rem;
-    padding: 0.5rem 0 0.5rem 2rem;
+    padding: 0.5rem 0.25rem;
     box-sizing: border-box;
+    text-align: center;
   }
   &__move-data {
     @include descriptive-text(false);
     margin: 0;
+    @include textOutline(black);
   }
 
   &__move-bubble {
@@ -106,7 +113,8 @@
     height: 1.75rem;
     width: 1.75rem;
     display: inline-block;
-    margin: 0 0.75rem;
+    margin-left: 0.75rem;
+    @include boxShadowOutline(black);
   }
 
   &__winner-banner {

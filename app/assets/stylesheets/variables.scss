@@ -87,6 +87,18 @@ $font-myriad: myriad_pro_regular;
     0 -2px $color
   ;
 }
+@mixin boxShadowOutline ($color) {
+  box-shadow:
+    2px 2px $color,
+    -2px 2px $color,
+    2px -2px $color,
+    -2px -2px $color,
+    0 2px $color,
+    -2px 0 $color,
+    2px 0 $color,
+    0 -2px $color
+  ;
+}
 @mixin outlineShadow ($color1, $color2) {
   text-shadow:
     2px 2px $color1,
