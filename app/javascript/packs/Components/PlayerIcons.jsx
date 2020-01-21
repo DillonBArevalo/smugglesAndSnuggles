@@ -86,13 +86,13 @@ class PlayerIcons extends Component {
   }
 
   generateMovesCircles() {
-    return new Array(this.props.movesLeft)
-      .fill('')
-      .map((_, i)=> {
+    return [1, 2]
+      .map((num)=> {
+          const classes = `player-icons__move-bubble${num > this.props.movesLeft ? ' player-icons__move-bubble--hidden' : ''}`
         return (
           <span
-            key={`bubble-${i}`}
-            className="player-icons__move-bubble"
+            key={`bubble-${num}`}
+            className={classes}
           ></span>
         );
       });

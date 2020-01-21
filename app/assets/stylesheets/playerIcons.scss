@@ -115,6 +115,11 @@
     display: inline-block;
     margin-left: 0.75rem;
     @include boxShadowOutline(black);
+
+    &--hidden {
+      opacity: 0;
+      box-shadow: none;
+    }
   }
 
   &__winner-banner {
