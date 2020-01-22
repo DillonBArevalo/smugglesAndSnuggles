@@ -9,10 +9,11 @@ const WRAPPING_WIDTHS_IN_PX = {
   city: [1076, 749]
 };
 const LINE_HEIGHT = 2.5;
+let throttled = false;
 
 const getActivePlayerTextHeight = (screenWidth, deck) => {
   const numberOfLines = WRAPPING_WIDTHS_IN_PX[deck].reduce(
-    (wraps, size) => size < screenWidth ? wraps + 1 : wraps,
+    (wraps, size) => size > screenWidth ? wraps + 1 : wraps,
     1
   );
   return numberOfLines * LINE_HEIGHT;
@@ -49,10 +50,40 @@ class PlayerIcons extends Component {
       top: this.props.flipped ? 'country' : 'city',
       bottom: this.props.flipped ? 'city' : 'country',
     }
-    const defaultContainerWidth = document.body.offsetWidth * 0.3;
     this.state = {
-      imageSizes: getAllImageSizes(defaultContainerWidth)
+      imageSizes: getAllImageSizes(document.body.offsetWidth * 0.3)
     };
+    this.throttledResize = this.throttledResize.bind(this);
+    this.resize = this.resize.bind(this);
+  }
+
+  componentDidMount() {
+    window.addEventListener('resize', this.throttledResize);
+    this.setImageSize();
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.throttledResize);
+  }
+
+  throttledResize() {
+    if (!throttled) {
+      throttled = true;
+      window.setTimeout(this.resize, 200);
+    }
+  }
+
+  resize () {
+    throttled = false;
+    this.setImageSize();
+  }
+
+  setImageSize() {
+    const container = document.getElementById('userPane');
+    const containerWidth = container && container.offsetWidth;
+    if (containerWidth) {
+      this.setState({imageSizes: getAllImageSizes(containerWidth)});
+    }
   }
 
   getPlayerData(position, key) {
@@ -131,7 +162,11 @@ class PlayerIcons extends Component {
     classes[activePosition].push('player-icons__player-container--active');
 
     return (
-      <section className="player-icons" aria-label="Player information">
+      <section
+        className="player-icons"
+        aria-label="Player information"
+        id="userPane"
+      >
         <div className={classes.top.join(' ')}>
           <div className='player-icons__move-container'>
             {activePosition === 'top' &&
