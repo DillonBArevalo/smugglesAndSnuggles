@@ -55,6 +55,8 @@ class PlayerIcons extends Component {
     };
     this.throttledResize = this.throttledResize.bind(this);
     this.resize = this.resize.bind(this);
+    this.runImageErrorcity = this.runImageErrorcity.bind(this);
+    this.runImageErrorcountry = this.runImageErrorcountry.bind(this);
   }
 
   componentDidMount() {
@@ -90,6 +92,13 @@ class PlayerIcons extends Component {
     return this.props.playersData[this.mapping[position]][key]
   }
 
+  runImageErrorcity () {
+    this.props.handleImageError('city');
+  }
+  runImageErrorcountry () {
+    this.props.handleImageError('country');
+  }
+
   generateUserPicture(position, isActive){
     const deck = this.mapping[position];
     const imageSize = `${this.state.imageSizes[deck][isActive ? 'active' : 'notActive']}rem`;
@@ -108,6 +117,7 @@ class PlayerIcons extends Component {
           src={this.getPlayerData(position, 'url')}
           className="player-icons__profile-picture"
           style={imageStyle}
+          onError={this[`runImageError${deck}`]}
         />
         <p className={`player-icons__user-name player-icons__user-name--${deck}`}>
           {this.getPlayerData(position, 'username')}
