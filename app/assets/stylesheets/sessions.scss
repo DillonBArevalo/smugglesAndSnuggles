@@ -13,10 +13,8 @@
 
   &__container {
     min-width: 16rem;
-    display: flex;
+    @include flexCenter;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
     background-color: $sessionsBackground;
     padding: 2rem 1rem 1rem 1rem;
     border-radius: 2rem;
@@ -119,9 +117,7 @@
     margin-bottom: 0.25rem;
     @include background-image-default;
     font-family: $font-mochi;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    @include flexCenter();
   }
   &__profile-label-text{
     width: 6rem;

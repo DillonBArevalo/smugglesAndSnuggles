@@ -2,32 +2,14 @@
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmugglesAndSnuggles</title>
+    <title>Smuggles N' Snuggles</title>
     <%= csrf_meta_tags %>
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'render_react' %>
   </head>
 
-  <body>
-    <header id="header">
-      <div id='title'>Smuggles 'N Snuggles</div>
-      <nav id='user-info'>
-        <%= link_to('Home', root_path, class: 'sessions-link') %>
-        <% if logged_in? %>
-          <%= link_to('Account', user_path(current_user), class: 'sessions-link') %>
-          <%= link_to('Game Lobby', new_game_path, class: 'sessions-link') %>
-          <%= link_to('Logout', sessions_path, method: :delete, class: 'sessions-link') %>
-          <%= image_tag(current_user.avatar.url(:thumb), class: 'profile-picture--thumb') %>
-        <% else %>
-          <%= link_to('Register', new_user_path, class: 'sessions-link') %>
-          <%= link_to('Log In', new_sessions_path, class: 'sessions-link') %>
-          <%= image_tag('no-photo.png', class: 'profile-picture--thumb') %>
-        <% end %>
-      </nav>
-    </header>
-    <main id='main-content'>
-      <%= yield %>
-    </main>
+  <body class="home">
+    <%= yield %>
   </body>
 </html>

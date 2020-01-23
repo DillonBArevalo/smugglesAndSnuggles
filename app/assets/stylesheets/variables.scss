@@ -7,9 +7,10 @@ $countryPlayerColor: #eeb166;
 $cellDark: #b4b4b4;
 $cellLight: #e5e5e5;
 
-$cancelMoveColor: #5e5e5e;
 $stackPreviewColor: #6f6f6f;
+$cancelMoveColor: $stackPreviewColor;
 $sliderBackgroundColor: #b3b7b9;
+$profileBorderColor: #bfbfbf;
 
 $profileBackgroundColor: #0f0f3e;
 
@@ -23,7 +24,7 @@ $sessionsBackground: #f6af5d;
 $darkOrange: #bb7b36;
 $lightOrange: #fce4c8;
 $veryLightOrange: #fef6ec;
-$buttonShadowColor: #7c8185;
+$buttonShadowColor: $stackPreviewColor;
 $lobbyAlternateOrange: #d99953;
 $lobbyPrimaryButtonColor: #55b978;
 $lobbySecondaryButtonColor: #ef6b4e;
@@ -111,6 +112,18 @@ $font-myriad: myriad_pro_regular;
     0 -2px $color1,
     -2px 2px 4px $color2;
 }
+@mixin outlineShadowLight ($color1, $color2) {
+  text-shadow:
+    1px 1px $color1,
+    -1px 1px $color1,
+    1px -1px $color1,
+    -1px -1px $color1,
+    0 1px $color1,
+    -1px 0 $color1,
+    1px 0 $color1,
+    0 -1px $color1,
+    -2px 2px 4px $color2;
+}
 
 @mixin clickableRegion () {
   content: '';
@@ -166,4 +179,10 @@ $font-myriad: myriad_pro_regular;
   box-shadow: -0.125rem 0.125rem 0.125rem $buttonShadowColor;
   white-space: nowrap;
   @include outlineShadow(white, black);
+}
+
+@mixin flexCenter () {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
