@@ -40,7 +40,7 @@
     width: auto;
     height: 100%;
     border-radius: 50%;
-    border: 1rem solid #bfbfbf;
+    border: 1rem solid $profileBorderColor;
     box-sizing: border-box;
     @include background-image-default;
   }

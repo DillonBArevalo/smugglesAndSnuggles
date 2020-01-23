@@ -3,7 +3,12 @@
 <div class="user-info">
   <div class="user-info__top-container">
     <div class="player-icons__user-picture-container">
-      <%= image_tag(current_user.avatar.url(:medium), alt: "Your profile picture.", class: "player-icons__profile-picture player-icons__profile-picture--user-page") %>
+      <%= image_tag(
+        current_user.avatar.url(:medium),
+        alt: "Your profile picture.",
+        class: "player-icons__profile-picture player-icons__profile-picture--user-page",
+        onerror: "this.onerror = null; this.src=\"#{ image_path 'no-photo.png'}\""
+      ) %>
       <p class="player-icons__user-name player-icons__user-name--city">
         <%= current_user.username.capitalize %>
       </p>

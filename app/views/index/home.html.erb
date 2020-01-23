@@ -1,18 +1,36 @@
+<nav class="profile-nav" aria-label="Account">
+<% if logged_in? %>
+  <%= image_tag(
+      current_user.avatar.url(:thumb),
+      alt: 'Your profile picture',
+      class: 'profile-nav__picture profile-picture--thumb',
+      onerror: "this.onerror = null; this.src=\"#{ image_path 'no-photo.png'}\""
+  ) %>
+  <p class="profile-nav__player-name"><%= current_user.username %></p>
+  <%= link_to('Profile', user_path(current_user), class: 'home-button home-button--small') %>
+  <%= link_to('Log out', sessions_path, method: :delete, class: 'home-button home-button--small home-button--secondary') %>
+<% else %>
+  <%= link_to('Register', new_user_path, class: 'home-button home-button--small') %>
+  <%= link_to('Log In', new_sessions_path, class: 'home-button home-button--small') %>
+<% end %>
+</nav>
 <main class="home-ring">
   <div class="home-heading-container">
     <h1 class="home-heading">Smuggles N' Snuggles</h1>
     <p class="home-heading-subtitle">Online</p>
     </div>
-  <span class="home-button home-button--clip home-button--top-clip">
-      Rules <span class="home-button__subtext">(coming soon)</span>
-  </span>
-  <%= link_to "Play online", new_game_path, class: "home-button home-button--full-size" %>
-  <%= form_for @game, html: {class: 'form'} do |f| %>
-    <%= f.hidden_field :is_local, value: true %>
-    <%= hidden_field_tag 'player2', 1 %>
-    <%= f.submit "Play Local", class: "home-button home-button--full-size" %>
-  <% end %>
-  <span class="home-button home-button--clip home-button--bottom-clip">
-      Shop <span class="home-button__subtext">(coming soon)</span>
-  </span>
+  <nav class="home-nav" aria-label="Gameplay">
+    <span class="home-button home-button--clip home-button--top-clip">
+        Rules <span class="home-button__subtext">(coming soon)</span>
+    </span>
+    <%= link_to "Play online", new_game_path, class: "home-button home-button--full-size" %>
+    <%= form_for @game, html: {class: 'form'} do |f| %>
+      <%= f.hidden_field :is_local, value: true %>
+      <%= hidden_field_tag 'player2', 1 %>
+      <%= f.submit "Play Local", class: "home-button home-button--full-size" %>
+    <% end %>
+    <span class="home-button home-button--clip home-button--bottom-clip">
+        Shop <span class="home-button__subtext">(coming soon)</span>
+    </span>
+  </nav>
 </main>
