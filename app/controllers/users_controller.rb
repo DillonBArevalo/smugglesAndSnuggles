@@ -11,7 +11,7 @@ class UsersController < ApplicationController
       redirect_to @user
     else
       @errors = @user.errors.full_messages
-      render 'new'
+      render 'new', layout: 'sessions'
     end
   end
 
