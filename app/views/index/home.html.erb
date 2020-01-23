@@ -1,15 +1,14 @@
 <main class="home-ring">
-  <div ></div>
-  <a href="javascript:void(0);" class="home-button home-button--clip home-button--top-clip">
-      Rules
-  </a>
-  <a href="javascript:void(0);" class="home-button home-button--full-size">
-      Play online
-  </a>
-  <a href="javascript:void(0);" class="home-button home-button--full-size">
-      Play local
-  </a>
-  <a disabled href="javascript:void(0);" class="home-button home-button--clip home-button--bottom-clip">
+  <span class="home-button home-button--clip home-button--top-clip">
+      Rules <span class="home-button__subtext">(coming soon)</span>
+  </span>
+  <%= link_to "Play online", new_game_path, class: "home-button home-button--full-size" %>
+  <%= form_for @game, html: {class: 'form'} do |f| %>
+    <%= f.hidden_field :is_local, value: true %>
+    <%= hidden_field_tag 'player2', 1 %>
+    <%= f.submit "Play Local", class: "home-button home-button--full-size" %>
+  <% end %>
+  <span class="home-button home-button--clip home-button--bottom-clip">
       Shop <span class="home-button__subtext">(coming soon)</span>
-  </a>
+  </span>
 </main>
