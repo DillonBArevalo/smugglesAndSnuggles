@@ -23,6 +23,7 @@ class Game extends Component {
       },
       movesLeft: this.props.gameData.movesLeft,
       playerDeck: this.props.playerDeck,
+      playersData: this.props.playersData,
       preppedMove: {},
       stackView: null,
       winner: this.props.gameData.winner || null,
@@ -40,6 +41,7 @@ class Game extends Component {
 
     this.cancelMove = this.cancelMove.bind(this);
     this.docKeyup = this.docKeyup.bind(this);
+    this.handleImageError = this.handleImageError.bind(this);
     this.hideStack = this.hideStack.bind(this);
     this.highlightMoves = this.highlightMoves.bind(this);
     this.toggleConfirmMove = this.toggleConfirmMove.bind(this);
@@ -67,6 +69,12 @@ class Game extends Component {
     // there's a race condition here where if you disconnect first it will ignore
     // the leave message and other components won't remove this user from the list
     window.setTimeout(() => this.channel.consumer.disconnect(), 500);
+  }
+
+  handleImageError (deck) {
+    const playersData = Object.assign({}, this.state.playersData);
+    playersData[deck].url = playersData.backupUrl;
+    this.setState(playersData);
   }
 
   handleMessage (message) {
@@ -463,10 +471,11 @@ class Game extends Component {
         <PlayerIcons
           flipped={this.state.isFlippedBoard}
           active={this.state.activeDeck}
-          playersData={this.props.playersData}
+          playersData={this.state.playersData}
           movesLeft={this.state.movesLeft}
           banners={this.props.assets.banners}
           winner={this.state.winner}
+          handleImageError={this.handleImageError}
         />
         <div id='main-game-container' className="board">
           {this.renderGameBoard()}
