@@ -1,6 +1,7 @@
 // Place all the styles related to the index controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+@import 'variables';
 
 // normalize
 button:-moz-focusring, input:-moz-focusring {
@@ -13,4 +14,142 @@ button:-moz-focusring, input:-moz-focusring {
 
 .dark :focus {
   outline: 1px dashed white;
+}
+// $x-indicies: 3%, 2%, 1%, 0%, 1%, 8%, 9%, 10%, 11%, 89%, 90%, 91%, 92%, 99%, 100%, 99%, 98%, 97%;
+
+// $y-indicies: 0%, 2%, 5%, 15%, 28%, 90%, 95%, 98%, 100%, 100%, 98%, 95%, 90%, 28%, 15%, 5%, 2%, 0%;
+
+// @mixin clip() {
+//   clip-path: polygon(
+//     3% 0%,
+//     2% 2%,
+//     1% 5%,
+//     0% 15%,
+//     1% 28%,
+//     8% 90%,
+//     9% 95%,
+//     10% 98%,
+//     11% 100%,
+//     89% 100%,
+//     90% 98%,
+//     91% 95%,
+//     92% 90%,
+//     99% 28%,
+//     100% 15%,
+//     99% 5%,
+//     98% 2%,
+//     97% 0%
+//   );
+// }
+
+// @mixin clip2() {
+//   clip-path: polygon(
+//     3% 0%,
+//     2% 2%,
+//     1% 5%,
+//     0% 15%,
+//     1% 28%,
+//     8% 90%,
+//     9% 95%,
+//     10% 98%,
+//     11% 100%,
+//     89% 100%,
+//     90% 98%,
+//     91% 95%,
+//     92% 90%,
+//     99% 28%,
+//     100% 15%,
+//     99% 5%,
+//     98% 2%,
+//     97% 0%
+//   );
+// }
+
+
+// @mixin clipButton($diff: 0, $top: false) {
+//   $vertices: ();
+
+// 	@for $i from 1 to length($x-indicies) {
+//     $x-val: nth($x-indicies, $i);
+//     $y-val: if($top, nth($y-indicies, $i), 100% - nth($y-indicies, $i));
+//     @if $x-val < 50% {
+//       $x-val: $x-val + $diff;
+//     } @else {
+//       $x-val: $x-val - $diff;
+//     }
+//     @if $y-val < 50% {
+//       $y-val: $y-val + ($diff);
+//     } @else {
+//       $y-val: $y-val - ($diff);
+//     }
+// 		$vertices: $vertices, $x-val $y-val;
+// 	}
+
+// 	clip-path: polygon($vertices);
+// }
+
+.home {
+  background-color: $sessionsBackground;
+  @include flexCenter();
+}
+
+.home-ring {
+  @include flexCenter();
+  flex-direction: column;
+  border-radius: 50%;
+  width: 25rem;
+  height: 25rem;
+  border: 0.5rem solid $sessionsBackground;
+  box-shadow: 0 0 20rem white;
+  background-color: white;
+}
+
+.home-button {
+  @include outlineShadow(black, black);
+  @include flexCenter();
+  margin: 0.5rem;
+  background-color: $sessionsBackground;
+  border: none;
+  box-sizing: border-box;
+  font-family: $font-mochi;
+  color: white;
+  font-size: 2rem;
+  // box-shadow: -0.125rem 0.125rem 0.125rem $buttonShadowColor;
+  white-space: nowrap;
+  cursor: pointer;
+  position: relative;
+  text-decoration: none;
+  font-size: 2.5rem;
+  width: 21rem;
+  height: 3.5rem;
+  text-align: center;
+
+  &::after {
+    @include clickableRegion();
+  }
+  &--clip {
+    background-color: transparent;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    height: 4rem;
+    margin: 0;
+    width: 19rem;
+  }
+  &--top-clip {
+    background-image: image-url('trapezoidButton_BG.png');
+  }
+  &--full-size {
+    width: 21rem;
+    border: 0.25rem solid white;
+    box-shadow: -0.0625rem 0.0625rem 0.25rem black;
+    border-radius: 1rem;
+  }
+  &--bottom-clip {
+    background-image: image-url('trapezoidButton-flipped_BG.png');
+  }
+  &__subtext {
+    padding-left: 0.5rem;
+    font-size: 1rem;
+  }
 }

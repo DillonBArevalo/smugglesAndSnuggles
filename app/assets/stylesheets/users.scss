@@ -125,9 +125,7 @@
   }
   &__icon-link {
     padding: 0;
-    display: flex;
-    text-align: center;
-    justify-content: center;
+    @include flexCenter();
   }
   &__icon {
     height: 3rem;

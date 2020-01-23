@@ -167,3 +167,9 @@ $font-myriad: myriad_pro_regular;
   white-space: nowrap;
   @include outlineShadow(white, black);
 }
+
+@mixin flexCenter () {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
