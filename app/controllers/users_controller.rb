@@ -16,8 +16,11 @@ class UsersController < ApplicationController
   end
 
   def show
-    redirect_to '/sessions/new' unless current_user && current_user.id == params[:id].to_i
-    render layout: 'profile'
+    if current_user && current_user.id == params[:id].to_i
+      render layout: 'profile'
+    else
+      redirect_to '/sessions/new'
+    end
   end
 
   private
