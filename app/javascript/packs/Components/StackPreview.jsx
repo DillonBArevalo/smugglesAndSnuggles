@@ -31,8 +31,7 @@ class StackPreview extends Component {
               url={this.props.getCardUrl(card.deck, card.value, card.faceDown)}
               faceDown={card.faceDown}
               highlightMoves={_ => {}}
-              stackClass={`stack-preview__card--${idx + 1}-of-${numCards}`}
-              className="stack-preview__card"
+              customClass={`stack-preview__card--${idx + 1}-of-${numCards} stack-preview__card`}
             />
           })}
           <div className="stack-preview__spacer"></div>

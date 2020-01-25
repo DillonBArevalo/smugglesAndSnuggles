@@ -15,7 +15,9 @@ class Game < ApplicationRecord
   end
 
   def players_data
-    data = {}
+    data = {
+      "backupUrl": ActionController::Base.helpers.image_path('no-photo.png'),
+    }
     games_users.each do |game_user|
       user = game_user.user
       user_data = {

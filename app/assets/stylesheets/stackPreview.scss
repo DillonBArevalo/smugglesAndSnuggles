@@ -23,7 +23,6 @@
   }
 
   &__card {
-    max-height: 80%;
     margin: 0.25rem;
   }
 
@@ -32,6 +31,7 @@
     overflow: auto;
     flex-grow: 1;
     flex-shrink: 1;
+    height: 100%;
   }
   // &__slider {
   //   -webkit-appearance: none;

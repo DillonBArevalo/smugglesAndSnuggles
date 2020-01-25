@@ -37,7 +37,7 @@ class Cell extends Component {
               cancelMove={this.props.cancelMove}
               active={false}
               isSmuggled={true}
-              stackClass="card--4-of-4"
+              customClass="card--4-of-4"
             /></div>}
         {this.props.cards.map((card, idx) => {
           const position = numCards - idx;
@@ -52,7 +52,7 @@ class Cell extends Component {
               active={card.active}
               isSmuggled={card.isSmuggled}
               selected={this.props.selected && position === 1}
-              stackClass={`card--${position}-of-${isOverflowing ? 4 : numCards}`}
+              customClass={`card--${position}-of-${isOverflowing ? 4 : numCards}`}
             /></div>
         })}
         {this.props.hoverCard && ((card) => <Card
@@ -60,7 +60,7 @@ class Cell extends Component {
             value={card.value}
             url={this.props.getCardUrl(card.deck, card.value)}
             faceDown={false}
-            className={'card--hovering'}
+            customClass="card--hovering"
           />)(this.props.hoverCard)}
       </div>
     );

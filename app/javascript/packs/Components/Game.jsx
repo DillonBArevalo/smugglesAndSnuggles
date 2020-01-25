@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import Cell from './Cell';
 import PlayerIcons from './PlayerIcons';
 import StackPreview from './StackPreview';
-import {enterGame} from '../modules/apiRequests'
 import MoveConfirmation from './MoveConfirmation';
+import Modal from "./Modal";
 import WinnerNotification from './WinnerNotification';
+import {enterGame} from '../modules/apiRequests'
 
 class Game extends Component {
   constructor(props){
@@ -22,6 +23,7 @@ class Game extends Component {
       },
       movesLeft: this.props.gameData.movesLeft,
       playerDeck: this.props.playerDeck,
+      playersData: this.props.playersData,
       preppedMove: {},
       stackView: null,
       winner: this.props.gameData.winner || null,
@@ -29,27 +31,50 @@ class Game extends Component {
 
     this.messageResponseMapper = {
       join: 'startGame',
-      leave: 'leave',
+      leave: 'opponentLeave',
       move: 'moveOpponent',
       message: 'message',
+      rematch: 'receiveRematchRequest',
+      accept: 'receiveRequestAccepted',
+      startGame: 'startNewGame',
     };
 
     this.cancelMove = this.cancelMove.bind(this);
     this.docKeyup = this.docKeyup.bind(this);
+    this.handleImageError = this.handleImageError.bind(this);
     this.hideStack = this.hideStack.bind(this);
     this.highlightMoves = this.highlightMoves.bind(this);
     this.toggleConfirmMove = this.toggleConfirmMove.bind(this);
     this.getCardUrl = this.getCardUrl.bind(this);
     this.resign = this.resign.bind(this);
+    this.requestRematch = this.requestRematch.bind(this);
+    this.acceptRematch = this.acceptRematch.bind(this);
+    this.cleanUp = this.cleanUp.bind(this);
+    this.toggleRenderResignModal = this.toggleRenderResignModal.bind(this);
   }
 
   componentDidMount () {
     enterGame(this, this.handleMessage.bind(this), this.props.id, this.props.gameId, this.props.isLocal);
     document.addEventListener('keyup', this.docKeyup);
+    window.addEventListener('beforeunload', this.cleanUp);
   }
 
   componentWillUnmount () {
     document.removeEventListener('keyup', this.docKeyup);
+    this.cleanUp();
+  }
+
+  cleanUp () {
+    this.channel.sendUpdate('leave');
+    // there's a race condition here where if you disconnect first it will ignore
+    // the leave message and other components won't remove this user from the list
+    window.setTimeout(() => this.channel.consumer.disconnect(), 500);
+  }
+
+  handleImageError (deck) {
+    const playersData = Object.assign({}, this.state.playersData);
+    playersData[deck].url = playersData.backupUrl;
+    this.setState(playersData);
   }
 
   handleMessage (message) {
@@ -69,10 +94,49 @@ class Game extends Component {
     this.moveCard(endRow, endCol, movement, true);
   }
 
+  requestRematch () {
+    this.channel.sendUpdate('rematch');
+    this.setState({requestPending: true});
+  }
+
+  receiveRematchRequest () {
+    this.setState({rematchRequested: true});
+  }
+
+  acceptRematch () {
+    const player2 = this.props.playersData[this.props.playerDeck === 'city' ? 'country' : 'city'].id
+    this.channel.sendUpdate(
+      'accept',
+      {
+        isLocal: false,
+        player1: this.props.id,
+        player2,
+      }
+    );
+    this.setState({requestPending: true});
+    this.acceptTimeout = window.setTimeout(() => {
+      this.setState({requestPending: false});
+      window.alert('Something went wrong. Please return to the Lobby to try again.');
+    }, 5000);
+  }
+
+  receiveRequestAccepted ({url}) {
+    console.log(url)
+    this.channel.sendUpdate('startGame', {url})
+    window.setTimeout(() => window.location.href = url, 500);
+  }
+
+  startNewGame ({url, errors}) {
+    console.log(url)
+    window.location.href = url;
+  }
+
+  opponentLeave () {
+    this.setState({isOpponentConnected: false});
+  }
+
   resign () {
-    if(this.state.winner || window.confirm('Are you sure you want to quit this game? You will forefit and lose.')) {
-      window.location.href = '/games/new';
-    }
+    window.location.href = '/games/new';
   }
 
   getCardUrl (deck, number, flipped = false) {
@@ -130,7 +194,9 @@ class Game extends Component {
   moveCard(endRow, endCol, movement = false, isOpponentMove = false){
     const board = this.state.board.slice();
     const previousTop = this.topCard(board[endRow][endCol]);
-    const startingLocation = movement ? movement.startingLocation : this.state.movement.startingLocation;
+    const startingLocation = movement && movement.startingLocation ?
+      movement.startingLocation :
+      this.state.movement.startingLocation;
     const movingCard = board[startingLocation[0]][startingLocation[1]].cards.pop();
     const newTop = this.topCard(board[startingLocation[0]][startingLocation[1]]);
     const moveData = this.generateMoveData(endRow, endCol, startingLocation, movingCard);
@@ -326,9 +392,17 @@ class Game extends Component {
     return  this.state.movement.active && isCorrectRow && isCorrectCol;
   }
 
+  closeModal () {
+    this.setState({renderResignModal: false})
+  }
+
+  toggleRenderResignModal () {
+    this.setState({renderResignModal: !this.state.renderResignModal});
+  }
+
   renderGameBoard () {
     let gameContents = <h2>Waiting for your opponent to connect...</h2>;
-    if (this.state.isOpponentConnected) {
+    if (this.state.isOpponentConnected || this.state.winner) {
       const isFlipped = this.state.isFlippedBoard;
       const board = isFlipped ? this.flippedBoard() : this.state.board;
       gameContents = board.map((row, rowIndex) => {
@@ -361,16 +435,47 @@ class Game extends Component {
     return gameContents;
   }
 
+  renderResignModal () {
+    return (
+      <Modal
+        closeModal={this.toggleRenderResignModal}
+        firstFocusId="modalHeading"
+        returnFocusTo="resignButton"
+        tabbableElementIds={['quitButton', 'cancelButton']}
+      >
+        <h1
+          className="modal__heading"
+          id="modalHeading"
+          tabIndex="-1"
+        >Resign game</h1>
+        <p className="modal__body">Are you sure you want to quit? You will forefit the game!</p>
+        <div className="modal__button-container">
+          <button
+            id="quitButton"
+            className="modal__button modal__button--quit"
+            onClick={this.resign}
+            >Quit game</button>
+          <button
+            id="cancelButton"
+            className="modal__button modal__button--cancel"
+            onClick={this.toggleRenderResignModal}
+          >Cancel</button>
+        </div>
+      </Modal>
+    );
+  }
+
   render() {
     return(
       <div className='game-container'>
         <PlayerIcons
           flipped={this.state.isFlippedBoard}
           active={this.state.activeDeck}
-          playersData={this.props.playersData}
+          playersData={this.state.playersData}
           movesLeft={this.state.movesLeft}
           banners={this.props.assets.banners}
           winner={this.state.winner}
+          handleImageError={this.handleImageError}
         />
         <div id='main-game-container' className="board">
           {this.renderGameBoard()}
@@ -378,7 +483,8 @@ class Game extends Component {
         <div className="game-container__right-cell">
           <button
             className={`resign-game-button resign-game-button--${this.state.playerDeck}`}
-            onClick={this.resign}
+            onClick={this.state.winner ? this.resign : this.toggleRenderResignModal}
+            id="resignButton"
           >
             RETURN TO LOBBY
           </button>
@@ -391,6 +497,10 @@ class Game extends Component {
               winner={this.state.winner}
               playerDeck={this.state.playerDeck}
               icons={this.props.assets.icons}
+              rematchRequested={this.state.rematchRequested}
+              rematch={this.state.rematchRequested ? this.acceptRematch : this.requestRematch}
+              isOpponentPresent={this.state.isOpponentConnected}
+              requestPending={this.state.requestPending}
             />
             : <MoveConfirmation
               confirmMove={this.state.confirmMove}
@@ -403,6 +513,7 @@ class Game extends Component {
             />
           }
         </div>
+        {this.state.renderResignModal && this.renderResignModal()}
       </div>
     );
   }

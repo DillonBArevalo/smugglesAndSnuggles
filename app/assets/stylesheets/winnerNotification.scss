@@ -16,7 +16,7 @@
     color: white;
     font-family: $font-mochi;
     font-size: 3rem;
-    @include outline(black);
+    @include textOutline(black);
     text-align: center;
     letter-spacing: 0.25rem;
     margin: 1rem 0;
@@ -37,11 +37,17 @@
     font-family: $font-mochi;
     font-size: 2rem;
     height: 6rem;
-    @include outline(black);
+    @include textOutline(black);
     border-radius: 5rem;
     margin-bottom: 0.5rem;
     display: flex;
     align-items: center;
+    transition: background-color 0.5s;
+    overflow: auto;
+
+    &:disabled {
+      opacity: 0.5;
+    }
 
     &--city {
       background-color: $cityPlayerColor;
@@ -49,6 +55,13 @@
     &--country {
       background-color: $countryPlayerColor;
     }
+    &--rematch {
+      background-color: $lobbyPrimaryButtonColor;
+    }
+  }
+  &__pending-dots-container {
+    margin: auto;
+    @include pendingDots('winner-notification');
   }
 
   &__icon {

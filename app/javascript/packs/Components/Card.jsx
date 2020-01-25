@@ -33,7 +33,7 @@ class Card extends Component {
     return(
       <img
         src={this.props.url}
-        className={`card ${this.props.stackClass} card--${this.props.deck} ${this.props.selected ? 'card--selected' : ''} ${this.props.class || ''}`}
+        className={`card ${this.props.customClass || ''} card--${this.props.deck} ${this.props.selected ? 'card--selected' : ''}`}
         onClick={this.clickHandler}
         alt={this.generateAlt()}
       />

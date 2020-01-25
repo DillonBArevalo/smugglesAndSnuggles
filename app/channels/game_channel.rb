@@ -20,11 +20,21 @@ class GameChannel < ApplicationCable::Channel
         @game.completed_at = Time.now
       end
       @game.save
+    elsif type == 'accept'
+      @game = Game.new(game_log: Game.new_game, is_local: data['isLocal'])
+      player1 = User.find(data['player1'])
+      player2 = User.find(data['player2'])
+      @game.players = [player1, player2].shuffle
+      if @game.save
+        data['url'] = "/games/#{@game.id}/play"
+      else
+        data['errors'] = @game.errors
+      end
     end
     data['isLocal'].to_s.downcase == "false" && ActionCable.server.broadcast(channel, data)
   end
 
-  def unsubscribed
-    p 'unsusb happened'
+  def unsubscribed(args)
+    p 'unsusb happened', args
   end
 end

@@ -1,0 +1,57 @@
+@import 'variables';
+
+.modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  &__backdrop {
+    background-color: black;
+    opacity: 0.8;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+  }
+  &__main {
+    background-color: $sessionsBackground;
+    padding: 1rem;
+    border-radius: 2rem;
+    border: 0.5rem solid white;
+    font-family: $font-mochi;
+    max-width: 75%;
+  }
+  &__heading {
+    color: white;
+    @include outlineShadow(black, white);
+    margin: 1rem 0 2rem 0;
+    font-size: 2.5rem;
+    &:focus {
+      outline: none;
+    }
+  }
+  &__body {
+    font-size: 1.5rem;
+    color: white;
+    @include outlineShadow(black, white);
+  }
+  &__button-container {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+  &__button {
+    @include whiteButton();
+    margin: 0.25rem;
+    &:last-of-type {
+      margin-right: 0;
+    }
+  }
+}

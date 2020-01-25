@@ -19,7 +19,6 @@ class LobbyChannel < ApplicationCable::Channel
       else
         data['errors'] = @game.errors
       end
-    elsif type == 'startGame'
     end
     ActionCable.server.broadcast(channel, data)
   end
