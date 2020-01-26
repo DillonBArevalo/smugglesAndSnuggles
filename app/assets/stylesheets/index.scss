@@ -131,6 +131,7 @@ button:-moz-focusring, input:-moz-focusring {
       margin: 0;
       width: 19rem;
       color: $cellLight;
+      cursor: default;
     }
     &--top-clip {
       background-image: image-url('trapezoidButton_BG.png');
