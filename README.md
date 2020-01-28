@@ -4,7 +4,7 @@ Smuggles N' Snuggles is a 2-player strategy card game created by Jonathan Ahnert
 
 The visual design of the website was co created by Jonathan Ahnert and Dillon Arevalo.
 
-This website is still in development, but is in a functional beta where the core experience (the gameplay) is available.
+This website is still in development but is in a functional beta with the core experience available [here](https://smuggles-n-snuggles.herokuapp.com/).
 
 ## Game Details
 
