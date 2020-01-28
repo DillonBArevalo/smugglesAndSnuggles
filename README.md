@@ -40,65 +40,38 @@ A demo account has been set up for anyone who wants to demo the website without 
 | preview | password |
 
 For those just looking to get an idea of the website here are its main features:
-<style>
-  .imageList {
-    display: flex;
-    flex-wrap: wrap;
-    list-style-type: none;
-    box-sizing: border-box;
-    justify-content: space-between;
-  }
-  .imageList > li {
-    flex: 0 0 calc(50% - 20px);
-    margin: 4px;
-    padding: 4px;
-  }
-  .imageList li {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 16px;
-  }
-  .imageList img {
-    width: 100%;
-  }
-  .imageList img[src="./readme-images/ActiveBoard.png"] {
-    width: 50%;
-  }
-  .imageList li:last-child {
-    flex-basis: 100%;
-  }
-</style>
-<ul class="imageList">
-  <li>
+
+<ul class="imageList" style="display: flex; flex-wrap: wrap; list-style-type: none; box-sizing: border-box; justify-content: space-between;">
+  <li style="flex: 0 0 calc(50% - 20px); margin: 4px; padding: 4px; display: flex; flex-direction: column; margin-bottom: 16px;">
     <span>Home page with easy navigation to all relevant pages on the site</span>
-    <img alt="Home page" src="./readme-images/Home.png"/>
+    <img style="width: 100%;" alt="Home page" src="./readme-images/Home.png"/>
   </li>
-  <li>
+  <li style="flex: 0 0 calc(50% - 20px); margin: 4px; padding: 4px; display: flex; flex-direction: column; margin-bottom: 16px;">
     <span> Profile page with your game history and the ability to return to uncompleted games (and soon to have profile picture editing functionality)</span>
-    <img alt="Profile page" src="./readme-images/Profile.png"/>
+    <img style="width: 100%;" alt="Profile page" src="./readme-images/Profile.png"/>
   </li>
-  <li>
+  <li style="flex: 0 0 calc(50% - 20px); margin: 4px; padding: 4px; display: flex; flex-direction: column; margin-bottom: 16px;">
     <span> Online lobby</span>
-    <img alt="Lobby" src="./readme-images/Lobby.png"/>
+    <img style="width: 100%;" alt="Lobby" src="./readme-images/Lobby.png"/>
   </li>
-  <li>
+  <li style="flex: 0 0 calc(50% - 20px); margin: 4px; padding: 4px; display: flex; flex-direction: column; margin-bottom: 16px;">
     <span> The website also features an accessible modal with custom focus handling</span>
-    <img alt="Modal" src="./readme-images/Modal.png"/>
+    <img style="width: 100%;" alt="Modal" src="./readme-images/Modal.png"/>
   </li>
-  <li>
+  <li style="flex: 0 0 100%; margin: 4px; padding: 4px; display: flex; flex-direction: column; margin-bottom: 16px;">
     <span> The meat of the website is its gamelay page.</span>
     <ul>
-      <li>
+      <li style="display: flex; flex-direction: column; margin-bottom: 16px;">
         <span> The page has a turn indicator, profile pictures of the players, the game board, a preview that shows any stack of cards you click on (they can get arbitrarially deep), and a toggled option for hovering move confirmation if a player is worried about mis-clicks causing accidental moves</span>
-        <img alt="Play page" src="./readme-images/Play.png"/>
+        <img style="width: 100%;" alt="Play page" src="./readme-images/Play.png"/>
       </li>
-      <li>
+      <li style="display: flex; flex-direction: column; margin-bottom: 16px;">
         <span> When a card is selected it is highlighted and all available moves are marked on the board</span>
-        <img alt="Move preview" src="./readme-images/ActiveBoard.png"/>
+        <img style="width: 50%;" alt="Move preview" src="./readme-images/ActiveBoard.png"/>
       </li>
-      <li>
+      <li style="display: flex; flex-direction: column; margin-bottom: 16px;">
         <span> When move confirmation is active, clicking on one of the available locations for a move will render a transparent card and ask for confirmation</span>
-        <img alt="Move confirmation" src="./readme-images/MoveConfirmation.png"/>
+        <img style="width: 100%;" alt="Move confirmation" src="./readme-images/MoveConfirmation.png"/>
       </li>
     </ul>
   </li>
