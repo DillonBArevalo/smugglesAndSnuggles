@@ -186,3 +186,35 @@ $font-myriad: myriad_pro_regular;
   align-items: center;
   justify-content: center;
 }
+
+@mixin button () {
+  @include outlineShadowLight(black, black);
+  @include flexCenter();
+  margin: 0.5rem;
+  background-color: $sessionsBackground;
+  box-sizing: border-box;
+  font-family: $font-mochi;
+  color: white;
+  white-space: nowrap;
+  position: relative;
+  text-decoration: none;
+  text-align: center;
+  font-size: 2rem;
+  width: 21rem;
+  height: 3.5rem;
+  letter-spacing: 2px;
+  border: 0.25rem solid white;
+  box-shadow: -0.0625rem 0.0625rem 0.25rem black;
+  border-radius: 1rem;
+}
+@mixin buttonSmall () {
+  border: 0.1875rem solid white;
+  box-shadow: -0.0625rem 0.0625rem 0.25rem black;
+  border-radius: 0.75rem;
+  font-size: 1.25rem;
+  height: auto;
+  padding: 0.5rem 0.75rem;
+  letter-spacing: 1px;
+  width: auto;
+  margin: 0.25rem;
+}
