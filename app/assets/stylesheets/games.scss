@@ -26,14 +26,10 @@
 }
 
 .resign-game-button {
-  padding: 0.5rem;
-  color: white;
-  font-family: $font-mochi;
-  background-color: $stackPreviewColor;
-  margin: 0.5rem 1rem 0 1rem;
+  @include button();
+  width: auto;
+  margin: 0.5rem 1rem;
   font-size: 1.5rem;
-  border: 0;
-  @include textOutlineLight(black);
 
   &--city {
     background-color: $cityPlayerColor;
