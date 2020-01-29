@@ -2,30 +2,24 @@
 
 .nav {
   position: fixed;
-  top: 0;
+  top: 0.5rem;
   right: 2rem;
   height: 2.5rem;
   display: flex;
 
   &__link {
-    position: relative;
-    font-family: $font-mochi;
-    text-decoration: none;
-    color: white;
-    font-size: 1.5rem;
-    padding: 0.5rem;
+    @include button();
     &::after {
       @include clickableRegion();
     }
+    &--small {
+      @include buttonSmall();
+    }
+    &--city {
+      background-color: nth($profileHeaderColors, 2);
+    }
   }
 
-  &--country {
-    background-color: $darkOrange;
-  }
-
-  &--city {
-    background-color: nth($profileHeaderColors, 2);
-  }
 }
 
 .lobby {

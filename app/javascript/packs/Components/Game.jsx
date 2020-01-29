@@ -22,7 +22,6 @@ class Game extends Component {
         startingLocation: [],
       },
       movesLeft: this.props.gameData.movesLeft,
-      playerDeck: this.props.playerDeck,
       playersData: this.props.playersData,
       preppedMove: {},
       stackView: null,
@@ -234,8 +233,8 @@ class Game extends Component {
 
   checkScore(endRow, card, board, movesLeft, movedCardValue){
     const activeDeck = this.state.activeDeck;
-    const playerDeck = this.state.playerDeck;
     // later use commented instead of current generation of scoring for when flipped happens
+    // const playerDeck = this.props.playerDeck;
     // const scoring = card.deck === playerDeck && endRow === 0 || card.deck !== playerDeck && endRow === 4;
     const scoring = card.deck === 'country' && endRow === 0 || card.deck === 'city' && endRow === 4;
     if(scoring){
@@ -359,7 +358,7 @@ class Game extends Component {
   highlightMoves(row, col) {
     const card = this.topCard(this.state.board[row][col]);
     if(card.deck !== this.state.activeDeck
-      || (!this.props.isLocal && card.deck !== this.state.playerDeck)
+      || (!this.props.isLocal && card.deck !== this.props.playerDeck)
       || this.state.movedCardValue.some((value) => card.value === value)
       || this.state.winner ){
       return;
@@ -482,7 +481,7 @@ class Game extends Component {
         </div>
         <div className="game-container__right-cell">
           <button
-            className={`resign-game-button resign-game-button--${this.state.playerDeck}`}
+            className={`resign-game-button resign-game-button--${this.props.playerDeck}`}
             onClick={this.state.winner ? this.resign : this.toggleRenderResignModal}
             id="resignButton"
           >
@@ -495,7 +494,7 @@ class Game extends Component {
           {this.state.winner ?
             <WinnerNotification
               winner={this.state.winner}
-              playerDeck={this.state.playerDeck}
+              playerDeck={this.props.playerDeck}
               icons={this.props.assets.icons}
               rematchRequested={this.state.rematchRequested}
               rematch={this.state.rematchRequested ? this.acceptRematch : this.requestRematch}
@@ -510,6 +509,7 @@ class Game extends Component {
               movement={this.state.movement}
               assets={this.props.assets.moveConfirmation}
               preppedMove={this.state.preppedMove}
+              playerDeck={this.props.playerDeck}
             />
           }
         </div>
