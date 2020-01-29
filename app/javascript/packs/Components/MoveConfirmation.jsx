@@ -7,7 +7,7 @@ class MoveConfirmation extends Component {
 
   renderCancelMoveButton () {
     return  (<button
-              className="move-confirmation__cancel-move-button"
+              className={`move-confirmation__cancel-move-button move-confirmation__cancel-move-button--${this.props.playerDeck}`}
               onClick={this.props.cancelMove}
             >
               CANCEL MOVE

@@ -30,6 +30,9 @@
   width: auto;
   margin: 0.5rem 1rem;
   font-size: 1.5rem;
+  padding: 0.5rem;
+  height: auto;
+  white-space: unset;
 
   &--city {
     background-color: $cityPlayerColor;
