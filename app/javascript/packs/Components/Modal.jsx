@@ -13,6 +13,11 @@ class Modal extends Component {
     this.hideOtherContent();
     this.trapScroll();
     document.getElementById(this.props.firstFocusId || 'modalHeading').focus();
+    this.props.renderedCallback && this.props.renderedCallback();
+  }
+
+  componentDidUpdate () {
+    this.props.renderedCallback && this.props.renderedCallback();
   }
 
   componentWillUnmount () {
@@ -80,7 +85,7 @@ class Modal extends Component {
   renderModalContent () {
     return (<div
       id="modal"
-      className="modal"
+      className={'modal ' + (this.props.rootClass || '')}
       onKeyUp={this.closeOnEsc}
       onKeyDown={this.trapTab}
     >

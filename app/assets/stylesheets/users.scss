@@ -31,6 +31,38 @@
     clip: rect(1px, 1px, 1px, 1px);
     clip-path: polygon(0px 0px, 0px 0px,0px 0px, 0px 0px);
   }
+
+  &__new-picture-form {
+    flex: 0 0 50%;
+    margin: 0;
+    position: relative;
+  }
+
+  &__input {
+    position: absolute;
+    height: calc(100% - 3rem);
+    width: 100%;
+    opacity: 0;
+    z-index: 1;
+    position: absolute;
+
+    &:focus + .profile__label {
+      background-color: nth($profileHeaderColors, 2);
+      outline: 1px dashed white;
+    }
+  }
+
+  &__label {
+    border: 2px solid white;
+    border-radius: 20px;
+    color: white;
+    padding: 4rem;
+    display: block;
+
+    &--dragging {
+      background-color: nth($profileHeaderColors, 2);
+    }
+  }
 }
 .profile-picture--thumb {
   border-radius: 50%;
@@ -68,37 +100,19 @@
     font-size: 1.75rem;
   }
 
-  &__edit-form {
+  &__edit-button {
     position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-  }
-  &__edit-label {
+
     height: 100%;
     width: 100%;
     opacity: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     border-radius: 50%;
     font-size: 1.25rem;
+    color: white;
+    font-family: $font-mochi;
     @include outlineShadow(black, black);
 
-    &:hover {
-      opacity: 1;
-      background-color: rgba(0, 0, 0, 0.8);
-    }
-  }
-  &__edit-input {
-    position: absolute;
-    height: 1px;
-    width: 1px;
-    overflow: hidden;
-    opacity: 0.01;
-
-    &:focus + .user-info__edit-label {
+    &:hover, &:focus {
       opacity: 1;
       background-color: rgba(0, 0, 0, 0.8);
     }
@@ -122,6 +136,85 @@
     font-size: 2rem;
   }
 }
+
+.modal--profile .modal {
+  &__main {
+    background-color: $profileBackgroundColor;
+    width: 75%;
+    min-height: 50%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__heading-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+  &__heading {
+    margin: 0 1rem 0 0;
+  }
+  &__body-container {
+    display: flex;
+    flex-grow: 1;
+  }
+  &__profile-picture-placeholder-container {
+    margin: 0 1rem;
+    box-sizing: border-box;
+    flex-grow: 1;
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 50%;
+  }
+  &__profile-picture-placeholder {
+    border-radius: 50%;
+    border: 0.5rem solid gray;
+    color: white;
+    display: block;
+  }
+  &__new-picture-form {
+    flex: 0 0 50%;
+    margin: 0;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__input {
+    position: absolute;
+    height: calc(100% - 3rem);
+    width: 100%;
+    opacity: 0;
+    z-index: 1;
+    position: absolute;
+
+    &:focus + .modal__label {
+      background-color: nth($profileHeaderColors, 2);
+      outline: 1px dashed white;
+    }
+  }
+  &__label {
+    border: 2px solid white;
+    border-radius: 20px;
+    color: white;
+    padding: 4rem;
+    display: block;
+    flex-grow: 1;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    @include outlineShadow(black, black);
+
+    &--dragging {
+      background-color: nth($profileHeaderColors, 2);
+    }
+  }
+}
+
 
 
 .game-history-table-container {
