@@ -107,7 +107,7 @@ class Profile extends Component {
             >X</button>
           </div>
           <div className="modal__body-container">
-            <form className="modal__new-picture-form" action="">
+            <form className="modal__new-picture-form" action="" onSubmit={this.submitPhoto}>
               <input
                 className="modal__input"
                 id="pictureInput"
@@ -126,7 +126,6 @@ class Profile extends Component {
               <button
                 id="submitButton"
                 className="modal__button modal__button--quit"
-                onClick={this.submitPhoto}
                 type="submit"
               >Submit picture</button>
             </form>

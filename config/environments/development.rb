@@ -1,6 +1,9 @@
 Rails.application.configure do
   # Verifies that versions and hashed value of the package contents in the project's package.json
-config.webpacker.check_yarn_integrity = true
+  config.webpacker.check_yarn_integrity = true
+
+  # set up storage for profile picutres/other files
+  config.active_storage.service = :local
 
   # Settings specified here will take precedence over those in config/application.rb.
 

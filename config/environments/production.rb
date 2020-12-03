@@ -1,8 +1,11 @@
 Rails.application.configure do
   # Verifies that versions and hashed value of the package contents in the project's package.json
-config.webpacker.check_yarn_integrity = false
+  config.webpacker.check_yarn_integrity = false
 
-config.web_socket_server_url = "wss://smuggles-n-snuggles.herokuapp.com/cable"
+  # set up storage for profile picutres/other files
+  config.active_storage.service = :cloudinary
+
+  config.web_socket_server_url = "wss://smuggles-n-snuggles.herokuapp.com/cable"
 
   # Settings specified here will take precedence over those in config/application.rb.
 

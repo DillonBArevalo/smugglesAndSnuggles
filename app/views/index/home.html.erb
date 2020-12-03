@@ -1,7 +1,7 @@
 <nav class="profile-nav" aria-label="Account">
 <% if logged_in? %>
   <%= image_tag(
-      current_user.avatar.url(:thumb),
+      current_user.get_avatar(resize: "100x100"),
       alt: 'Your profile picture',
       class: 'profile-nav__picture profile-picture--thumb',
       onerror: "this.onerror = null; this.src=\"#{ image_path 'no-photo.png'}\""

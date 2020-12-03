@@ -32,7 +32,7 @@ gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
 gem 'bcrypt', '~> 3.1.7'
 
-gem "paperclip", "~> 6.0.0"
+gem 'mini_magick'
 
 gem 'sprockets', '~> 3.7.2'
 

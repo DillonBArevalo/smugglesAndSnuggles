@@ -21,7 +21,7 @@ class Game < ApplicationRecord
     games_users.each do |game_user|
       user = game_user.user
       user_data = {
-        "url": ActionController::Base.helpers.image_path(user.avatar.url(:medium)),
+        "url": user.get_avatar(resize: '250x250'),
         "id": user.id,
         "username": user.username,
       }

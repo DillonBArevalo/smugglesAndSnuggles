@@ -28,7 +28,7 @@ The website uses the following tech stack:
 - HTML and Vanilla JS on minimally interactive pages
 - ActionCable (websockets) for online connection
 - Heroku
-- Paperclip (soon to be re replaced with AWS image storage)
+- activeStorage with Cloudinary integration (seemed easiest free option!)
 
 ### Preview
 
@@ -83,8 +83,6 @@ For those just looking to get an idea of the website here are its main features:
 The Smuggles N' Snuggles Online website is still in active development and will soon be updated with some important features:
 
 - Accessibility is lacking in some significant areas including form validation and keyboard support for the main gameplay functionality.
-- Image storage with AWS will allow prifile pictures to persist (Paperclip is now deprecated in conjunction with heroku and updating to AWS will be necessary).
-- Updating profile pictures with dynamic image previewing on upload
 - An emote wheel for in game communication with your opponent (Think Hearthstone style in game communication).
 - Review game functionality so you can learn from your mistakes and replay any game starting from any move in that game's history
 - A store where the hard copy of the game can be purchased
